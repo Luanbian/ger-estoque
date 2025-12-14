@@ -12,7 +12,6 @@ function* loadHealthCheckSaga() {
       API_BASE_URL
     );
 
-    console.log("Health Check Response:", response.data);
     yield put(
       actions.setData({
         status: response.data.status,
