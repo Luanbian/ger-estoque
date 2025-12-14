@@ -4,6 +4,7 @@ import { all, spawn } from "redux-saga/effects";
 
 // Slice
 import { healthCheckSlice } from "../features/healthcheck/slice";
+import { customizerSlice } from "../features/customizer/slice";
 
 // Sagas
 import { healthSagas } from "../features/healthcheck";
@@ -17,6 +18,7 @@ const sagaMiddleware = createSagaMiddleware({
 
 const rootReducer = combineReducers({
   healthCheck: healthCheckSlice.reducer,
+  customizer: customizerSlice.reducer,
 });
 
 export const store = configureStore({
