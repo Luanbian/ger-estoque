@@ -1,8 +1,12 @@
+import { Provider } from "react-redux";
+import store from "./store";
+import Home from "./app/page";
+
 function App() {
   return (
-    <main className="container">
-      <h1>Welcome to Gerenciamento de Estoque</h1>
-    </main>
+    <Provider store={store}>
+      <Home />
+    </Provider>
   );
 }
 
