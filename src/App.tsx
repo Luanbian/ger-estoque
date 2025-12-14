@@ -1,9 +1,29 @@
+import { lazy, Suspense } from "react";
 import { Provider } from "react-redux";
+import { Box, CircularProgress } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ThemeSettings } from "./utils/theme/Theme";
 import store from "./store";
-import Home from "./app/page";
+
+// Lazy load the Home component
+const Home = lazy(() => import("./app/page"));
+
+const LoadingFallback = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        width: "100vw",
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  );
+};
 
 function ThemedApp() {
   const theme = createTheme({
@@ -20,7 +40,9 @@ function ThemedApp() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Home />
+      <Suspense fallback={<LoadingFallback />}>
+        <Home />
+      </Suspense>
     </ThemeProvider>
   );
 }
