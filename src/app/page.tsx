@@ -1,7 +1,7 @@
-import { HealthCheckContainer } from "./components/healthCheck/container";
+import { Header } from "./components/header/container";
 
 const Home = () => {
-  return <HealthCheckContainer />;
+  return <Header />;
 };
 
 export default Home;

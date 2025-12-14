@@ -38,7 +38,7 @@ export const BuildTheme = (config: any = {}) => {
       mode: customizer.activeMode,
     },
     shape: {
-      borderRadius: 50,
+      borderRadius: 0,
     },
     shadows: defaultShadow,
     typography: typography,

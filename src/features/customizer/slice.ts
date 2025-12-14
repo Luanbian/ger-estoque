@@ -38,7 +38,6 @@ export const customizerSlice = createSlice({
     setDir: (state: StateType, action) => {
       state.activeDir = action.payload;
     },
-
     toggleSidebar: (state) => {
       state.isCollapse = !state.isCollapse;
     },
