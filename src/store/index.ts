@@ -5,9 +5,11 @@ import { all, spawn } from "redux-saga/effects";
 // Slice
 import { healthCheckSlice } from "../features/healthcheck/slice";
 import { customizerSlice } from "../features/customizer/slice";
+import { authSlice } from "../features/auth/slice";
 
 // Sagas
 import { healthSagas } from "../features/healthcheck";
+import { authSagas } from "../features/auth";
 
 const sagaMiddleware = createSagaMiddleware({
   onError: (error, errorInfo) => {
@@ -19,6 +21,7 @@ const sagaMiddleware = createSagaMiddleware({
 const rootReducer = combineReducers({
   healthCheck: healthCheckSlice.reducer,
   customizer: customizerSlice.reducer,
+  auth: authSlice.reducer,
 });
 
 export const store = configureStore({
@@ -32,7 +35,7 @@ export const store = configureStore({
 
 // Run sagas
 function* rootSaga() {
-  yield all([spawn(healthSagas)]);
+  yield all([spawn(healthSagas), spawn(authSagas)]);
 }
 
 sagaMiddleware.run(rootSaga);

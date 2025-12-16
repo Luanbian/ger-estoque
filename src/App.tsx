@@ -1,13 +1,11 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { Provider } from "react-redux";
 import { Box, CircularProgress } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ThemeSettings } from "./utils/theme/Theme";
 import store from "./store";
-
-// Lazy load the Home component
-const Home = lazy(() => import("./app/page"));
+import { AppRoutes } from "./routes";
 
 const LoadingFallback = () => {
   return (
@@ -41,7 +39,7 @@ function ThemedApp() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Suspense fallback={<LoadingFallback />}>
-        <Home />
+        <AppRoutes />
       </Suspense>
     </ThemeProvider>
   );
