@@ -3,19 +3,19 @@ import actions from "./slice";
 import axios, { AxiosResponse } from "axios";
 import { HealthCheckResponse } from "./types";
 import { API_BASE_URL } from "../../constants/api";
+import { APIResponse } from "../common/types";
 
 function* loadHealthCheckSaga() {
   yield put(actions.setLoading(true));
   try {
-    const response: AxiosResponse<HealthCheckResponse> = yield call(
-      axios.get,
-      API_BASE_URL
-    );
+    const response: AxiosResponse<APIResponse<HealthCheckResponse>> =
+      yield call(axios.get, API_BASE_URL);
 
+    const { data } = response.data;
     yield put(
       actions.setData({
-        status: response.data.status,
-        details: response.data.details,
+        status: data.status,
+        details: data.details,
       })
     );
   } catch (error) {
