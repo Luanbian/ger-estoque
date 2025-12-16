@@ -9,13 +9,12 @@ import {
   IconButton,
 } from "@mui/material";
 import {
-  IconHome,
   IconPackage,
-  IconUsers,
-  IconSettings,
   IconChevronLeft,
   IconChevronRight,
+  IconHome,
 } from "@tabler/icons-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface Props {
   isOpen: boolean;
@@ -24,12 +23,17 @@ interface Props {
 }
 
 export const SidebarComponent = ({ isOpen, onToggle, sidebarWidth }: Props) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const menuItems = [
     { text: "Início", icon: <IconHome />, path: "/" },
-    { text: "Produtos", icon: <IconPackage />, path: "/produtos" },
-    { text: "Usuários", icon: <IconUsers />, path: "/usuarios" },
-    { text: "Configurações", icon: <IconSettings />, path: "/configuracoes" },
+    { text: "Produtos", icon: <IconPackage />, path: "/stock" },
   ];
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
 
   return (
     <>
@@ -53,7 +57,22 @@ export const SidebarComponent = ({ isOpen, onToggle, sidebarWidth }: Props) => {
           <List>
             {menuItems.map((item) => (
               <ListItem key={item.text} disablePadding>
-                <ListItemButton>
+                <ListItemButton
+                  selected={location.pathname === item.path}
+                  onClick={() => handleNavigation(item.path)}
+                  sx={{
+                    "&.Mui-selected": {
+                      backgroundColor: (theme) => theme.palette.primary.main,
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: (theme) => theme.palette.primary.dark,
+                      },
+                      "& .MuiListItemIcon-root": {
+                        color: "white",
+                      },
+                    },
+                  }}
+                >
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText primary={item.text} />
                 </ListItemButton>

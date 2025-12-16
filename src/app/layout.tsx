@@ -1,16 +1,14 @@
 import { Box } from "@mui/material";
+import { Outlet } from "react-router-dom";
 import { Header } from "./components/header/container";
 import { Sidebar } from "./components/sidebar/container";
 import { useSelector } from "../store/hooks";
 
-const Home = () => {
+export const MainLayout = () => {
   const { isCollapse, SidebarWidth } = useSelector((state) => state.customizer);
 
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", height: "100vh" }}
-      bgcolor={"red"}
-    >
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Header />
       <Box sx={{ display: "flex", flex: 1, overflow: "hidden" }}>
         <Sidebar />
@@ -21,13 +19,12 @@ const Home = () => {
             p: 3,
             transition: "margin 0.3s",
             marginLeft: isCollapse ? 0 : `${SidebarWidth}px`,
+            overflow: "auto",
           }}
         >
-          <h1>Bem-vindo ao Sistema de Gerenciamento de Estoque</h1>
+          <Outlet />
         </Box>
       </Box>
     </Box>
   );
 };
-
-export default Home;

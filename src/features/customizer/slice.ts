@@ -14,7 +14,7 @@ const initialState: StateType = {
   activeDir: "ltr",
   activeMode: "dark", // This can be light or dark
   activeTheme: "BLACK_THEME", // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
-  SidebarWidth: 270,
+  SidebarWidth: 200,
   MiniSidebarWidth: 87,
   isCollapse: false,
 };
