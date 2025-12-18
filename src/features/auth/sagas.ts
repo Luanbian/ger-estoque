@@ -1,21 +1,23 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import actions from "./slice";
 import { LoginCredentials, LoginResponse } from "./types";
 import { APIResponse } from "../common/types";
 import { API_BASE_URL } from "../../constants/api";
+import { apiService } from "../../services/api";
 
 function* loginSaga(action: PayloadAction<LoginCredentials>) {
   yield put(actions.setLoading(true));
   try {
-    const response: AxiosResponse<APIResponse<LoginResponse>> = yield call(
-      axios.post,
+    const response: APIResponse<LoginResponse> = yield call(
+      apiService.post,
       `${API_BASE_URL}/auth/login`,
       action.payload
     );
 
-    const { data } = response.data;
+    const { data } = response;
+
     yield put(
       actions.setAuth({
         data: {

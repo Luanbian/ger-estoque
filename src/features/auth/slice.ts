@@ -33,12 +33,6 @@ export const authSlice = createSlice({
       state.token = action.payload.token;
       state.error = null;
     },
-    clearAuth: (state) => {
-      state.data = null;
-      state.token = null;
-      state.loading = false;
-      state.error = null;
-    },
   },
 });
 

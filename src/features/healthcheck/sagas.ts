@@ -1,17 +1,20 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import actions from "./slice";
-import axios, { AxiosResponse } from "axios";
 import { HealthCheckResponse } from "./types";
 import { API_BASE_URL } from "../../constants/api";
 import { APIResponse } from "../common/types";
+import { apiService } from "../../services/api";
 
 function* loadHealthCheckSaga() {
   yield put(actions.setLoading(true));
   try {
-    const response: AxiosResponse<APIResponse<HealthCheckResponse>> =
-      yield call(axios.get, API_BASE_URL);
+    const response: APIResponse<HealthCheckResponse> = yield call(
+      apiService.get,
+      API_BASE_URL
+    );
 
-    const { data } = response.data;
+    const { data } = response;
+
     yield put(
       actions.setData({
         status: data.status,
