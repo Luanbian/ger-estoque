@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { Category } from "../../../features/categories/types";
+import { CategoryGridList } from "../../components/categories/table/list";
 
 interface Props {
   data: Category[];
@@ -10,11 +11,7 @@ export const CategoryPage = ({ data }: Props) => {
       <Typography variant="h4" component="h1" gutterBottom>
         Categorias
       </Typography>
-      {data.map((category) => (
-        <Typography key={category._id} variant="h6" component="h2">
-          {category.name}
-        </Typography>
-      ))}
+      <CategoryGridList data={data} />
     </Box>
   );
 };

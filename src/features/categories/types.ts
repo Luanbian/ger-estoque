@@ -2,10 +2,11 @@ export interface Category {
   _id: string;
   name: string;
   slug: string;
+  tenantId: string;
   description: string | null;
   fatherCategoryId: string | null;
   displayOrder: number;
-  tenantId: string;
+  subCategories?: Category[];
 }
 
 export interface CategoryState {
