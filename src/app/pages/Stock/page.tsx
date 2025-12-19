@@ -1,14 +1,18 @@
 import { Box, Typography } from "@mui/material";
+import { ProductGridList } from "../../components/products/grid/list";
+import { Product } from "../../../features/products/types";
 
-export const StockPage = () => {
+interface Props {
+  data: Product[];
+}
+
+export const StockPage = ({ data }: Props) => {
   return (
     <Box>
       <Typography variant="h4" component="h1" gutterBottom>
         Produtos
       </Typography>
-      <Typography variant="body1" color="text.secondary">
-        Gerencie seus produtos aqui.
-      </Typography>
+      <ProductGridList data={data} />
     </Box>
   );
 };
