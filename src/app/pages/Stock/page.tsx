@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { ProductGridList } from "../../components/products/grid/list";
+import { ProductGridList } from "../../components/products/table/list";
 import { Product } from "../../../features/products/types";
 
 interface Props {
