@@ -9,10 +9,11 @@ import {
   IconButton,
 } from "@mui/material";
 import {
-  IconPackage,
   IconChevronLeft,
   IconChevronRight,
   IconHome,
+  IconCategory,
+  IconStack3Filled,
 } from "@tabler/icons-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -28,7 +29,8 @@ export const SidebarComponent = ({ isOpen, onToggle, sidebarWidth }: Props) => {
 
   const menuItems = [
     { text: "Início", icon: <IconHome />, path: "/" },
-    { text: "Produtos", icon: <IconPackage />, path: "/stock" },
+    { text: "Produtos", icon: <IconStack3Filled />, path: "/stock" },
+    { text: "Categorias", icon: <IconCategory />, path: "/category" },
   ];
 
   const handleNavigation = (path: string) => {

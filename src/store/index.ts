@@ -7,11 +7,13 @@ import { healthCheckSlice } from "../features/healthcheck/slice";
 import { customizerSlice } from "../features/customizer/slice";
 import { authSlice } from "../features/auth/slice";
 import { productSlice } from "../features/products/slice";
+import { categorySlice } from "../features/categories/slice";
 
 // Sagas
 import { healthSagas } from "../features/healthcheck";
 import { authSagas } from "../features/auth";
 import { productSagas } from "../features/products";
+import { categorySagas } from "../features/categories";
 
 const sagaMiddleware = createSagaMiddleware({
   onError: (error, errorInfo) => {
@@ -25,6 +27,7 @@ const rootReducer = combineReducers({
   customizer: customizerSlice.reducer,
   auth: authSlice.reducer,
   product: productSlice.reducer,
+  category: categorySlice.reducer,
 });
 
 export const store = configureStore({
@@ -38,7 +41,12 @@ export const store = configureStore({
 
 // Run sagas
 function* rootSaga() {
-  yield all([spawn(healthSagas), spawn(authSagas), spawn(productSagas)]);
+  yield all([
+    spawn(healthSagas),
+    spawn(authSagas),
+    spawn(productSagas),
+    spawn(categorySagas),
+  ]);
 }
 
 sagaMiddleware.run(rootSaga);

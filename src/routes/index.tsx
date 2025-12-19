@@ -4,6 +4,7 @@ import { MainLayout } from "../app/layout";
 import { HomePage } from "../app/pages/Home";
 import { Stock } from "../app/pages/Stock/layout";
 import { ProtectedRoute } from "./protectedRoutes";
+import { Category } from "../app/pages/Category/layout";
 
 export const AppRoutes = () => {
   return (
@@ -19,6 +20,7 @@ export const AppRoutes = () => {
         >
           <Route path="/" element={<HomePage />} />
           <Route path="/stock" element={<Stock />} />
+          <Route path="/category" element={<Category />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
