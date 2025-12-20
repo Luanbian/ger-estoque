@@ -8,26 +8,26 @@ import {
   Alert,
 } from "@mui/material";
 import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
-import { CreateCategoryPayload } from "../../../../features/categories/types";
+import { CreateProductPayload } from "../../../../features/products/types";
 
 interface Props {
   actions: {
-    createCategory: (value: CreateCategoryPayload) => void;
+    createProduct: (value: CreateProductPayload) => void;
     onClose?: () => void;
   };
 }
 
-export const CreateCategoryComponent = ({ actions }: Props) => {
-  const { createCategory, onClose } = actions;
+export const CreateProductComponent = ({ actions }: Props) => {
+  const { createProduct, onClose } = actions;
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateCategoryPayload>();
+  } = useForm<CreateProductPayload>();
 
-  const onSubmit = (data: CreateCategoryPayload) => {
-    createCategory(data);
+  const onSubmit = (data: CreateProductPayload) => {
+    createProduct(data);
     reset();
     if (onClose) {
       onClose();
@@ -52,59 +52,29 @@ export const CreateCategoryComponent = ({ actions }: Props) => {
       }}
     >
       <Typography variant="h5" gutterBottom fontWeight={600}>
-        Nova Categoria
+        Novo Produto
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Preencha os dados para criar uma nova categoria
+        Preencha os dados para criar um novo produto
       </Typography>
 
       <Stack spacing={3}>
         <TextField
           {...register("name", {
-            required: "O nome da categoria é obrigatório",
+            required: "O nome do produto é obrigatório",
             minLength: {
               value: 3,
               message: "O nome deve ter pelo menos 3 caracteres",
             },
           })}
-          label="Nome da Categoria"
-          placeholder="Digite o nome da categoria"
+          label="Nome do Produto"
+          placeholder="Digite o nome do produto"
           fullWidth
           required
           error={!!errors.name}
           helperText={errors.name?.message}
           autoFocus
-        />
-
-        <TextField
-          {...register("description")}
-          label="Descrição"
-          placeholder="Digite uma descrição (opcional)"
-          fullWidth
-          multiline
-          rows={4}
-          error={!!errors.description}
-          helperText={errors.description?.message}
-        />
-
-        <TextField
-          {...register("displayOrder", {
-            valueAsNumber: true,
-            min: {
-              value: 0,
-              message: "A ordem deve ser um número positivo",
-            },
-          })}
-          label="Ordem de Exibição"
-          placeholder="0"
-          type="number"
-          fullWidth
-          error={!!errors.displayOrder}
-          helperText={
-            errors.displayOrder?.message ||
-            "Defina a ordem de exibição da categoria"
-          }
         />
 
         {Object.keys(errors).length > 0 && (
@@ -128,7 +98,7 @@ export const CreateCategoryComponent = ({ actions }: Props) => {
             color="primary"
             startIcon={<IconDeviceFloppy size={18} />}
           >
-            Salvar Categoria
+            Salvar Produto
           </Button>
         </Stack>
       </Stack>

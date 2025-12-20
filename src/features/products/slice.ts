@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ProductState, RequestProduct } from "./types.ts";
+import {
+  CreateProductPayload,
+  Product,
+  ProductState,
+  RequestProduct,
+} from "./types.ts";
 
 export const initialState: ProductState = {
   data: null,
@@ -12,6 +17,10 @@ export const productSlice = createSlice({
   initialState,
   reducers: {
     productRequest: (_state, _action: PayloadAction<RequestProduct>) => {},
+    createProductRequest: (
+      _state,
+      _action: PayloadAction<CreateProductPayload>
+    ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -21,6 +30,9 @@ export const productSlice = createSlice({
     setProduct: (state, action: PayloadAction<ProductState["data"]>) => {
       state.data = action.payload;
       state.error = null;
+    },
+    addProduct: (state, action: PayloadAction<Product>) => {
+      state.data?.push(action.payload);
     },
   },
 });

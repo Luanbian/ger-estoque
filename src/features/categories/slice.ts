@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CategoryState, CreateCategoryPayload } from "./types.ts";
+import { Category, CategoryState, CreateCategoryPayload } from "./types.ts";
 
 export const initialState: CategoryState = {
   data: null,

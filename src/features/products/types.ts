@@ -13,8 +13,8 @@ export interface Product {
   variantAttributes: VariantAttributes | null;
   stock: number;
   minStock: number;
-  unitPrice: number | null;
-  salePrice: number | null;
+  unitPrice: number;
+  salePrice: number;
   stockStatus: StockStatusEnum;
   variants: Product[] | null;
 }
@@ -34,4 +34,16 @@ export interface RequestProduct {
   page?: string;
   limit?: string;
   sort?: string;
+}
+
+export interface CreateProductPayload {
+  name: string;
+  type: ProductType;
+  categoryId: string;
+  unitOfMeasureId: string;
+  salePrice: number;
+  unitPrice: number;
+  stock?: number;
+  minStock?: number;
+  hasVariants?: boolean;
 }

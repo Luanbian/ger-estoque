@@ -13,10 +13,13 @@ import {
 import { ProductRow } from "./item";
 
 interface Props {
-  data: Product[];
+  data: {
+    products: Product[];
+  };
 }
 
 export const ProductGridList = ({ data }: Props) => {
+  const { products } = data;
   return (
     <TableContainer
       component={Paper}
@@ -60,7 +63,7 @@ export const ProductGridList = ({ data }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((product) => (
+          {products.map((product) => (
             <ProductRow key={product._id} product={product} />
           ))}
         </TableBody>

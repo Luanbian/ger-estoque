@@ -59,8 +59,7 @@ export const CategoryPage = ({ data, actions }: Props) => {
         onClose={handleCloseModal}
         content={
           <CreateCategoryComponent
-            actions={{ createCategory }}
-            onClose={handleCloseModal}
+            actions={{ createCategory, onClose: handleCloseModal }}
           />
         }
         maxWidth={550}
