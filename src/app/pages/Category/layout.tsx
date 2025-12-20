@@ -2,17 +2,14 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "../../../store/hooks.ts";
 import { CategoryPage } from "./page.tsx";
 import actions from "../../../features/categories/slice.ts";
+import { CreateCategoryPayload } from "../../../features/categories/types.ts";
 
 export const Category = () => {
   const dispatch = useDispatch();
   const { data, loading } = useSelector((state) => state.category);
 
-  const createCategory = () => {
-    dispatch(
-      actions.createCategoryRequest({
-        name: "Nova Categoria",
-      })
-    );
+  const createCategory = (value: CreateCategoryPayload) => {
+    dispatch(actions.createCategoryRequest(value));
   };
 
   useEffect(() => {

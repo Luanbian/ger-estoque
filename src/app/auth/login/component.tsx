@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Box,
   Button,
@@ -8,6 +7,8 @@ import {
   Typography,
   Alert,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { LoginCredentials } from "../../../features/auth/types";
 
 interface Props {
   onLogin: (username: string, password: string) => void;
@@ -16,12 +17,10 @@ interface Props {
 }
 
 export const LoginComponent = ({ onLogin, loading, error }: Props) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { register, handleSubmit } = useForm<LoginCredentials>();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onLogin(email, password);
+  const onSubmit = (data: LoginCredentials) => {
+    onLogin(data.email, data.password);
   };
 
   return (
@@ -43,22 +42,19 @@ export const LoginComponent = ({ onLogin, loading, error }: Props) => {
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
               fullWidth
               label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register("email")}
               margin="normal"
               required
               disabled={loading}
             />
             <TextField
-              fullWidth
               label="Senha"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("password")}
               margin="normal"
               required
               disabled={loading}
