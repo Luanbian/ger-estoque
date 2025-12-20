@@ -1,6 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
-import { actions } from "../../../../../features/products";
-import { useDispatch } from "../../../../../store/hooks";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -10,6 +8,9 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { actions } from "../../../../../features/products";
+import { useDispatch } from "../../../../../store/hooks";
 
 interface VariantForm {
   hasVariants: boolean;
@@ -23,10 +24,11 @@ interface Props {
 
 const StepVariantComponent = ({ actions }: Props) => {
   const { nextStep } = actions;
-  const { control, handleSubmit } = useForm<VariantForm>();
+  const { handleSubmit } = useForm<VariantForm>();
+  const [hasVariants, setHasVariants] = useState<boolean>(false);
 
-  const onSubmit = (data: VariantForm) => {
-    nextStep(data);
+  const onSubmit = () => {
+    nextStep({ hasVariants });
   };
 
   return (
@@ -35,22 +37,23 @@ const StepVariantComponent = ({ actions }: Props) => {
 
       <FormControl>
         <InputLabel>Possui Variantes?</InputLabel>
-        <Controller
-          name="hasVariants"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <Select
-              label="Possui Variantes?"
-              value={field.value}
-              onChange={(e) => field.onChange(e.target.value === "true")}
-            >
-              <MenuItem value="true">Sim</MenuItem>
-              <MenuItem value="false">Não</MenuItem>
-            </Select>
-          )}
-        />
+        <Select
+          label="Possui Variantes?"
+          value={hasVariants ? "true" : "false"}
+          onChange={(e) => {
+            setHasVariants(e.target.value === "true");
+          }}
+        >
+          <MenuItem value="true">Sim</MenuItem>
+          <MenuItem value="false">Não</MenuItem>
+        </Select>
       </FormControl>
+
+      {hasVariants && (
+        <>
+          <Typography variant="h6">Detalhes da Variante</Typography>
+        </>
+      )}
 
       <Button type="submit" onClick={handleSubmit(onSubmit)}>
         Próximo

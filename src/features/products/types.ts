@@ -60,3 +60,14 @@ export interface CreateProductPayload {
   minStock?: number;
   hasVariants?: boolean;
 }
+
+export interface CreateProductWithVariantPayload extends CreateProductPayload {
+  variants: {
+    name: string;
+    attributes: VariantAttributes;
+    stock?: number;
+    minStock?: number;
+    unitPrice: number;
+    salePrice: number;
+  }[];
+}

@@ -5,6 +5,7 @@ import {
   ProductState,
   RequestProduct,
   RegisterSteps,
+  CreateProductWithVariantPayload,
 } from "./types.ts";
 
 export const initialState: ProductState = {
@@ -32,6 +33,10 @@ export const productSlice = createSlice({
     createProductRequest: (
       _state,
       _action: PayloadAction<CreateProductPayload>
+    ) => {},
+    createProductWithVariantRequest: (
+      _state,
+      _action: PayloadAction<CreateProductWithVariantPayload>
     ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
