@@ -7,6 +7,14 @@ export const Category = () => {
   const dispatch = useDispatch();
   const { data, loading } = useSelector((state) => state.category);
 
+  const createCategory = () => {
+    dispatch(
+      actions.createCategoryRequest({
+        name: "Nova Categoria",
+      })
+    );
+  };
+
   useEffect(() => {
     dispatch(actions.categoryRequest());
   }, []);
@@ -15,5 +23,7 @@ export const Category = () => {
     return <div>Carregando categorias...</div>;
   }
 
-  return <CategoryPage data={data} />;
+  return (
+    <CategoryPage data={{ categories: data }} actions={{ createCategory }} />
+  );
 };

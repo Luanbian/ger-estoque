@@ -16,10 +16,14 @@ import { Category } from "../../../../features/categories/types";
 import { SubCategory } from "./subCategory";
 
 interface Props {
-  category: Category;
+  data: {
+    category: Category;
+  };
 }
 
-export const CategoryRow = ({ category }: Props) => {
+export const CategoryRow = ({ data }: Props) => {
+  const { category } = data;
+
   const [open, setOpen] = useState(false);
   const hasSubCategories =
     category.subCategories && category.subCategories.length > 0;

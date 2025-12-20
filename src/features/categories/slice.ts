@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CategoryState } from "./types.ts";
+import { CategoryState, CreateCategoryPayload } from "./types.ts";
 
 export const initialState: CategoryState = {
   data: null,
@@ -12,6 +12,10 @@ export const categorySlice = createSlice({
   initialState,
   reducers: {
     categoryRequest: () => {},
+    createCategoryRequest: (
+      _state,
+      _action: PayloadAction<CreateCategoryPayload>
+    ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -21,6 +25,9 @@ export const categorySlice = createSlice({
     setCategory: (state, action: PayloadAction<CategoryState["data"]>) => {
       state.data = action.payload;
       state.error = null;
+    },
+    addCategory: (state, action: PayloadAction<Category>) => {
+      state.data?.push(action.payload);
     },
   },
 });

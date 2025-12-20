@@ -14,3 +14,10 @@ export interface CategoryState {
   loading: boolean;
   error: string | null;
 }
+
+export interface CreateCategoryPayload {
+  name: string;
+  description?: string;
+  fatherCategoryId?: string;
+  displayOrder?: number;
+}

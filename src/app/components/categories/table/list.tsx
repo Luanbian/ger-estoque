@@ -11,10 +11,14 @@ import { Category } from "../../../../features/categories/types";
 import { CategoryRow } from "./category";
 
 interface Props {
-  data: Category[];
+  data: {
+    categories: Category[];
+  };
 }
 
 export const CategoryGridList = ({ data }: Props) => {
+  const { categories } = data;
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -28,8 +32,8 @@ export const CategoryGridList = ({ data }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((category) => (
-            <CategoryRow key={category._id} category={category} />
+          {categories.map((category) => (
+            <CategoryRow key={category._id} data={{ category }} />
           ))}
         </TableBody>
       </Table>
