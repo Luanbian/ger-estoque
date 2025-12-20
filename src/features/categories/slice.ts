@@ -3,6 +3,7 @@ import { Category, CategoryState, CreateCategoryPayload } from "./types.ts";
 
 export const initialState: CategoryState = {
   data: null,
+  dataPlain: null,
   loading: false,
   error: null,
 };
@@ -12,6 +13,7 @@ export const categorySlice = createSlice({
   initialState,
   reducers: {
     categoryRequest: () => {},
+    categoryTreeRequest: () => {},
     createCategoryRequest: (
       _state,
       _action: PayloadAction<CreateCategoryPayload>
@@ -28,6 +30,13 @@ export const categorySlice = createSlice({
     },
     addCategory: (state, action: PayloadAction<Category>) => {
       state.data?.push(action.payload);
+    },
+    setCategoryPlain: (
+      state,
+      action: PayloadAction<CategoryState["dataPlain"]>
+    ) => {
+      state.dataPlain = action.payload;
+      state.error = null;
     },
   },
 });

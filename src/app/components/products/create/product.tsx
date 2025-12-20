@@ -1,44 +1,48 @@
 import { useForm } from "react-hook-form";
+import { Box, Button, Typography } from "@mui/material";
 import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Stack,
-  Alert,
-} from "@mui/material";
-import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
-import { CreateProductPayload } from "../../../../features/products/types";
+  CreateProductPayload,
+  RegisterSteps,
+} from "../../../../features/products/types";
+import { StepIdentification } from "./steps/identification";
+import { StepCategory } from "./steps/category";
+import { StepVariant } from "./steps/variant";
+import { StepPrice } from "./steps/price";
+import { StepStock } from "./steps/stock";
 
 interface Props {
+  data: {
+    steps: RegisterSteps;
+    registerForm: Partial<CreateProductPayload> | null;
+  };
   actions: {
     createProduct: (value: CreateProductPayload) => void;
     onClose?: () => void;
   };
 }
 
-export const CreateProductComponent = ({ actions }: Props) => {
+export const CreateProductComponent = ({ data, actions }: Props) => {
+  const { steps, registerForm } = data;
   const { createProduct, onClose } = actions;
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<CreateProductPayload>();
+  const { handleSubmit, reset } = useForm<CreateProductPayload>();
 
-  const onSubmit = (data: CreateProductPayload) => {
-    createProduct(data);
+  const onSubmit = () => {
+    createProduct(registerForm as CreateProductPayload);
     reset();
     if (onClose) {
       onClose();
     }
   };
 
-  const handleCancel = () => {
-    reset();
-    if (onClose) {
-      onClose();
-    }
+  const currentStep = () => {
+    const allSteps = {
+      identification: <StepIdentification />,
+      category: <StepCategory />,
+      variant: <StepVariant />,
+      price: <StepPrice />,
+      stock: <StepStock />,
+    };
+    return allSteps[steps.status];
   };
 
   return (
@@ -59,49 +63,17 @@ export const CreateProductComponent = ({ actions }: Props) => {
         Preencha os dados para criar um novo produto
       </Typography>
 
-      <Stack spacing={3}>
-        <TextField
-          {...register("name", {
-            required: "O nome do produto é obrigatório",
-            minLength: {
-              value: 3,
-              message: "O nome deve ter pelo menos 3 caracteres",
-            },
-          })}
-          label="Nome do Produto"
-          placeholder="Digite o nome do produto"
-          fullWidth
-          required
-          error={!!errors.name}
-          helperText={errors.name?.message}
-          autoFocus
-        />
+      {currentStep()}
 
-        {Object.keys(errors).length > 0 && (
-          <Alert severity="error">
-            Por favor, corrija os erros antes de continuar
-          </Alert>
-        )}
-
-        <Stack direction="row" spacing={2} justifyContent="flex-end">
-          <Button
-            variant="outlined"
-            color="secondary"
-            startIcon={<IconX size={18} />}
-            onClick={handleCancel}
-          >
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            startIcon={<IconDeviceFloppy size={18} />}
-          >
-            Salvar Produto
-          </Button>
-        </Stack>
-      </Stack>
+      <Box sx={{ mt: 2 }}>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={!(steps.status === "price" && steps.steps?.price === true)}
+        >
+          Confirmar
+        </Button>
+      </Box>
     </Box>
   );
 };

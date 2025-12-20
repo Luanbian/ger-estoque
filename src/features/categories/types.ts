@@ -11,6 +11,7 @@ export interface Category {
 
 export interface CategoryState {
   data: Category[] | null;
+  dataPlain: Category[] | null;
   loading: boolean;
   error: string | null;
 }

@@ -28,6 +28,19 @@ export interface ProductState {
   data: Product[] | null;
   loading: boolean;
   error: string | null;
+  registerSteps: RegisterSteps;
+  registerForm: Partial<CreateProductPayload> | null;
+}
+
+export interface RegisterSteps {
+  status: "identification" | "category" | "variant" | "stock" | "price";
+  steps: {
+    identification?: boolean;
+    category?: boolean;
+    variant?: boolean;
+    stock?: boolean;
+    price?: boolean;
+  };
 }
 
 export interface RequestProduct {

@@ -29,6 +29,7 @@ function* getProduct(_action: PayloadAction<RequestProduct>) {
 }
 
 function* createProduct(payload: PayloadAction<CreateProductPayload>) {
+  console.log("Payload received in saga:", payload.payload);
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Product> = yield call(
@@ -47,6 +48,7 @@ function* createProduct(payload: PayloadAction<CreateProductPayload>) {
       )
     );
   } finally {
+    yield put(actions.resetRegister());
     yield put(actions.setLoading(false));
   }
 }

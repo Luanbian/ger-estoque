@@ -6,6 +6,28 @@ import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
 import { PayloadAction } from "@reduxjs/toolkit";
 
+function* getCategoryTree() {
+  yield put(actions.setLoading(true));
+  try {
+    const response: APIResponse<Category[]> = yield call(
+      apiService.get,
+      `${API_BASE_URL}/category/tree`
+    );
+
+    const { data } = response;
+
+    yield put(actions.setCategory(data));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      )
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 function* getCategory() {
   yield put(actions.setLoading(true));
   try {
@@ -16,7 +38,7 @@ function* getCategory() {
 
     const { data } = response;
 
-    yield put(actions.setCategory(data));
+    yield put(actions.setCategoryPlain(data));
   } catch (error) {
     yield put(
       actions.setError(
@@ -53,6 +75,7 @@ function* createCategory(payload: PayloadAction<CreateCategoryPayload>) {
 
 export function* categorySagas() {
   yield all([
+    takeEvery(actions.categoryTreeRequest.type, getCategoryTree),
     takeEvery(actions.categoryRequest.type, getCategory),
     takeEvery(actions.createCategoryRequest.type, createCategory),
   ]);

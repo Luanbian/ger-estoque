@@ -4,6 +4,7 @@ import { ProductGridList } from "../../components/products/table/list";
 import {
   CreateProductPayload,
   Product,
+  RegisterSteps,
 } from "../../../features/products/types";
 import { IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../components/modal";
@@ -12,6 +13,8 @@ import { CreateProductComponent } from "../../components/products/create/product
 interface Props {
   data: {
     products: Product[];
+    registerSteps: RegisterSteps;
+    registerForm: Partial<CreateProductPayload> | null;
   };
   actions: {
     createProduct: (value: CreateProductPayload) => void;
@@ -19,7 +22,7 @@ interface Props {
 }
 
 export const StockPage = ({ data, actions }: Props) => {
-  const { products } = data;
+  const { products, registerSteps, registerForm } = data;
   const { createProduct } = actions;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -61,6 +64,7 @@ export const StockPage = ({ data, actions }: Props) => {
         content={
           <CreateProductComponent
             actions={{ createProduct, onClose: handleCloseModal }}
+            data={{ steps: registerSteps, registerForm }}
           />
         }
       />

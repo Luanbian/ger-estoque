@@ -13,7 +13,7 @@ export const Category = () => {
   };
 
   useEffect(() => {
-    dispatch(actions.categoryRequest());
+    dispatch(actions.categoryTreeRequest());
   }, []);
 
   if (loading || !data) {
