@@ -21,10 +21,15 @@ interface Props {
     nextStep: (value: StockForm) => void;
     prevStep: () => void;
   };
+  data: {
+    stock?: number;
+    minStock?: number;
+  };
 }
 
-const StepStockComponent = ({ actions }: Props) => {
+const StepStockComponent = ({ actions, data }: Props) => {
   const { nextStep, prevStep } = actions;
+  const { stock, minStock } = data;
   const { register, handleSubmit } = useForm<StockForm>();
 
   const onSubmit = (data: StockForm) => {
@@ -50,6 +55,7 @@ const StepStockComponent = ({ actions }: Props) => {
             placeholder="Ex: 100"
             variant="outlined"
             fullWidth
+            defaultValue={stock}
             {...register("stock", { required: true, valueAsNumber: true })}
           />
 
@@ -60,6 +66,7 @@ const StepStockComponent = ({ actions }: Props) => {
             variant="outlined"
             fullWidth
             {...register("minStock", { required: true, valueAsNumber: true })}
+            defaultValue={minStock}
             helperText="Quantidade mínima para alerta de reposição"
           />
 
@@ -122,5 +129,19 @@ export const StepStock = () => {
     );
   };
 
-  return <StepStockComponent actions={{ nextStep, prevStep }} />;
+  return (
+    <StepStockComponent
+      actions={{ nextStep, prevStep }}
+      data={{
+        stock:
+          registerForm && "stock" in registerForm
+            ? registerForm.stock
+            : undefined,
+        minStock:
+          registerForm && "minStock" in registerForm
+            ? registerForm.minStock
+            : undefined,
+      }}
+    />
+  );
 };

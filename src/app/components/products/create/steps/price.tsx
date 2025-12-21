@@ -9,7 +9,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { convertToCents } from "../../../../../utils/convertTocents";
+import {
+  convertFromCents,
+  convertToCents,
+} from "../../../../../utils/convertTocents";
+import { IconArrowBack, IconArrowForward } from "@tabler/icons-react";
 
 interface PriceForm {
   unitPrice: string;
@@ -19,11 +23,17 @@ interface PriceForm {
 interface Props {
   actions: {
     conclude: (value: PriceForm) => void;
+    prevStep: () => void;
+  };
+  data: {
+    unitPrice?: string;
+    salePrice?: string;
   };
 }
 
-const StepPriceComponent = ({ actions }: Props) => {
-  const { conclude } = actions;
+const StepPriceComponent = ({ actions, data }: Props) => {
+  const { conclude, prevStep } = actions;
+  const { unitPrice, salePrice } = data;
   const { register, handleSubmit } = useForm<PriceForm>();
 
   const onSubmit = (data: PriceForm) => {
@@ -50,6 +60,7 @@ const StepPriceComponent = ({ actions }: Props) => {
             fullWidth
             {...register("unitPrice", { required: true })}
             helperText="Preço de custo do produto"
+            defaultValue={unitPrice}
           />
 
           <TextField
@@ -59,18 +70,33 @@ const StepPriceComponent = ({ actions }: Props) => {
             fullWidth
             {...register("salePrice", { required: true })}
             helperText="Preço final para o cliente"
+            defaultValue={salePrice}
           />
 
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            fullWidth
-            onClick={handleSubmit(onSubmit)}
-            sx={{ mt: 2, py: 1.5 }}
+          <Box
+            sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}
           >
-            Concluir Cadastro
-          </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              startIcon={<IconArrowBack />}
+              sx={{ minWidth: 120 }}
+              onClick={prevStep}
+            >
+              Voltar
+            </Button>
+
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              endIcon={<IconArrowForward />}
+              onClick={handleSubmit(onSubmit)}
+              sx={{ minWidth: 120 }}
+            >
+              Concluir Cadastro
+            </Button>
+          </Box>
         </Stack>
       </Paper>
     </Box>
@@ -80,6 +106,15 @@ const StepPriceComponent = ({ actions }: Props) => {
 export const StepPrice = () => {
   const dispatch = useDispatch();
   const { registerForm, registerSteps } = useSelector((state) => state.product);
+
+  const prevStep = () => {
+    dispatch(
+      actions.setRegisterSteps({
+        status: "stock",
+        steps: { ...registerSteps.steps, price: false },
+      })
+    );
+  };
 
   const conclude = (value: PriceForm) => {
     dispatch(
@@ -96,5 +131,19 @@ export const StepPrice = () => {
       })
     );
   };
-  return <StepPriceComponent actions={{ conclude }} />;
+  return (
+    <StepPriceComponent
+      actions={{ conclude, prevStep }}
+      data={{
+        unitPrice:
+          registerForm && "unitPrice" in registerForm
+            ? convertFromCents(registerForm.unitPrice!)
+            : undefined,
+        salePrice:
+          registerForm && "salePrice" in registerForm
+            ? convertFromCents(registerForm.salePrice!)
+            : undefined,
+      }}
+    />
+  );
 };
