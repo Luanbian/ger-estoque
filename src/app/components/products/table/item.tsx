@@ -16,7 +16,7 @@ import {
 } from "@mui/icons-material";
 import { formatPrice } from "../../../../utils/formatPrice";
 import { getStatusChip } from "../../../../utils/getStockStatus";
-import { ProductVariant } from "./itemVariant";
+import { ProductVariantGridList } from "./variantList";
 
 interface Props {
   product: Product;
@@ -86,7 +86,7 @@ export const ProductRow = ({ product }: Props) => {
         </TableCell>
       </TableRow>
 
-      {hasVariants && <ProductVariant product={product} open={open} />}
+      {hasVariants && <ProductVariantGridList product={product} open={open} />}
     </>
   );
 };

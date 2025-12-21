@@ -10,6 +10,7 @@ export const getStatusChip = (
     [StockStatusEnum.OK]: { label: "OK", color: "success" },
     [StockStatusEnum.LOW_STOCK]: { label: "Baixo", color: "warning" },
     [StockStatusEnum.OUT_OF_STOCK]: { label: "Esgotado", color: "error" },
+    [StockStatusEnum.UNKNOWN]: { label: "Desconhecido", color: "default" },
   };
 
   const config = statusConfig[status] || {

@@ -48,7 +48,7 @@ export const StockPage = ({ data, actions }: Props) => {
           paddingInline={2}
         >
           <Typography variant="h4" component="h1" gutterBottom>
-            Categorias
+            Produtos
           </Typography>
           <Button
             variant="contained"
