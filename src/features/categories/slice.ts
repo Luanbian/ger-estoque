@@ -18,6 +18,10 @@ export const categorySlice = createSlice({
       _state,
       _action: PayloadAction<CreateCategoryPayload>
     ) => {},
+    createSubCategoryRequest: (
+      _state,
+      _action: PayloadAction<CreateCategoryPayload>
+    ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -30,6 +34,17 @@ export const categorySlice = createSlice({
     },
     addCategory: (state, action: PayloadAction<Category>) => {
       state.data?.push(action.payload);
+    },
+    addSubCategory: (state, action: PayloadAction<Category>) => {
+      const parentCategory = state.data?.find(
+        (cat) => cat._id === action.payload.fatherCategoryId
+      );
+      if (parentCategory) {
+        if (!parentCategory.subCategories) {
+          parentCategory.subCategories = [];
+        }
+        parentCategory.subCategories.push(action.payload);
+      }
     },
     setCategoryPlain: (
       state,

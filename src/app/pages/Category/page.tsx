@@ -12,13 +12,14 @@ import { CreateCategoryComponent } from "../../components/categories/create/cate
 interface Props {
   data: {
     categories: Category[];
+    categoriesPlain: Category[];
   };
   actions: {
     createCategory: (value: CreateCategoryPayload) => void;
   };
 }
 export const CategoryPage = ({ data, actions }: Props) => {
-  const { categories } = data;
+  const { categories, categoriesPlain } = data;
   const { createCategory } = actions;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -60,6 +61,7 @@ export const CategoryPage = ({ data, actions }: Props) => {
         content={
           <CreateCategoryComponent
             actions={{ createCategory, onClose: handleCloseModal }}
+            data={{ categories: categoriesPlain }}
           />
         }
         maxWidth={550}

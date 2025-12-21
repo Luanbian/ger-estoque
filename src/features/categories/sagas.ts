@@ -73,10 +73,34 @@ function* createCategory(payload: PayloadAction<CreateCategoryPayload>) {
   }
 }
 
+function* createSubCategory(payload: PayloadAction<CreateCategoryPayload>) {
+  yield put(actions.setLoading(true));
+  try {
+    const response: APIResponse<Category> = yield call(
+      apiService.post,
+      `${API_BASE_URL}/category/${payload.payload.fatherCategoryId}/subcategory`,
+      payload.payload
+    );
+
+    const { data } = response;
+
+    yield put(actions.addSubCategory(data));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      )
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 export function* categorySagas() {
   yield all([
     takeEvery(actions.categoryTreeRequest.type, getCategoryTree),
     takeEvery(actions.categoryRequest.type, getCategory),
     takeEvery(actions.createCategoryRequest.type, createCategory),
+    takeEvery(actions.createSubCategoryRequest.type, createSubCategory),
   ]);
 }

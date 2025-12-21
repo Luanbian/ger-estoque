@@ -6,18 +6,29 @@ import {
   Typography,
   Stack,
   Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
-import { CreateCategoryPayload } from "../../../../features/categories/types";
+import {
+  Category,
+  CreateCategoryPayload,
+} from "../../../../features/categories/types";
 
 interface Props {
+  data: {
+    categories: Category[];
+  };
   actions: {
     createCategory: (value: CreateCategoryPayload) => void;
     onClose?: () => void;
   };
 }
 
-export const CreateCategoryComponent = ({ actions }: Props) => {
+export const CreateCategoryComponent = ({ actions, data }: Props) => {
+  const { categories } = data;
   const { createCategory, onClose } = actions;
   const {
     register,
@@ -106,6 +117,28 @@ export const CreateCategoryComponent = ({ actions }: Props) => {
             "Defina a ordem de exibição da categoria"
           }
         />
+
+        <Typography variant="h6" color="text.primary">
+          Sub categoria (opcional)
+        </Typography>
+
+        <FormControl fullWidth variant="outlined">
+          <InputLabel>Categoria Pai</InputLabel>
+          <Select
+            label="Categoria Pai"
+            {...register("fatherCategoryId", { required: false })}
+          >
+            {categories.length === 0 ? (
+              <MenuItem disabled>Nenhuma categoria disponível</MenuItem>
+            ) : (
+              categories.map((category) => (
+                <MenuItem key={category._id} value={category._id}>
+                  {category.name}
+                </MenuItem>
+              ))
+            )}
+          </Select>
+        </FormControl>
 
         {Object.keys(errors).length > 0 && (
           <Alert severity="error">
