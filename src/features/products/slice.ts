@@ -59,12 +59,11 @@ export const productSlice = createSlice({
     },
     setRegisterForm: (
       state,
-      action: PayloadAction<Partial<CreateProductPayload> | null>
+      action: PayloadAction<
+        CreateProductWithVariantPayload | CreateProductPayload
+      >
     ) => {
-      state.registerForm = {
-        ...state.registerForm,
-        ...action.payload,
-      };
+      state.registerForm = action.payload;
     },
     resetRegister: (state) => {
       state.registerForm = null;

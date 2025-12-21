@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useDispatch } from "../../../../../store/hooks";
+import { useDispatch, useSelector } from "../../../../../store/hooks";
 import { actions } from "../../../../../features/products";
 import { Box, Button, Typography } from "@mui/material";
 import { convertToCents } from "../../../../../utils/convertTocents";
@@ -50,16 +50,18 @@ const StepPriceComponent = ({ actions }: Props) => {
 
 export const StepPrice = () => {
   const dispatch = useDispatch();
+  const { registerForm, registerSteps } = useSelector((state) => state.product);
 
   const conclude = (value: PriceForm) => {
     dispatch(
       actions.setRegisterSteps({
         status: "price",
-        steps: { price: true },
+        steps: { ...registerSteps.steps, price: true },
       })
     );
     dispatch(
       actions.setRegisterForm({
+        ...registerForm!,
         unitPrice: convertToCents(value.unitPrice),
         salePrice: convertToCents(value.salePrice),
       })

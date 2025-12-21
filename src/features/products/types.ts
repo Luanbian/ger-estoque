@@ -29,17 +29,17 @@ export interface ProductState {
   loading: boolean;
   error: string | null;
   registerSteps: RegisterSteps;
-  registerForm: Partial<CreateProductPayload> | null;
+  registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
 }
 
 export interface RegisterSteps {
   status: "identification" | "category" | "variant" | "stock" | "price";
   steps: {
-    identification?: boolean;
-    category?: boolean;
-    variant?: boolean;
-    stock?: boolean;
-    price?: boolean;
+    identification: boolean;
+    category: boolean;
+    variant: boolean;
+    stock: boolean;
+    price: boolean;
   };
 }
 
@@ -54,19 +54,24 @@ export interface CreateProductPayload {
   type: ProductType;
   categoryId: string;
   unitOfMeasureId: string;
-  salePrice: number;
-  unitPrice: number;
+  salePrice?: number;
+  unitPrice?: number;
   stock?: number;
   minStock?: number;
-  hasVariants?: boolean;
+  hasVariants: boolean;
 }
 
-export interface CreateProductWithVariantPayload extends CreateProductPayload {
+export interface CreateProductWithVariantPayload {
+  name: string;
+  type: ProductType;
+  categoryId: string;
+  unitOfMeasureId: string;
+  hasVariants: boolean;
   variants: {
     name: string;
-    attributes: VariantAttributes;
-    stock?: number;
-    minStock?: number;
+    attributes: VariantAttributes[];
+    stock: number;
+    minStock: number;
     unitPrice: number;
     salePrice: number;
   }[];

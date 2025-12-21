@@ -3,6 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { ProductGridList } from "../../components/products/table/list";
 import {
   CreateProductPayload,
+  CreateProductWithVariantPayload,
   Product,
   RegisterSteps,
 } from "../../../features/products/types";
@@ -14,10 +15,12 @@ interface Props {
   data: {
     products: Product[];
     registerSteps: RegisterSteps;
-    registerForm: Partial<CreateProductPayload> | null;
+    registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
   };
   actions: {
-    createProduct: (value: CreateProductPayload) => void;
+    createProduct: (
+      value: CreateProductPayload | CreateProductWithVariantPayload
+    ) => void;
   };
 }
 

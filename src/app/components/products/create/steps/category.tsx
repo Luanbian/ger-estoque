@@ -98,19 +98,22 @@ export const StepCategory = () => {
   const dispatch = useDispatch();
   const { dataPlain } = useSelector((state) => state.category);
   const { data } = useSelector((state) => state.unitOfMeasure);
+  const { registerForm, registerSteps } = useSelector((state) => state.product);
 
   const nextStep = (value: CategoryForm) => {
     dispatch(
       actions.setRegisterSteps({
         status: "variant",
-        steps: { category: true },
+        steps: { ...registerSteps.steps, category: true },
       })
     );
     dispatch(
       actions.setRegisterForm({
+        ...registerForm!,
         type: value.type,
         categoryId: value.categoryId,
         unitOfMeasureId: value.unitOfMeasureId,
+        hasVariants: false,
       })
     );
   };

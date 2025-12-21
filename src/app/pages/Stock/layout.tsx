@@ -2,7 +2,10 @@ import { StockPage } from "./page.tsx";
 import { useDispatch, useSelector } from "../../../store/hooks.ts";
 import { useEffect } from "react";
 import { actions } from "../../../features/products";
-import { CreateProductPayload } from "../../../features/products/types.ts";
+import {
+  CreateProductPayload,
+  CreateProductWithVariantPayload,
+} from "../../../features/products/types.ts";
 
 export const Stock = () => {
   const dispatch = useDispatch();
@@ -10,12 +13,23 @@ export const Stock = () => {
     (state) => state.product
   );
 
-  const createProduct = (value: CreateProductPayload) => {
-    dispatch(actions.createProductRequest(value));
+  const createProduct = (
+    value: CreateProductWithVariantPayload | CreateProductPayload
+  ) => {
+    if (value.hasVariants && value.variants.length > 0) {
+      dispatch(
+        actions.createProductWithVariantRequest(
+          value as CreateProductWithVariantPayload
+        )
+      );
+      return;
+    }
+
+    dispatch(actions.createProductRequest(value as CreateProductPayload));
   };
 
   useEffect(() => {
-    dispatch(actions.productRequest({ page: "1", limit: "10", sort: "asc" }));
+    dispatch(actions.productRequest({ page: "1", limit: "100", sort: "asc" }));
   }, []);
 
   if (loading || !data) {

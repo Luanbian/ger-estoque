@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { actions } from "../../../../../features/products";
-import { useDispatch } from "../../../../../store/hooks";
+import { useDispatch, useSelector } from "../../../../../store/hooks";
 import { useForm } from "react-hook-form";
 
 interface Props {
@@ -44,16 +44,18 @@ const StepIdentificationComponent = ({ actions }: Props) => {
 
 export const StepIdentification = () => {
   const dispatch = useDispatch();
+  const { registerForm, registerSteps } = useSelector((state) => state.product);
 
   const nextStep = (value: IdentificationForm) => {
     dispatch(
       actions.setRegisterSteps({
         status: "category",
-        steps: { identification: true },
+        steps: { ...registerSteps.steps, identification: true },
       })
     );
     dispatch(
       actions.setRegisterForm({
+        ...registerForm!,
         name: value.name,
       })
     );

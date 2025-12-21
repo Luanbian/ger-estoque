@@ -1,17 +1,23 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { actions } from "./slice.ts";
-import { CreateProductPayload, Product, RequestProduct } from "./types.ts";
+import {
+  CreateProductPayload,
+  CreateProductWithVariantPayload,
+  Product,
+  RequestProduct,
+} from "./types.ts";
 import { APIResponse } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
 
-function* getProduct(_action: PayloadAction<RequestProduct>) {
+function* getProduct(action: PayloadAction<RequestProduct>) {
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Product[]> = yield call(
       apiService.get,
-      `${API_BASE_URL}/product`
+      `${API_BASE_URL}/product`,
+      action.payload
     );
 
     const { data } = response;
@@ -29,7 +35,6 @@ function* getProduct(_action: PayloadAction<RequestProduct>) {
 }
 
 function* createProduct(payload: PayloadAction<CreateProductPayload>) {
-  console.log("Payload received in saga:", payload.payload);
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Product> = yield call(
@@ -53,7 +58,9 @@ function* createProduct(payload: PayloadAction<CreateProductPayload>) {
   }
 }
 
-function* createProductWithVariant(payload: PayloadAction<any>) {
+function* createProductWithVariant(
+  payload: PayloadAction<CreateProductWithVariantPayload>
+) {
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Product> = yield call(

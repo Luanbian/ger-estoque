@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { Box, Button, Typography } from "@mui/material";
 import {
   CreateProductPayload,
+  CreateProductWithVariantPayload,
   RegisterSteps,
 } from "../../../../features/products/types";
 import { StepIdentification } from "./steps/identification";
@@ -13,10 +14,12 @@ import { StepStock } from "./steps/stock";
 interface Props {
   data: {
     steps: RegisterSteps;
-    registerForm: Partial<CreateProductPayload> | null;
+    registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
   };
   actions: {
-    createProduct: (value: CreateProductPayload) => void;
+    createProduct: (
+      value: CreateProductWithVariantPayload | CreateProductPayload
+    ) => void;
     onClose?: () => void;
   };
 }
@@ -24,10 +27,10 @@ interface Props {
 export const CreateProductComponent = ({ data, actions }: Props) => {
   const { steps, registerForm } = data;
   const { createProduct, onClose } = actions;
-  const { handleSubmit, reset } = useForm<CreateProductPayload>();
+  const { handleSubmit, reset } = useForm<CreateProductWithVariantPayload>();
 
   const onSubmit = () => {
-    createProduct(registerForm as CreateProductPayload);
+    createProduct(registerForm!);
     reset();
     if (onClose) {
       onClose();
@@ -44,6 +47,10 @@ export const CreateProductComponent = ({ data, actions }: Props) => {
     };
     return allSteps[steps.status];
   };
+
+  const allStepsCompleted = Object.values(steps.steps).every(
+    (step) => step === true
+  );
 
   return (
     <Box
@@ -66,11 +73,7 @@ export const CreateProductComponent = ({ data, actions }: Props) => {
       {currentStep()}
 
       <Box sx={{ mt: 2 }}>
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={!(steps.status === "price" && steps.steps?.price === true)}
-        >
+        <Button type="submit" variant="contained" disabled={!allStepsCompleted}>
           Confirmar
         </Button>
       </Box>

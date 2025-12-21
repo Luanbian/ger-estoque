@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { actions } from "../../../../../features/products";
-import { useDispatch } from "../../../../../store/hooks";
+import { useDispatch, useSelector } from "../../../../../store/hooks";
 import { useForm } from "react-hook-form";
 
 interface StockForm {
@@ -47,16 +47,18 @@ const StepStockComponent = ({ actions }: Props) => {
 
 export const StepStock = () => {
   const dispatch = useDispatch();
+  const { registerForm, registerSteps } = useSelector((state) => state.product);
 
   const nextStep = (value: StockForm) => {
     dispatch(
       actions.setRegisterSteps({
         status: "price",
-        steps: { stock: true },
+        steps: { ...registerSteps.steps, stock: true },
       })
     );
     dispatch(
       actions.setRegisterForm({
+        ...registerForm!,
         stock: value.stock,
         minStock: value.minStock,
       })
