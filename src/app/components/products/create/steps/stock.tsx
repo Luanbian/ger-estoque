@@ -1,7 +1,15 @@
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { actions } from "../../../../../features/products";
 import { useDispatch, useSelector } from "../../../../../store/hooks";
 import { useForm } from "react-hook-form";
+import { IconArrowBack, IconArrowForward } from "@tabler/icons-react";
 
 interface StockForm {
   stock: number;
@@ -11,11 +19,12 @@ interface StockForm {
 interface Props {
   actions: {
     nextStep: (value: StockForm) => void;
+    prevStep: () => void;
   };
 }
 
 const StepStockComponent = ({ actions }: Props) => {
-  const { nextStep } = actions;
+  const { nextStep, prevStep } = actions;
   const { register, handleSubmit } = useForm<StockForm>();
 
   const onSubmit = (data: StockForm) => {
@@ -23,24 +32,63 @@ const StepStockComponent = ({ actions }: Props) => {
   };
 
   return (
-    <Box>
-      <Typography variant="h2">Estoque do Produto</Typography>
+    <Box sx={{ width: "100%", maxWidth: 600, mx: "auto" }}>
+      <Paper elevation={2} sx={{ p: 4, borderRadius: 2 }}>
+        <Typography
+          variant="h5"
+          component="h2"
+          gutterBottom
+          sx={{ mb: 3, fontWeight: 600 }}
+        >
+          Estoque do Produto
+        </Typography>
 
-      <input
-        type="number"
-        {...register("stock", { required: true, valueAsNumber: true })}
-        placeholder="Quantidade em Estoque"
-      />
+        <Stack spacing={3}>
+          <TextField
+            type="number"
+            label="Quantidade em Estoque"
+            placeholder="Ex: 100"
+            variant="outlined"
+            fullWidth
+            {...register("stock", { required: true, valueAsNumber: true })}
+          />
 
-      <input
-        type="number"
-        {...register("minStock", { required: true, valueAsNumber: true })}
-        placeholder="Estoque Mínimo"
-      />
+          <TextField
+            type="number"
+            label="Estoque Mínimo"
+            placeholder="Ex: 10"
+            variant="outlined"
+            fullWidth
+            {...register("minStock", { required: true, valueAsNumber: true })}
+            helperText="Quantidade mínima para alerta de reposição"
+          />
 
-      <Button type="submit" onClick={handleSubmit(onSubmit)}>
-        Próximo
-      </Button>
+          <Box
+            sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}
+          >
+            <Button
+              variant="outlined"
+              size="large"
+              startIcon={<IconArrowBack />}
+              sx={{ minWidth: 120 }}
+              onClick={prevStep}
+            >
+              Voltar
+            </Button>
+
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              endIcon={<IconArrowForward />}
+              onClick={handleSubmit(onSubmit)}
+              sx={{ minWidth: 120 }}
+            >
+              Próximo
+            </Button>
+          </Box>
+        </Stack>
+      </Paper>
     </Box>
   );
 };
@@ -48,6 +96,15 @@ const StepStockComponent = ({ actions }: Props) => {
 export const StepStock = () => {
   const dispatch = useDispatch();
   const { registerForm, registerSteps } = useSelector((state) => state.product);
+
+  const prevStep = () => {
+    dispatch(
+      actions.setRegisterSteps({
+        status: "variant",
+        steps: { ...registerSteps.steps, stock: false },
+      })
+    );
+  };
 
   const nextStep = (value: StockForm) => {
     dispatch(
@@ -65,5 +122,5 @@ export const StepStock = () => {
     );
   };
 
-  return <StepStockComponent actions={{ nextStep }} />;
+  return <StepStockComponent actions={{ nextStep, prevStep }} />;
 };

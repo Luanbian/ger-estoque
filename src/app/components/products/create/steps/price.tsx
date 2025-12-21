@@ -1,7 +1,14 @@
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "../../../../../store/hooks";
 import { actions } from "../../../../../features/products";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { convertToCents } from "../../../../../utils/convertTocents";
 
 interface PriceForm {
@@ -24,26 +31,48 @@ const StepPriceComponent = ({ actions }: Props) => {
   };
 
   return (
-    <Box>
-      <Typography variant="h2">Preço do Produto</Typography>
+    <Box sx={{ width: "100%", maxWidth: 600, mx: "auto" }}>
+      <Paper elevation={2} sx={{ p: 4, borderRadius: 2 }}>
+        <Typography
+          variant="h5"
+          component="h2"
+          gutterBottom
+          sx={{ mb: 3, fontWeight: 600 }}
+        >
+          Preço do Produto
+        </Typography>
 
-      <input
-        type="number"
-        step="0.01"
-        {...register("unitPrice", { required: true })}
-        placeholder="Preço Unitário"
-      />
+        <Stack spacing={3}>
+          <TextField
+            label="Preço Unitário"
+            placeholder="Ex: 10.50"
+            variant="outlined"
+            fullWidth
+            {...register("unitPrice", { required: true })}
+            helperText="Preço de custo do produto"
+          />
 
-      <input
-        type="number"
-        step="0.01"
-        {...register("salePrice", { required: true })}
-        placeholder="Preço de Venda"
-      />
+          <TextField
+            label="Preço de Venda"
+            placeholder="Ex: 15.00"
+            variant="outlined"
+            fullWidth
+            {...register("salePrice", { required: true })}
+            helperText="Preço final para o cliente"
+          />
 
-      <Button type="submit" onClick={handleSubmit(onSubmit)}>
-        Concluir
-      </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            fullWidth
+            onClick={handleSubmit(onSubmit)}
+            sx={{ mt: 2, py: 1.5 }}
+          >
+            Concluir Cadastro
+          </Button>
+        </Stack>
+      </Paper>
     </Box>
   );
 };

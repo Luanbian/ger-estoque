@@ -53,27 +53,54 @@ export const CreateProductComponent = ({ data, actions }: Props) => {
   );
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit(onSubmit)}
-      sx={{
-        width: "100%",
-        maxWidth: 500,
-        p: 3,
-      }}
-    >
-      <Typography variant="h5" gutterBottom fontWeight={600}>
-        Novo Produto
-      </Typography>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)} p={4}>
+      <Box sx={{ mb: 4 }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          fontWeight={700}
+          color="primary.main"
+          sx={{ mb: 1 }}
+        >
+          Novo Produto
+        </Typography>
 
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Preencha os dados para criar um novo produto
-      </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          Preencha os dados para criar um novo produto
+        </Typography>
+      </Box>
 
-      {currentStep()}
+      <Box
+        sx={{
+          py: 3,
+          px: 2,
+          borderRadius: 1,
+          mb: 3,
+        }}
+      >
+        {currentStep()}
+      </Box>
 
-      <Box sx={{ mt: 2 }}>
-        <Button type="submit" variant="contained" disabled={!allStepsCompleted}>
+      <Box
+        sx={{
+          mt: 4,
+          display: "flex",
+          gap: 2,
+          justifyContent: "flex-end",
+        }}
+      >
+        {onClose && (
+          <Button variant="outlined" onClick={onClose} size="large">
+            Cancelar
+          </Button>
+        )}
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={!allStepsCompleted}
+          size="large"
+          sx={{ minWidth: 120 }}
+        >
           Confirmar
         </Button>
       </Box>
