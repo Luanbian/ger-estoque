@@ -25,6 +25,8 @@ import { Category } from "../../../../features/categories/types";
 import { IconPencil } from "@tabler/icons-react";
 import { ModalComponent } from "../../modal";
 import { CreateOrUpdateProductComponent } from "../createOrUpdate/product";
+import { useDispatch } from "../../../../store/hooks";
+import { actions as productActions } from "../../../../features/products";
 
 interface Props {
   data: {
@@ -40,6 +42,7 @@ interface Props {
 }
 
 export const ProductRow = ({ data, actions }: Props) => {
+  const dispatch = useDispatch();
   const { onEdit } = actions;
   const { product, category, categories, registerForm, registerSteps } = data;
   const [open, setOpen] = useState(false);
@@ -54,6 +57,7 @@ export const ProductRow = ({ data, actions }: Props) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    dispatch(productActions.resetRegister());
   };
 
   return (
@@ -137,7 +141,7 @@ export const ProductRow = ({ data, actions }: Props) => {
             data={{ product, steps: registerSteps, registerForm }}
             actions={{
               updateProduct: onEdit,
-              onClose: () => setIsModalOpen(false),
+              onClose: handleCloseModal,
             }}
           />
         }

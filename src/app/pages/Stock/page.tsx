@@ -11,6 +11,8 @@ import { IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../components/modal";
 import { CreateOrUpdateProductComponent } from "../../components/products/createOrUpdate/product";
 import { Category } from "../../../features/categories/types";
+import { useDispatch } from "../../../store/hooks";
+import { actions as productActions } from "../../../features/products";
 
 interface Props {
   data: {
@@ -28,6 +30,7 @@ interface Props {
 }
 
 export const StockPage = ({ data, actions }: Props) => {
+  const dispatch = useDispatch();
   const { products, categories, registerSteps, registerForm } = data;
   const { createProduct, editProduct } = actions;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +41,7 @@ export const StockPage = ({ data, actions }: Props) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    dispatch(productActions.resetRegister());
   };
 
   return (
