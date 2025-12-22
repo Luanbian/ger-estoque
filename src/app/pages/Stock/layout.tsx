@@ -12,11 +12,12 @@ export const Stock = () => {
   const { data, loading, registerSteps, registerForm } = useSelector(
     (state) => state.product
   );
+  const { data: categories } = useSelector((state) => state.category);
 
   const createProduct = (
     value: CreateProductWithVariantPayload | CreateProductPayload
   ) => {
-    if (value.hasVariants && value.variants.length > 0) {
+    if (value.hasVariants && "variants" in value && value.variants.length > 0) {
       dispatch(
         actions.createProductWithVariantRequest(
           value as CreateProductWithVariantPayload
@@ -32,13 +33,13 @@ export const Stock = () => {
     dispatch(actions.productRequest({ page: "1", limit: "100", sort: "asc" }));
   }, []);
 
-  if (loading || !data) {
+  if (loading || !data || !categories) {
     return <div>Carregando produtos...</div>;
   }
 
   return (
     <StockPage
-      data={{ products: data, registerSteps, registerForm }}
+      data={{ products: data, categories, registerSteps, registerForm }}
       actions={{ createProduct }}
     />
   );

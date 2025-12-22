@@ -11,15 +11,17 @@ import {
 } from "@mui/material";
 
 import { ProductRow } from "./item";
+import { Category } from "../../../../features/categories/types";
 
 interface Props {
   data: {
     products: Product[];
+    categories: Category[];
   };
 }
 
 export const ProductGridList = ({ data }: Props) => {
-  const { products } = data;
+  const { products, categories } = data;
   return (
     <TableContainer
       component={Paper}
@@ -37,7 +39,12 @@ export const ProductGridList = ({ data }: Props) => {
             </TableCell>
             <TableCell>
               <Typography variant="subtitle2" fontWeight={600}>
-                SKU
+                TIPO
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography variant="subtitle2" fontWeight={600}>
+                CATEGORIA
               </Typography>
             </TableCell>
             <TableCell align="center">
@@ -45,14 +52,9 @@ export const ProductGridList = ({ data }: Props) => {
                 ESTOQUE
               </Typography>
             </TableCell>
-            <TableCell align="center">
-              <Typography variant="subtitle2" fontWeight={600}>
-                MÍN.
-              </Typography>
-            </TableCell>
             <TableCell align="right">
               <Typography variant="subtitle2" fontWeight={600}>
-                PREÇO
+                MÍN.
               </Typography>
             </TableCell>
             <TableCell align="center">
@@ -64,7 +66,16 @@ export const ProductGridList = ({ data }: Props) => {
         </TableHead>
         <TableBody>
           {products.map((product) => (
-            <ProductRow key={product._id} product={product} />
+            <ProductRow
+              key={product._id}
+              data={{
+                product,
+                categories,
+                category: categories.find(
+                  (cat) => cat._id === product.categoryId
+                ),
+              }}
+            />
           ))}
         </TableBody>
       </Table>

@@ -7,6 +7,7 @@ export interface Product {
   name: string;
   tenantId: string;
   type: ProductType;
+  categoryId: string;
   unitOfMeasureId: string;
   hasVariants: boolean;
   parentProductId: string | null;

@@ -10,10 +10,12 @@ import {
 import { IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../components/modal";
 import { CreateProductComponent } from "../../components/products/create/product";
+import { Category } from "../../../features/categories/types";
 
 interface Props {
   data: {
     products: Product[];
+    categories: Category[];
     registerSteps: RegisterSteps;
     registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
   };
@@ -25,7 +27,7 @@ interface Props {
 }
 
 export const StockPage = ({ data, actions }: Props) => {
-  const { products, registerSteps, registerForm } = data;
+  const { products, categories, registerSteps, registerForm } = data;
   const { createProduct } = actions;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -59,7 +61,7 @@ export const StockPage = ({ data, actions }: Props) => {
             Novo Produto
           </Button>
         </Box>
-        <ProductGridList data={{ products }} />
+        <ProductGridList data={{ products, categories }} />
       </Box>
       <ModalComponent
         isOpen={isModalOpen}

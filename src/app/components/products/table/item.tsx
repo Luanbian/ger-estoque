@@ -14,15 +14,20 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@mui/icons-material";
-import { formatPrice } from "../../../../utils/formatPrice";
 import { getStatusChip } from "../../../../utils/getStockStatus";
 import { ProductVariantGridList } from "./variantList";
+import { Category } from "../../../../features/categories/types";
 
 interface Props {
-  product: Product;
+  data: {
+    product: Product;
+    category?: Category;
+    categories?: Category[];
+  };
 }
 
-export const ProductRow = ({ product }: Props) => {
+export const ProductRow = ({ data }: Props) => {
+  const { product, category, categories } = data;
   const [open, setOpen] = useState(false);
   const hasVariants =
     product.hasVariants && product.variants && product.variants.length > 0;
@@ -63,22 +68,22 @@ export const ProductRow = ({ product }: Props) => {
         </TableCell>
         <TableCell>
           <Typography variant="body2" color="text.secondary">
-            {product.sku}
+            {product.type}
           </Typography>
         </TableCell>
         <TableCell align="center">
           <Typography variant="body2" fontWeight={500}>
-            {product.stock}
+            {category ? category.name : "Sem categoria"}
           </Typography>
         </TableCell>
         <TableCell align="center">
           <Typography variant="body2" color="text.secondary">
-            {product.minStock}
+            {product.stock}
           </Typography>
         </TableCell>
         <TableCell align="right">
           <Typography variant="body2" fontWeight={500}>
-            {formatPrice(product.unitPrice)}
+            {product.minStock}
           </Typography>
         </TableCell>
         <TableCell align="center">
@@ -86,7 +91,9 @@ export const ProductRow = ({ product }: Props) => {
         </TableCell>
       </TableRow>
 
-      {hasVariants && <ProductVariantGridList product={product} open={open} />}
+      {hasVariants && (
+        <ProductVariantGridList data={{ product, open, categories }} />
+      )}
     </>
   );
 };

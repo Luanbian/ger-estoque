@@ -8,13 +8,14 @@ import {
 } from "@mui/material";
 import { Product } from "../../../../features/products/types";
 import { ProductVariantItem } from "./variantItem";
+import { Category } from "../../../../features/categories/types";
 
 interface Props {
-  product: Product;
-  open: boolean;
+  data: { product: Product; open: boolean; categories?: Category[] };
 }
 
-export const ProductVariantGridList = ({ product, open }: Props) => {
+export const ProductVariantGridList = ({ data }: Props) => {
+  const { product, open, categories } = data;
   return (
     <TableRow>
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
@@ -25,8 +26,12 @@ export const ProductVariantGridList = ({ product, open }: Props) => {
                 {product.variants?.map((variant) => (
                   <ProductVariantItem
                     key={variant._id}
-                    variant={variant}
-                    open={open}
+                    data={{
+                      variant,
+                      category: categories?.find(
+                        (cat) => cat._id === variant.categoryId
+                      ),
+                    }}
                   />
                 ))}
               </TableBody>
