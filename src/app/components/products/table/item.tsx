@@ -12,7 +12,7 @@ import {
   Product,
   RegisterSteps,
 } from "../../../../features/products/types";
-import { useState } from "react";
+import { JSX, useState } from "react";
 import {
   ChecklistRtlOutlined,
   Inventory2Outlined,
@@ -22,11 +22,12 @@ import {
 import { getStatusChip } from "../../../../utils/getStockStatus";
 import { ProductVariantGridList } from "./variantList";
 import { Category } from "../../../../features/categories/types";
-import { IconPencil } from "@tabler/icons-react";
+import { IconPencil, IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../modal";
 import { CreateOrUpdateProductComponent } from "../createOrUpdate/product";
 import { useDispatch } from "../../../../store/hooks";
 import { actions as productActions } from "../../../../features/products";
+import { AddVariant } from "../addVariant";
 
 interface Props {
   data: {
@@ -47,17 +48,34 @@ export const ProductRow = ({ data, actions }: Props) => {
   const { product, category, categories, registerForm, registerSteps } = data;
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const hasVariants =
     product.hasVariants && product.variants && product.variants.length > 0;
   const { label, color } = getStatusChip(product.stockStatus);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (isEditing: boolean) => {
+    setIsEditing(isEditing);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     dispatch(productActions.resetRegister());
+  };
+
+  const ModalComponentContent = (): JSX.Element => {
+    if (isEditing) {
+      return (
+        <CreateOrUpdateProductComponent
+          data={{ product, steps: registerSteps, registerForm }}
+          actions={{
+            updateProduct: onEdit,
+            onClose: handleCloseModal,
+          }}
+        />
+      );
+    }
+    return <AddVariant data={{ productId: product._id }} />;
   };
 
   return (
@@ -118,14 +136,13 @@ export const ProductRow = ({ data, actions }: Props) => {
         </TableCell>
         <TableCell align="center">
           {!hasVariants && (
-            <IconButton
-              color="primary"
-              onClick={handleOpenModal}
-              aria-label="edit product"
-            >
+            <IconButton color="primary" onClick={() => handleOpenModal(true)}>
               <IconPencil size={20} />
             </IconButton>
           )}
+          <IconButton color="primary" onClick={() => handleOpenModal(false)}>
+            <IconPlus size={20} />
+          </IconButton>
         </TableCell>
       </TableRow>
 
@@ -136,15 +153,7 @@ export const ProductRow = ({ data, actions }: Props) => {
       <ModalComponent
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        content={
-          <CreateOrUpdateProductComponent
-            data={{ product, steps: registerSteps, registerForm }}
-            actions={{
-              updateProduct: onEdit,
-              onClose: handleCloseModal,
-            }}
-          />
-        }
+        content={<ModalComponentContent />}
       />
     </>
   );

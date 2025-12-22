@@ -68,12 +68,14 @@ export interface CreateProductWithVariantPayload {
   categoryId: string;
   unitOfMeasureId: string;
   hasVariants: boolean;
-  variants: {
-    name: string;
-    attributes: VariantAttributes[];
-    stock: number;
-    minStock: number;
-    unitPrice: number;
-    salePrice: number;
-  }[];
+  variants: AddVariantPayload[];
+}
+
+export interface AddVariantPayload {
+  name: string;
+  attributes: VariantAttributes[];
+  stock: number;
+  minStock: number;
+  unitPrice: number;
+  salePrice: number;
 }

@@ -6,6 +6,7 @@ import {
   RequestProduct,
   RegisterSteps,
   CreateProductWithVariantPayload,
+  AddVariantPayload,
 } from "./types.ts";
 
 export const initialState: ProductState = {
@@ -42,6 +43,13 @@ export const productSlice = createSlice({
       _state,
       _action: PayloadAction<{ id: string; data: ProductPayload }>
     ) => {},
+    addVariantToProductRequest: (
+      _state,
+      _action: PayloadAction<{
+        id: string;
+        data: AddVariantPayload[];
+      }>
+    ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -61,6 +69,19 @@ export const productSlice = createSlice({
       } else {
         state.data = [action.payload];
       }
+      state.error = null;
+    },
+    addVariant: (
+      state,
+      action: PayloadAction<{ id: string; data: Product }>
+    ) => {
+      const index = state.data!.findIndex(
+        (product) => product._id === action.payload.id
+      );
+      if (!state.data![index].variants) {
+        state.data![index].variants = [];
+      }
+      state.data![index].variants?.push(action.payload.data);
       state.error = null;
     },
     addProduct: (state, action: PayloadAction<Product>) => {

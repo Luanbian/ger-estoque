@@ -6,6 +6,7 @@ import {
   CreateProductWithVariantPayload,
   Product,
   RequestProduct,
+  AddVariantPayload,
 } from "./types.ts";
 import { APIResponse } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
@@ -108,11 +109,36 @@ function* updateProduct(
   }
 }
 
+function* addVariantToProduct(
+  payload: PayloadAction<{ id: string; data: AddVariantPayload[] }>
+) {
+  yield put(actions.setLoading(true));
+  try {
+    const response: APIResponse<Product> = yield call(
+      apiService.post,
+      `${API_BASE_URL}/product/${payload.payload.id}/variant`,
+      payload.payload.data
+    );
+
+    const { data } = response;
+    yield put(actions.addVariant({ id: payload.payload.id, data }));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      )
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 export function* productSagas() {
   yield all([
     takeEvery(actions.productRequest.type, getProduct),
     takeEvery(actions.createProductRequest.type, createProduct),
     takeEvery(actions.updateProductRequest.type, updateProduct),
+    takeEvery(actions.addVariantToProductRequest.type, addVariantToProduct),
     takeEvery(
       actions.createProductWithVariantRequest.type,
       createProductWithVariant
