@@ -82,6 +82,9 @@ export const productSlice = createSlice({
         state.data![index].variants = [];
       }
       state.data![index].variants?.push(action.payload.data);
+      if (!state.data![index].hasVariants) {
+        state.data![index].hasVariants = true;
+      }
       state.error = null;
     },
     addProduct: (state, action: PayloadAction<Product>) => {
