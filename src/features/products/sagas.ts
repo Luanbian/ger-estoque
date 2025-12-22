@@ -2,7 +2,7 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { actions } from "./slice.ts";
 import {
-  CreateProductPayload,
+  ProductPayload,
   CreateProductWithVariantPayload,
   Product,
   RequestProduct,
@@ -34,7 +34,7 @@ function* getProduct(action: PayloadAction<RequestProduct>) {
   }
 }
 
-function* createProduct(payload: PayloadAction<CreateProductPayload>) {
+function* createProduct(payload: PayloadAction<ProductPayload>) {
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Product> = yield call(
@@ -85,7 +85,7 @@ function* createProductWithVariant(
 }
 
 function* updateProduct(
-  payload: PayloadAction<{ id: string; data: Partial<Product> }>
+  payload: PayloadAction<{ id: string; data: ProductPayload }>
 ) {
   yield put(actions.setLoading(true));
   try {

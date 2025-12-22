@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Box, Button, Typography } from "@mui/material";
 import {
-  CreateProductPayload,
+  ProductPayload,
   CreateProductWithVariantPayload,
   Product,
   RegisterSteps,
@@ -16,13 +16,13 @@ interface Props {
   data: {
     product?: Product;
     steps: RegisterSteps;
-    registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
+    registerForm: ProductPayload | CreateProductWithVariantPayload | null;
   };
   actions: {
     createProduct?: (
-      value: CreateProductWithVariantPayload | CreateProductPayload
+      value: CreateProductWithVariantPayload | ProductPayload
     ) => void;
-    updateProduct?: (id: string) => void;
+    updateProduct?: (id: string, productToUpdate: ProductPayload) => void;
     onClose?: () => void;
   };
 }
@@ -34,7 +34,7 @@ export const CreateOrUpdateProductComponent = ({ data, actions }: Props) => {
 
   const onSubmit = () => {
     if (product?._id && updateProduct) {
-      updateProduct(product._id);
+      updateProduct(product._id, registerForm!);
     }
     if (createProduct) {
       createProduct(registerForm!);

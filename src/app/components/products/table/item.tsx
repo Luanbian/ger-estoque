@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  CreateProductPayload,
+  ProductPayload,
   CreateProductWithVariantPayload,
   Product,
   RegisterSteps,
@@ -32,10 +32,10 @@ interface Props {
     category?: Category;
     categories?: Category[];
     registerSteps: RegisterSteps;
-    registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
+    registerForm: ProductPayload | CreateProductWithVariantPayload | null;
   };
   actions: {
-    onEdit: (id: string) => void;
+    onEdit: (id: string, productToUpdate: ProductPayload) => void;
   };
 }
 

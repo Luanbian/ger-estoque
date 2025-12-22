@@ -30,7 +30,7 @@ export interface ProductState {
   loading: boolean;
   error: string | null;
   registerSteps: RegisterSteps;
-  registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
+  registerForm: ProductPayload | CreateProductWithVariantPayload | null;
 }
 
 export interface RegisterSteps {
@@ -50,7 +50,7 @@ export interface RequestProduct {
   sort?: string;
 }
 
-export interface CreateProductPayload {
+export interface ProductPayload {
   name: string;
   type: ProductType;
   categoryId: string;

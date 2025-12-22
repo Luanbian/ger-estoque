@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  CreateProductPayload,
+  ProductPayload,
   Product,
   ProductState,
   RequestProduct,
@@ -32,7 +32,7 @@ export const productSlice = createSlice({
     productRequest: (_state, _action: PayloadAction<RequestProduct>) => {},
     createProductRequest: (
       _state,
-      _action: PayloadAction<CreateProductPayload>
+      _action: PayloadAction<ProductPayload>
     ) => {},
     createProductWithVariantRequest: (
       _state,
@@ -40,7 +40,7 @@ export const productSlice = createSlice({
     ) => {},
     updateProductRequest: (
       _state,
-      _action: PayloadAction<{ id: string; data: Partial<Product> }>
+      _action: PayloadAction<{ id: string; data: ProductPayload }>
     ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -74,9 +74,7 @@ export const productSlice = createSlice({
     },
     setRegisterForm: (
       state,
-      action: PayloadAction<
-        CreateProductWithVariantPayload | CreateProductPayload
-      >
+      action: PayloadAction<CreateProductWithVariantPayload | ProductPayload>
     ) => {
       state.registerForm = action.payload;
     },

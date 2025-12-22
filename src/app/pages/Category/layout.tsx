@@ -19,7 +19,6 @@ export const Category = () => {
 
   useEffect(() => {
     dispatch(actions.categoryTreeRequest());
-    dispatch(actions.categoryRequest());
   }, []);
 
   if (loading || !data || !dataPlain) {

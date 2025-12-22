@@ -1,11 +1,18 @@
+import { useEffect } from "react";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { Header } from "./components/header/container";
 import { Sidebar } from "./components/sidebar/container";
-import { useSelector } from "../store/hooks";
+import { useDispatch, useSelector } from "../store/hooks";
+import { actions as categoryActions } from "../features/categories";
 
 export const MainLayout = () => {
+  const dispatch = useDispatch();
   const { isCollapse, SidebarWidth } = useSelector((state) => state.customizer);
+
+  useEffect(() => {
+    dispatch(categoryActions.categoryRequest());
+  }, []);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>

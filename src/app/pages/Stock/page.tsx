@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { ProductGridList } from "../../components/products/table/list";
 import {
-  CreateProductPayload,
+  ProductPayload,
   CreateProductWithVariantPayload,
   Product,
   RegisterSteps,
@@ -17,13 +17,13 @@ interface Props {
     products: Product[];
     categories: Category[];
     registerSteps: RegisterSteps;
-    registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
+    registerForm: ProductPayload | CreateProductWithVariantPayload | null;
   };
   actions: {
     createProduct: (
-      value: CreateProductPayload | CreateProductWithVariantPayload
+      value: ProductPayload | CreateProductWithVariantPayload
     ) => void;
-    editProduct: (id: string) => void;
+    editProduct: (id: string, productToUpdate: ProductPayload) => void;
   };
 }
 

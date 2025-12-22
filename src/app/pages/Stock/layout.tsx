@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "../../../store/hooks.ts";
 import { useEffect } from "react";
 import { actions } from "../../../features/products";
 import {
-  CreateProductPayload,
+  ProductPayload,
   CreateProductWithVariantPayload,
 } from "../../../features/products/types.ts";
 
@@ -12,10 +12,10 @@ export const Stock = () => {
   const { data, loading, registerSteps, registerForm } = useSelector(
     (state) => state.product
   );
-  const { data: categories } = useSelector((state) => state.category);
+  const { dataPlain: categories } = useSelector((state) => state.category);
 
   const createProduct = (
-    value: CreateProductWithVariantPayload | CreateProductPayload
+    value: CreateProductWithVariantPayload | ProductPayload
   ) => {
     if (value.hasVariants && "variants" in value && value.variants.length > 0) {
       dispatch(
@@ -26,11 +26,11 @@ export const Stock = () => {
       return;
     }
 
-    dispatch(actions.createProductRequest(value as CreateProductPayload));
+    dispatch(actions.createProductRequest(value as ProductPayload));
   };
 
-  const editProduct = (id: string) => {
-    console.log("Edit product with id:", id);
+  const editProduct = (id: string, productToUpdate: ProductPayload) => {
+    dispatch(actions.updateProductRequest({ id, data: productToUpdate }));
   };
 
   useEffect(() => {
