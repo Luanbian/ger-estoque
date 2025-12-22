@@ -16,7 +16,10 @@ import {
 import { useForm } from "react-hook-form";
 import { actions } from "../../../../../features/products";
 import { useDispatch, useSelector } from "../../../../../store/hooks";
-import { VariantAttributes } from "../../../../../features/products/types";
+import {
+  Product,
+  VariantAttributes,
+} from "../../../../../features/products/types";
 import {
   IconArrowBack,
   IconArrowForward,
@@ -55,18 +58,25 @@ interface Props {
       unitPrice?: number;
       salePrice?: number;
     }[];
+    product?: Product;
   };
 }
 
 const StepVariantComponent = ({ actions, data }: Props) => {
   const { nextStep, prevStep } = actions;
-  const { hasVariants: initialHasVariants, variants: initialVariants } = data;
+  const {
+    hasVariants: initialHasVariants,
+    variants: initialVariants,
+    product,
+  } = data;
   const { handleSubmit, register } = useForm<VariantForm>();
   const [hasVariants, setHasVariants] = useState<boolean>(
-    initialHasVariants || false
+    product?.hasVariants || initialHasVariants || false
   );
   const [variants, setVariants] = useState<VariantForm["variants"]>(() =>
-    initialVariants?.length
+    product?.variants?.length
+      ? product.variants.map(normalizeVariant)
+      : initialVariants?.length
       ? initialVariants.map(normalizeVariant)
       : [createEmptyVariant()]
   );
@@ -380,7 +390,14 @@ const StepVariantComponent = ({ actions, data }: Props) => {
   );
 };
 
-export const StepVariant = () => {
+interface StepVariantProps {
+  data: {
+    product?: Product;
+  };
+}
+
+export const StepVariant = ({ data }: StepVariantProps) => {
+  const { product } = data;
   const dispatch = useDispatch();
   const { registerForm, registerSteps } = useSelector((state) => state.product);
 
@@ -427,6 +444,7 @@ export const StepVariant = () => {
           registerForm && "variants" in registerForm
             ? registerForm.variants
             : [],
+        product,
       }}
     />
   );

@@ -9,7 +9,7 @@ import {
 } from "../../../features/products/types";
 import { IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../components/modal";
-import { CreateProductComponent } from "../../components/products/create/product";
+import { CreateOrUpdateProductComponent } from "../../components/products/createOrUpdate/product";
 import { Category } from "../../../features/categories/types";
 
 interface Props {
@@ -23,12 +23,13 @@ interface Props {
     createProduct: (
       value: CreateProductPayload | CreateProductWithVariantPayload
     ) => void;
+    editProduct: (id: string) => void;
   };
 }
 
 export const StockPage = ({ data, actions }: Props) => {
   const { products, categories, registerSteps, registerForm } = data;
-  const { createProduct } = actions;
+  const { createProduct, editProduct } = actions;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -61,13 +62,16 @@ export const StockPage = ({ data, actions }: Props) => {
             Novo Produto
           </Button>
         </Box>
-        <ProductGridList data={{ products, categories }} />
+        <ProductGridList
+          data={{ products, categories, registerForm, registerSteps }}
+          actions={{ onEdit: editProduct }}
+        />
       </Box>
       <ModalComponent
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         content={
-          <CreateProductComponent
+          <CreateOrUpdateProductComponent
             actions={{ createProduct, onClose: handleCloseModal }}
             data={{ steps: registerSteps, registerForm }}
           />

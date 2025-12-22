@@ -3,6 +3,7 @@ import { IconArrowForward } from "@tabler/icons-react";
 import { actions } from "../../../../../features/products";
 import { useDispatch, useSelector } from "../../../../../store/hooks";
 import { useForm } from "react-hook-form";
+import { Product } from "../../../../../features/products/types";
 
 interface Props {
   actions: {
@@ -10,6 +11,7 @@ interface Props {
   };
   data: {
     name?: string;
+    product?: Product;
   };
 }
 
@@ -19,7 +21,7 @@ interface IdentificationForm {
 
 const StepIdentificationComponent = ({ actions, data }: Props) => {
   const { nextStep } = actions;
-  const { name } = data;
+  const { name, product } = data;
   const {
     register,
     handleSubmit,
@@ -57,7 +59,7 @@ const StepIdentificationComponent = ({ actions, data }: Props) => {
         variant="outlined"
         sx={{ mb: 3 }}
         autoFocus
-        defaultValue={name || ""}
+        defaultValue={product?.name || name || ""}
       />
 
       {errors.name && (
@@ -82,7 +84,14 @@ const StepIdentificationComponent = ({ actions, data }: Props) => {
   );
 };
 
-export const StepIdentification = () => {
+interface StepIdentificationProps {
+  data: {
+    product?: Product;
+  };
+}
+
+export const StepIdentification = ({ data }: StepIdentificationProps) => {
+  const { product } = data;
   const dispatch = useDispatch();
   const { registerForm, registerSteps } = useSelector((state) => state.product);
 
@@ -104,7 +113,7 @@ export const StepIdentification = () => {
   return (
     <StepIdentificationComponent
       actions={{ nextStep }}
-      data={{ name: registerForm?.name }}
+      data={{ name: registerForm?.name, product }}
     />
   );
 };

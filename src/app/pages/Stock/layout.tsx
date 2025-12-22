@@ -29,6 +29,10 @@ export const Stock = () => {
     dispatch(actions.createProductRequest(value as CreateProductPayload));
   };
 
+  const editProduct = (id: string) => {
+    console.log("Edit product with id:", id);
+  };
+
   useEffect(() => {
     dispatch(actions.productRequest({ page: "1", limit: "100", sort: "asc" }));
   }, []);
@@ -40,7 +44,7 @@ export const Stock = () => {
   return (
     <StockPage
       data={{ products: data, categories, registerSteps, registerForm }}
-      actions={{ createProduct }}
+      actions={{ createProduct, editProduct }}
     />
   );
 };

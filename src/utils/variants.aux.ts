@@ -1,4 +1,4 @@
-import { VariantForm } from "../app/components/products/create/steps/variant";
+import { VariantForm } from "../app/components/products/createOrUpdate/steps/variant";
 
 export const createEmptyVariant = () => ({
   name: "",

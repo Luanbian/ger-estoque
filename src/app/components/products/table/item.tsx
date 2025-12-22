@@ -6,7 +6,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Product } from "../../../../features/products/types";
+import {
+  CreateProductPayload,
+  CreateProductWithVariantPayload,
+  Product,
+  RegisterSteps,
+} from "../../../../features/products/types";
 import { useState } from "react";
 import {
   ChecklistRtlOutlined,
@@ -17,21 +22,39 @@ import {
 import { getStatusChip } from "../../../../utils/getStockStatus";
 import { ProductVariantGridList } from "./variantList";
 import { Category } from "../../../../features/categories/types";
+import { IconPencil } from "@tabler/icons-react";
+import { ModalComponent } from "../../modal";
+import { CreateOrUpdateProductComponent } from "../createOrUpdate/product";
 
 interface Props {
   data: {
     product: Product;
     category?: Category;
     categories?: Category[];
+    registerSteps: RegisterSteps;
+    registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
+  };
+  actions: {
+    onEdit: (id: string) => void;
   };
 }
 
-export const ProductRow = ({ data }: Props) => {
-  const { product, category, categories } = data;
+export const ProductRow = ({ data, actions }: Props) => {
+  const { onEdit } = actions;
+  const { product, category, categories, registerForm, registerSteps } = data;
   const [open, setOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const hasVariants =
     product.hasVariants && product.variants && product.variants.length > 0;
   const { label, color } = getStatusChip(product.stockStatus);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -89,11 +112,36 @@ export const ProductRow = ({ data }: Props) => {
         <TableCell align="center">
           <Chip label={label} color={color} size="small" />
         </TableCell>
+        <TableCell align="center">
+          {!hasVariants && (
+            <IconButton
+              color="primary"
+              onClick={handleOpenModal}
+              aria-label="edit product"
+            >
+              <IconPencil size={20} />
+            </IconButton>
+          )}
+        </TableCell>
       </TableRow>
 
       {hasVariants && (
         <ProductVariantGridList data={{ product, open, categories }} />
       )}
+
+      <ModalComponent
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        content={
+          <CreateOrUpdateProductComponent
+            data={{ product, steps: registerSteps, registerForm }}
+            actions={{
+              updateProduct: onEdit,
+              onClose: () => setIsModalOpen(false),
+            }}
+          />
+        }
+      />
     </>
   );
 };

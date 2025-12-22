@@ -42,4 +42,24 @@ export const apiService = {
     const response: AxiosResponse = await api.post<APIResponse<T>>(url, data);
     return response.data;
   },
+  put: async <T = unknown>(url: string, data: any): Promise<APIResponse<T>> => {
+    const response: AxiosResponse = await api.put<APIResponse<T>>(url, data);
+    return response.data;
+  },
+  delete: async <T = unknown>(
+    url: string,
+    data?: any
+  ): Promise<APIResponse<T>> => {
+    const response: AxiosResponse = await api.delete<APIResponse<T>>(url, {
+      data,
+    });
+    return response.data;
+  },
+  patch: async <T = unknown>(
+    url: string,
+    data: any
+  ): Promise<APIResponse<T>> => {
+    const response: AxiosResponse = await api.patch<APIResponse<T>>(url, data);
+    return response.data;
+  },
 };

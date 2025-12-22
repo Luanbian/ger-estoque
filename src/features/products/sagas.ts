@@ -84,10 +84,35 @@ function* createProductWithVariant(
   }
 }
 
+function* updateProduct(
+  payload: PayloadAction<{ id: string; data: Partial<Product> }>
+) {
+  yield put(actions.setLoading(true));
+  try {
+    const response: APIResponse<Product> = yield call(
+      apiService.put,
+      `${API_BASE_URL}/product/${payload.payload.id}`,
+      payload.payload.data
+    );
+
+    const { data } = response;
+    yield put(actions.setOneProduct(data));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      )
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 export function* productSagas() {
   yield all([
     takeEvery(actions.productRequest.type, getProduct),
     takeEvery(actions.createProductRequest.type, createProduct),
+    takeEvery(actions.updateProductRequest.type, updateProduct),
     takeEvery(
       actions.createProductWithVariantRequest.type,
       createProductWithVariant

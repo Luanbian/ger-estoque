@@ -1,4 +1,9 @@
-import { Product } from "../../../../features/products/types";
+import {
+  CreateProductPayload,
+  CreateProductWithVariantPayload,
+  Product,
+  RegisterSteps,
+} from "../../../../features/products/types";
 import {
   Table,
   TableBody,
@@ -17,11 +22,18 @@ interface Props {
   data: {
     products: Product[];
     categories: Category[];
+    registerSteps: RegisterSteps;
+    registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
+  };
+  actions: {
+    onEdit: (id: string) => void;
   };
 }
 
-export const ProductGridList = ({ data }: Props) => {
-  const { products, categories } = data;
+export const ProductGridList = ({ data, actions }: Props) => {
+  const { onEdit } = actions;
+  const { products, categories, registerForm, registerSteps } = data;
+
   return (
     <TableContainer
       component={Paper}
@@ -62,6 +74,11 @@ export const ProductGridList = ({ data }: Props) => {
                 STATUS
               </Typography>
             </TableCell>
+            <TableCell align="center">
+              <Typography variant="subtitle2" fontWeight={600}>
+                AÇÕES
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -71,10 +88,13 @@ export const ProductGridList = ({ data }: Props) => {
               data={{
                 product,
                 categories,
+                registerForm,
+                registerSteps,
                 category: categories.find(
                   (cat) => cat._id === product.categoryId
                 ),
               }}
+              actions={{ onEdit }}
             />
           ))}
         </TableBody>

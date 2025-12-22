@@ -1,6 +1,3 @@
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "../../../../../store/hooks";
-import { actions } from "../../../../../features/products";
 import {
   Box,
   Button,
@@ -9,35 +6,36 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  convertFromCents,
-  convertToCents,
-} from "../../../../../utils/convertTocents";
+import { actions } from "../../../../../features/products";
+import { useDispatch, useSelector } from "../../../../../store/hooks";
+import { useForm } from "react-hook-form";
 import { IconArrowBack, IconArrowForward } from "@tabler/icons-react";
+import { Product } from "../../../../../features/products/types";
 
-interface PriceForm {
-  unitPrice: string;
-  salePrice: string;
+interface StockForm {
+  stock: number;
+  minStock: number;
 }
 
 interface Props {
   actions: {
-    conclude: (value: PriceForm) => void;
+    nextStep: (value: StockForm) => void;
     prevStep: () => void;
   };
   data: {
-    unitPrice?: string;
-    salePrice?: string;
+    stock?: number;
+    minStock?: number;
+    product?: Product;
   };
 }
 
-const StepPriceComponent = ({ actions, data }: Props) => {
-  const { conclude, prevStep } = actions;
-  const { unitPrice, salePrice } = data;
-  const { register, handleSubmit } = useForm<PriceForm>();
+const StepStockComponent = ({ actions, data }: Props) => {
+  const { nextStep, prevStep } = actions;
+  const { stock, minStock, product } = data;
+  const { register, handleSubmit } = useForm<StockForm>();
 
-  const onSubmit = (data: PriceForm) => {
-    conclude(data);
+  const onSubmit = (data: StockForm) => {
+    nextStep(data);
   };
 
   return (
@@ -49,28 +47,29 @@ const StepPriceComponent = ({ actions, data }: Props) => {
           gutterBottom
           sx={{ mb: 3, fontWeight: 600 }}
         >
-          Preço do Produto
+          Estoque do Produto
         </Typography>
 
         <Stack spacing={3}>
           <TextField
-            label="Preço Unitário"
-            placeholder="Ex: 10.50"
+            type="number"
+            label="Quantidade em Estoque"
+            placeholder="Ex: 100"
             variant="outlined"
             fullWidth
-            {...register("unitPrice", { required: true })}
-            helperText="Preço de custo do produto"
-            defaultValue={unitPrice}
+            defaultValue={product?.stock || stock}
+            {...register("stock", { required: true, valueAsNumber: true })}
           />
 
           <TextField
-            label="Preço de Venda"
-            placeholder="Ex: 15.00"
+            type="number"
+            label="Estoque Mínimo"
+            placeholder="Ex: 10"
             variant="outlined"
             fullWidth
-            {...register("salePrice", { required: true })}
-            helperText="Preço final para o cliente"
-            defaultValue={salePrice}
+            {...register("minStock", { required: true, valueAsNumber: true })}
+            defaultValue={product?.minStock || minStock}
+            helperText="Quantidade mínima para alerta de reposição"
           />
 
           <Box
@@ -94,7 +93,7 @@ const StepPriceComponent = ({ actions, data }: Props) => {
               onClick={handleSubmit(onSubmit)}
               sx={{ minWidth: 120 }}
             >
-              Concluir Cadastro
+              Próximo
             </Button>
           </Box>
         </Stack>
@@ -103,46 +102,55 @@ const StepPriceComponent = ({ actions, data }: Props) => {
   );
 };
 
-export const StepPrice = () => {
+interface StepStockProps {
+  data: {
+    product?: Product;
+  };
+}
+
+export const StepStock = ({ data }: StepStockProps) => {
+  const { product } = data;
   const dispatch = useDispatch();
   const { registerForm, registerSteps } = useSelector((state) => state.product);
 
   const prevStep = () => {
     dispatch(
       actions.setRegisterSteps({
-        status: "stock",
-        steps: { ...registerSteps.steps, price: false },
+        status: "variant",
+        steps: { ...registerSteps.steps, stock: false },
       })
     );
   };
 
-  const conclude = (value: PriceForm) => {
+  const nextStep = (value: StockForm) => {
     dispatch(
       actions.setRegisterSteps({
         status: "price",
-        steps: { ...registerSteps.steps, price: true },
+        steps: { ...registerSteps.steps, stock: true },
       })
     );
     dispatch(
       actions.setRegisterForm({
         ...registerForm!,
-        unitPrice: convertToCents(value.unitPrice),
-        salePrice: convertToCents(value.salePrice),
+        stock: value.stock,
+        minStock: value.minStock,
       })
     );
   };
+
   return (
-    <StepPriceComponent
-      actions={{ conclude, prevStep }}
+    <StepStockComponent
+      actions={{ nextStep, prevStep }}
       data={{
-        unitPrice:
-          registerForm && "unitPrice" in registerForm
-            ? convertFromCents(registerForm.unitPrice!)
+        stock:
+          registerForm && "stock" in registerForm
+            ? registerForm.stock
             : undefined,
-        salePrice:
-          registerForm && "salePrice" in registerForm
-            ? convertFromCents(registerForm.salePrice!)
+        minStock:
+          registerForm && "minStock" in registerForm
+            ? registerForm.minStock
             : undefined,
+        product,
       }}
     />
   );

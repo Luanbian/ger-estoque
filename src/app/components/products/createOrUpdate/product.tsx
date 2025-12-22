@@ -3,6 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import {
   CreateProductPayload,
   CreateProductWithVariantPayload,
+  Product,
   RegisterSteps,
 } from "../../../../features/products/types";
 import { StepIdentification } from "./steps/identification";
@@ -13,24 +14,32 @@ import { StepStock } from "./steps/stock";
 
 interface Props {
   data: {
+    product?: Product;
     steps: RegisterSteps;
     registerForm: CreateProductPayload | CreateProductWithVariantPayload | null;
   };
   actions: {
-    createProduct: (
+    createProduct?: (
       value: CreateProductWithVariantPayload | CreateProductPayload
     ) => void;
+    updateProduct?: (id: string) => void;
     onClose?: () => void;
   };
 }
 
-export const CreateProductComponent = ({ data, actions }: Props) => {
-  const { steps, registerForm } = data;
-  const { createProduct, onClose } = actions;
+export const CreateOrUpdateProductComponent = ({ data, actions }: Props) => {
+  const { product, steps, registerForm } = data;
+  const { createProduct, onClose, updateProduct } = actions;
   const { handleSubmit, reset } = useForm<CreateProductWithVariantPayload>();
 
   const onSubmit = () => {
-    createProduct(registerForm!);
+    if (product?._id && updateProduct) {
+      updateProduct(product._id);
+    }
+    if (createProduct) {
+      createProduct(registerForm!);
+    }
+
     reset();
     if (onClose) {
       onClose();
@@ -39,11 +48,11 @@ export const CreateProductComponent = ({ data, actions }: Props) => {
 
   const currentStep = () => {
     const allSteps = {
-      identification: <StepIdentification />,
-      category: <StepCategory />,
-      variant: <StepVariant />,
-      price: <StepPrice />,
-      stock: <StepStock />,
+      identification: <StepIdentification data={{ product }} />,
+      category: <StepCategory data={{ product }} />,
+      variant: <StepVariant data={{ product }} />,
+      price: <StepPrice data={{ product }} />,
+      stock: <StepStock data={{ product }} />,
     };
     return allSteps[steps.status];
   };
@@ -62,11 +71,12 @@ export const CreateProductComponent = ({ data, actions }: Props) => {
           color="primary.main"
           sx={{ mb: 1 }}
         >
-          Novo Produto
+          {product?._id ? "Edite o produto" : "Novo Produto"}
         </Typography>
 
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          Preencha os dados para criar um novo produto
+          Preencha os dados para
+          {product?._id ? " editar o produto" : " criar um novo produto"}
         </Typography>
       </Box>
 

@@ -38,6 +38,10 @@ export const productSlice = createSlice({
       _state,
       _action: PayloadAction<CreateProductWithVariantPayload>
     ) => {},
+    updateProductRequest: (
+      _state,
+      _action: PayloadAction<{ id: string; data: Partial<Product> }>
+    ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -46,6 +50,17 @@ export const productSlice = createSlice({
     },
     setProduct: (state, action: PayloadAction<ProductState["data"]>) => {
       state.data = action.payload;
+      state.error = null;
+    },
+    setOneProduct: (state, action: PayloadAction<Product>) => {
+      if (state.data) {
+        const index = state.data.findIndex(
+          (product) => product._id === action.payload._id
+        );
+        state.data[index] = action.payload;
+      } else {
+        state.data = [action.payload];
+      }
       state.error = null;
     },
     addProduct: (state, action: PayloadAction<Product>) => {

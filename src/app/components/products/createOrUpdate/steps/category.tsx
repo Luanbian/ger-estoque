@@ -19,6 +19,7 @@ import { actions as unitOfMeasureActions } from "../../../../../features/unitOfM
 import { Category } from "../../../../../features/categories/types";
 import { unitOfMeasure } from "../../../../../features/unitOfMeasure/types";
 import { IconArrowBack, IconArrowForward } from "@tabler/icons-react";
+import { Product } from "../../../../../features/products/types";
 
 interface Props {
   data: {
@@ -27,6 +28,7 @@ interface Props {
     type?: ProductType;
     categoryId?: string;
     unitOfMeasureId?: string;
+    product?: Product;
   };
   actions: {
     nextStep: (value: CategoryForm) => void;
@@ -41,8 +43,14 @@ interface CategoryForm {
 }
 
 const StepCategoryComponent = ({ actions, data }: Props) => {
-  const { categories, unitOfMeasures, categoryId, unitOfMeasureId, type } =
-    data;
+  const {
+    categories,
+    unitOfMeasures,
+    categoryId,
+    unitOfMeasureId,
+    type,
+    product,
+  } = data;
   const { nextStep, prevStep } = actions;
   const {
     register,
@@ -75,7 +83,7 @@ const StepCategoryComponent = ({ actions, data }: Props) => {
           <Select
             label="Tipo de Produto"
             {...register("type", { required: "Selecione o tipo do produto" })}
-            defaultValue={type || ""}
+            defaultValue={product?.type || type || ""}
           >
             <MenuItem value={ProductType.FINAL}>Produto Final</MenuItem>
             <MenuItem value={ProductType.RAW_MATERIAL}>Matéria-prima</MenuItem>
@@ -90,7 +98,7 @@ const StepCategoryComponent = ({ actions, data }: Props) => {
           <Select
             label="Categoria do Produto"
             {...register("categoryId", { required: "Selecione uma categoria" })}
-            defaultValue={categoryId || ""}
+            defaultValue={product?.categoryId || categoryId || ""}
           >
             {categories.length === 0 ? (
               <MenuItem disabled>Nenhuma categoria disponível</MenuItem>
@@ -118,7 +126,7 @@ const StepCategoryComponent = ({ actions, data }: Props) => {
             {...register("unitOfMeasureId", {
               required: "Selecione uma unidade de medida",
             })}
-            defaultValue={unitOfMeasureId || ""}
+            defaultValue={product?.unitOfMeasureId || unitOfMeasureId || ""}
           >
             {unitOfMeasures.length === 0 ? (
               <MenuItem disabled>Nenhuma unidade disponível</MenuItem>
@@ -170,10 +178,17 @@ const StepCategoryComponent = ({ actions, data }: Props) => {
   );
 };
 
-export const StepCategory = () => {
+interface StepCategoryProps {
+  data: {
+    product?: Product;
+  };
+}
+
+export const StepCategory = ({ data }: StepCategoryProps) => {
+  const { product } = data;
   const dispatch = useDispatch();
   const { dataPlain } = useSelector((state) => state.category);
-  const { data } = useSelector((state) => state.unitOfMeasure);
+  const { data: unitOfMeasures } = useSelector((state) => state.unitOfMeasure);
   const { registerForm, registerSteps } = useSelector((state) => state.product);
 
   const prevStep = () => {
@@ -212,10 +227,11 @@ export const StepCategory = () => {
       actions={{ nextStep, prevStep }}
       data={{
         categories: dataPlain || [],
-        unitOfMeasures: data || [],
+        unitOfMeasures: unitOfMeasures || [],
         categoryId: registerForm?.categoryId,
         unitOfMeasureId: registerForm?.unitOfMeasureId,
         type: registerForm?.type,
+        product,
       }}
     />
   );
