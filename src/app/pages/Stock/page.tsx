@@ -1,36 +1,25 @@
 import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { ProductGridList } from "../../components/products/table/list";
-import {
-  ProductPayload,
-  CreateProductWithVariantPayload,
-  Product,
-  RegisterSteps,
-} from "../../../features/products/types";
+import { Product } from "../../../features/products/types";
 import { IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../components/modal";
-import { CreateOrUpdateProductComponent } from "../../components/products/createOrUpdate/product";
+import { CreateOrUpdateProduct } from "../../components/products/createOrUpdate/product";
 import { Category } from "../../../features/categories/types";
 
 interface Props {
   data: {
     products: Product[];
     categories: Category[];
-    registerSteps: RegisterSteps;
-    registerForm: ProductPayload | CreateProductWithVariantPayload | null;
   };
   actions: {
-    createProduct: (
-      value: ProductPayload | CreateProductWithVariantPayload
-    ) => void;
-    editProduct: (id: string, productToUpdate: ProductPayload) => void;
     resetForm: () => void;
   };
 }
 
 export const StockPage = ({ data, actions }: Props) => {
-  const { products, categories, registerSteps, registerForm } = data;
-  const { createProduct, editProduct, resetForm } = actions;
+  const { products, categories } = data;
+  const { resetForm } = actions;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -64,19 +53,14 @@ export const StockPage = ({ data, actions }: Props) => {
             Novo Produto
           </Button>
         </Box>
-        <ProductGridList
-          data={{ products, categories, registerForm, registerSteps }}
-          actions={{ onEdit: editProduct }}
-        />
+        <ProductGridList data={{ products, categories }} />
       </Box>
+
       <ModalComponent
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         content={
-          <CreateOrUpdateProductComponent
-            actions={{ createProduct, onClose: handleCloseModal }}
-            data={{ steps: registerSteps, registerForm }}
-          />
+          <CreateOrUpdateProduct actions={{ cancel: handleCloseModal }} />
         }
       />
     </>

@@ -6,12 +6,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import {
-  ProductPayload,
-  CreateProductWithVariantPayload,
-  Product,
-  RegisterSteps,
-} from "../../../../features/products/types";
+import { Product } from "../../../../features/products/types";
 import { JSX, useState } from "react";
 import {
   ChecklistRtlOutlined,
@@ -24,28 +19,25 @@ import { ProductVariantGridList } from "./variantList";
 import { Category } from "../../../../features/categories/types";
 import { IconPencil, IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../modal";
-import { CreateOrUpdateProductComponent } from "../createOrUpdate/product";
 import { useDispatch } from "../../../../store/hooks";
 import { actions as productActions } from "../../../../features/products";
 import { CreateOrUpdateVariant } from "../createOrUpdateVariant";
+import { CreateOrUpdateProduct } from "../createOrUpdate/product";
 
 interface Props {
   data: {
     product: Product;
     category?: Category;
     categories?: Category[];
-    registerSteps: RegisterSteps;
-    registerForm: ProductPayload | CreateProductWithVariantPayload | null;
   };
   actions: {
-    onEdit: (id: string, productToUpdate: ProductPayload) => void;
+    reset(): void;
   };
 }
 
-export const ProductRow = ({ data, actions }: Props) => {
-  const dispatch = useDispatch();
-  const { onEdit } = actions;
-  const { product, category, categories, registerForm, registerSteps } = data;
+const ProductRowComponent = ({ data, actions }: Props) => {
+  const { reset } = actions;
+  const { product, category, categories } = data;
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -60,17 +52,16 @@ export const ProductRow = ({ data, actions }: Props) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    dispatch(productActions.resetRegister());
+    reset();
   };
 
   const ModalComponentContent = (): JSX.Element => {
     if (isEditing) {
       return (
-        <CreateOrUpdateProductComponent
-          data={{ product, steps: registerSteps, registerForm }}
+        <CreateOrUpdateProduct
+          data={{ product }}
           actions={{
-            updateProduct: onEdit,
-            onClose: handleCloseModal,
+            cancel: handleCloseModal,
           }}
         />
       );
@@ -157,4 +148,22 @@ export const ProductRow = ({ data, actions }: Props) => {
       />
     </>
   );
+};
+
+interface ProductRowProps {
+  data: {
+    product: Product;
+    category?: Category;
+    categories?: Category[];
+  };
+}
+
+export const ProductRow = ({ data }: ProductRowProps) => {
+  const dispatch = useDispatch();
+
+  const reset = () => {
+    dispatch(productActions.resetRegister());
+  };
+
+  return <ProductRowComponent data={data} actions={{ reset }} />;
 };

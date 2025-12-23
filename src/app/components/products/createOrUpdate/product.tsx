@@ -11,6 +11,8 @@ import { StepCategory } from "./steps/category";
 import { StepVariant } from "./steps/variant";
 import { StepPrice } from "./steps/price";
 import { StepStock } from "./steps/stock";
+import { useDispatch, useSelector } from "../../../../store/hooks";
+import { actions as productActions } from "../../../../features/products";
 
 interface Props {
   data: {
@@ -19,31 +21,27 @@ interface Props {
     registerForm: ProductPayload | CreateProductWithVariantPayload | null;
   };
   actions: {
-    createProduct?: (
+    createProduct: (
       value: CreateProductWithVariantPayload | ProductPayload
     ) => void;
-    updateProduct?: (id: string, productToUpdate: ProductPayload) => void;
-    onClose?: () => void;
+    updateProduct: (id: string, productToUpdate: ProductPayload) => void;
+    cancel?: () => void;
   };
 }
 
-export const CreateOrUpdateProductComponent = ({ data, actions }: Props) => {
+const CreateOrUpdateProductComponent = ({ data, actions }: Props) => {
   const { product, steps, registerForm } = data;
-  const { createProduct, onClose, updateProduct } = actions;
+  const { createProduct, cancel, updateProduct } = actions;
   const { handleSubmit, reset } = useForm<CreateProductWithVariantPayload>();
 
   const onSubmit = () => {
-    if (product?._id && updateProduct) {
+    if (product?._id) {
       updateProduct(product._id, registerForm!);
-    }
-    if (createProduct) {
+    } else {
       createProduct(registerForm!);
     }
-
     reset();
-    if (onClose) {
-      onClose();
-    }
+    cancel?.();
   };
 
   const currentStep = () => {
@@ -99,8 +97,8 @@ export const CreateOrUpdateProductComponent = ({ data, actions }: Props) => {
           justifyContent: "flex-end",
         }}
       >
-        {onClose && (
-          <Button variant="outlined" onClick={onClose} size="large">
+        {cancel && (
+          <Button variant="outlined" onClick={cancel} size="large">
             Cancelar
           </Button>
         )}
@@ -115,5 +113,53 @@ export const CreateOrUpdateProductComponent = ({ data, actions }: Props) => {
         </Button>
       </Box>
     </Box>
+  );
+};
+
+export interface CreateOrUpdateProductProps {
+  data?: {
+    product?: Product;
+  };
+  actions: {
+    cancel?: () => void;
+  };
+}
+
+export const CreateOrUpdateProduct = ({
+  actions,
+  data,
+}: CreateOrUpdateProductProps) => {
+  const dispatch = useDispatch();
+  const { product } = data || {};
+  const { registerSteps, registerForm } = useSelector((state) => state.product);
+
+  const { cancel } = actions;
+
+  const createProduct = (
+    value: CreateProductWithVariantPayload | ProductPayload
+  ) => {
+    if (value.hasVariants && "variants" in value && value.variants.length > 0) {
+      dispatch(
+        productActions.createProductWithVariantRequest(
+          value as CreateProductWithVariantPayload
+        )
+      );
+      return;
+    }
+
+    dispatch(productActions.createProductRequest(value as ProductPayload));
+  };
+
+  const updateProduct = (id: string, productToUpdate: ProductPayload) => {
+    dispatch(
+      productActions.updateProductRequest({ id, data: productToUpdate })
+    );
+  };
+
+  return (
+    <CreateOrUpdateProductComponent
+      actions={{ createProduct, updateProduct, cancel }}
+      data={{ steps: registerSteps, registerForm, product }}
+    />
   );
 };
