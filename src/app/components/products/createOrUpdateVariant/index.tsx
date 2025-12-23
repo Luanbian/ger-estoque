@@ -108,16 +108,17 @@ const CreateOrUpdateVariantComponent = ({ actions, data }: Props) => {
                 control={control}
               />
             ))}
-
-            <Button
-              variant="outlined"
-              fullWidth
-              startIcon={<IconPlus />}
-              onClick={addVariantToList}
-              sx={{ mb: 3 }}
-            >
-              {!variant && "Adicionar Nova Variante"}
-            </Button>
+            {!variant && (
+              <Button
+                variant="outlined"
+                fullWidth
+                startIcon={<IconPlus />}
+                onClick={addVariantToList}
+                sx={{ mb: 3 }}
+              >
+                Adicionar Nova Variante
+              </Button>
+            )}
           </Box>
         )}
 
