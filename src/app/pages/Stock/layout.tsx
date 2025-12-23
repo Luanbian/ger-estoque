@@ -33,6 +33,10 @@ export const Stock = () => {
     dispatch(actions.updateProductRequest({ id, data: productToUpdate }));
   };
 
+  const resetForm = () => {
+    dispatch(actions.resetRegister());
+  };
+
   useEffect(() => {
     dispatch(actions.productRequest({ page: "1", limit: "100", sort: "asc" }));
   }, []);
@@ -44,7 +48,7 @@ export const Stock = () => {
   return (
     <StockPage
       data={{ products: data, categories, registerSteps, registerForm }}
-      actions={{ createProduct, editProduct }}
+      actions={{ createProduct, editProduct, resetForm }}
     />
   );
 };

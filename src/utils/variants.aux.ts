@@ -1,4 +1,4 @@
-import { VariantForm } from "../app/components/products/createOrUpdate/steps/variant";
+import { AddVariantPayload } from "../features/products/types";
 
 export const createEmptyVariant = () => ({
   name: "",
@@ -9,9 +9,7 @@ export const createEmptyVariant = () => ({
   salePrice: 0,
 });
 
-export const normalizeVariant = (
-  variant: Partial<VariantForm["variants"][number]>
-) => ({
+export const normalizeVariant = (variant: Partial<AddVariantPayload>) => ({
   name: variant.name ?? "",
   attributes: variant.attributes?.length
     ? variant.attributes

@@ -7,6 +7,7 @@ import {
   RegisterSteps,
   CreateProductWithVariantPayload,
   AddVariantPayload,
+  UpdateVariantPayload,
 } from "./types.ts";
 
 export const initialState: ProductState = {
@@ -50,6 +51,10 @@ export const productSlice = createSlice({
         data: AddVariantPayload[];
       }>
     ) => {},
+    updateVariantRequest: (
+      _state,
+      _action: PayloadAction<UpdateVariantPayload>
+    ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -84,6 +89,18 @@ export const productSlice = createSlice({
       state.data![index].variants?.push(action.payload.data);
       if (!state.data![index].hasVariants) {
         state.data![index].hasVariants = true;
+      }
+      state.error = null;
+    },
+    setOneVariant: (state, action: PayloadAction<Product>) => {
+      const productIndex = state.data!.findIndex(
+        (product) => product._id === action.payload.parentProductId
+      );
+      if (state.data![productIndex].variants) {
+        const variantIndex = state.data![productIndex].variants!.findIndex(
+          (variant) => variant._id === action.payload._id
+        );
+        state.data![productIndex].variants![variantIndex] = action.payload;
       }
       state.error = null;
     },

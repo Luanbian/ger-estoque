@@ -8,128 +8,46 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
+import {
+  Control,
+  useFieldArray,
+  UseFieldArrayReturn,
+  UseFormRegister,
+} from "react-hook-form";
 import { AddVariantPayload } from "../../../../features/products/types";
-import { IconArrowForward, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { useDispatch } from "../../../../store/hooks";
-import { actions } from "../../../../features/products";
 
 interface Props {
-  actions: {
-    addVariant: (data: AddVariantPayload[]) => void;
-  };
+  index: number;
+  showRemove: boolean;
+  actions: UseFieldArrayReturn<
+    {
+      variants: AddVariantPayload[];
+    },
+    "variants",
+    "id"
+  >;
+  register: UseFormRegister<{
+    variants: AddVariantPayload[];
+  }>;
+  control: Control<
+    {
+      variants: AddVariantPayload[];
+    },
+    any,
+    {
+      variants: AddVariantPayload[];
+    }
+  >;
 }
 
-const AddVariantComponent = ({ actions }: Props) => {
-  const { addVariant } = actions;
-  const { handleSubmit, register, control } = useForm<{
-    variants: AddVariantPayload[];
-  }>({
-    defaultValues: {
-      variants: [
-        {
-          name: "",
-          attributes: [{ type: "", value: "" }],
-          stock: 0,
-          minStock: 0,
-          unitPrice: 0,
-          salePrice: 0,
-        },
-      ],
-    },
-  });
-
-  const {
-    fields: variantFields,
-    append: appendVariant,
-    remove: removeVariant,
-  } = useFieldArray({
-    control,
-    name: "variants",
-  });
-
-  const onSubmit = (data: { variants: AddVariantPayload[] }) => {
-    addVariant(data.variants);
-  };
-
-  const addVariantToList = () => {
-    appendVariant({
-      name: "",
-      attributes: [{ type: "", value: "" }],
-      stock: 0,
-      minStock: 0,
-      unitPrice: 0,
-      salePrice: 0,
-    });
-  };
-
-  return (
-    <Box
-      sx={{
-        py: 3,
-        px: 2,
-        borderRadius: 1,
-        mb: 3,
-      }}
-    >
-      <Box sx={{ width: "100%" }}>
-        <Typography
-          variant="h5"
-          fontWeight={600}
-          color="text.primary"
-          sx={{ mb: 1 }}
-        >
-          Adicionar variante ao produto
-        </Typography>
-
-        {variantFields.length > 0 && (
-          <Box sx={{ mb: 3 }}>
-            {variantFields.map((variant, index) => (
-              <VariantForm
-                key={variant.id}
-                index={index}
-                variant={variant}
-                register={register}
-                control={control}
-                removeVariant={removeVariant}
-                showRemove={variantFields.length > 1}
-              />
-            ))}
-
-            <Button
-              variant="outlined"
-              fullWidth
-              startIcon={<IconPlus />}
-              onClick={addVariantToList}
-              sx={{ mb: 3 }}
-            >
-              Adicionar Nova Variante
-            </Button>
-          </Box>
-        )}
-
-        <Button
-          type="submit"
-          variant="contained"
-          size="large"
-          endIcon={<IconArrowForward />}
-          onClick={handleSubmit(onSubmit)}
-          sx={{ minWidth: 120 }}
-        >
-          Concluir
-        </Button>
-      </Box>
-    </Box>
-  );
-};
-
-const VariantForm = ({
+export const VariantForm = ({
   index,
+  showRemove,
+  actions,
   register,
   control,
-  removeVariant,
-  showRemove,
-}: any) => {
+}: Props) => {
   const {
     fields: attributeFields,
     append: appendAttribute,
@@ -164,7 +82,7 @@ const VariantForm = ({
         {showRemove && (
           <IconButton
             color="error"
-            onClick={() => removeVariant(index)}
+            onClick={() => actions.remove(index)}
             size="small"
           >
             <IconTrash />
@@ -312,25 +230,4 @@ const VariantForm = ({
       </Box>
     </Paper>
   );
-};
-interface AddVariantProps {
-  data: {
-    productId?: string;
-  };
-}
-
-export const AddVariant = ({ data }: AddVariantProps) => {
-  const dispatch = useDispatch();
-  const { productId } = data;
-
-  const addVariant = (data: AddVariantPayload[]) => {
-    if (!productId) return;
-    dispatch(actions.addVariantToProductRequest({ id: productId, data }));
-  };
-
-  if (!productId) {
-    return null;
-  }
-
-  return <AddVariantComponent actions={{ addVariant }} />;
 };

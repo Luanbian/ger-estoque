@@ -52,7 +52,7 @@ interface Props {
     hasVariants?: boolean;
     variants?: {
       name?: string;
-      attributes?: VariantAttributes[];
+      attributes?: VariantAttributes[] | null;
       stock?: number;
       minStock?: number;
       unitPrice?: number;

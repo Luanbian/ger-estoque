@@ -11,7 +11,7 @@ export interface Product {
   unitOfMeasureId: string;
   hasVariants: boolean;
   parentProductId: string | null;
-  variantAttributes: VariantAttributes | null;
+  variantAttributes: VariantAttributes[] | null;
   stock: number;
   minStock: number;
   unitPrice: number;
@@ -73,9 +73,22 @@ export interface CreateProductWithVariantPayload {
 
 export interface AddVariantPayload {
   name: string;
-  attributes: VariantAttributes[];
+  attributes: VariantAttributes[] | null;
   stock: number;
   minStock: number;
   unitPrice: number;
   salePrice: number;
+}
+
+export interface UpdateVariantPayload {
+  id: string;
+  name?: string;
+  type?: ProductType;
+  categoryId?: string;
+  unitOfMeasureId?: string;
+  attributes?: VariantAttributes[] | null;
+  stock?: number;
+  minStock?: number;
+  unitPrice?: number;
+  salePrice?: number;
 }

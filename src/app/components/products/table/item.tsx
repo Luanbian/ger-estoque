@@ -27,7 +27,7 @@ import { ModalComponent } from "../../modal";
 import { CreateOrUpdateProductComponent } from "../createOrUpdate/product";
 import { useDispatch } from "../../../../store/hooks";
 import { actions as productActions } from "../../../../features/products";
-import { AddVariant } from "../addVariant";
+import { CreateOrUpdateVariant } from "../createOrUpdateVariant";
 
 interface Props {
   data: {
@@ -75,7 +75,7 @@ export const ProductRow = ({ data, actions }: Props) => {
         />
       );
     }
-    return <AddVariant data={{ productId: product._id }} />;
+    return <CreateOrUpdateVariant data={{ productId: product._id }} />;
   };
 
   return (
