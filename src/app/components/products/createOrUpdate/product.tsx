@@ -36,7 +36,20 @@ const CreateOrUpdateProductComponent = ({ data, actions }: Props) => {
 
   const onSubmit = () => {
     if (product?._id) {
-      updateProduct(product._id, registerForm!);
+      updateProduct(product._id, {
+        name: registerForm!.name,
+        type: registerForm!.type,
+        categoryId: registerForm!.categoryId,
+        unitOfMeasureId: registerForm!.unitOfMeasureId,
+        hasVariants: registerForm!.hasVariants,
+        stock: "stock" in registerForm! ? registerForm!.stock : undefined,
+        minStock:
+          "minStock" in registerForm! ? registerForm!.minStock : undefined,
+        salePrice:
+          "salePrice" in registerForm! ? registerForm!.salePrice : undefined,
+        unitPrice:
+          "unitPrice" in registerForm! ? registerForm!.unitPrice : undefined,
+      });
     } else {
       createProduct(registerForm!);
     }

@@ -182,7 +182,7 @@ function* removeVariant(
   try {
     yield call(
       apiService.delete,
-      `${API_BASE_URL}/product/variant/${payload.payload.variantId}`
+      `${API_BASE_URL}/product/variant/${payload.payload.variantId}/${payload.payload.productId}`
     );
 
     yield put(actions.removeVariant(payload.payload));
