@@ -158,6 +158,45 @@ function* updateVariant(payload: PayloadAction<UpdateVariantPayload>) {
   }
 }
 
+function* removeProduct(payload: PayloadAction<string>) {
+  yield put(actions.setLoading(true));
+  try {
+    yield call(apiService.delete, `${API_BASE_URL}/product/${payload.payload}`);
+
+    yield put(actions.removeProduct(payload.payload));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      )
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
+function* removeVariant(
+  payload: PayloadAction<{ productId: string; variantId: string }>
+) {
+  yield put(actions.setLoading(true));
+  try {
+    yield call(
+      apiService.delete,
+      `${API_BASE_URL}/product/variant/${payload.payload.variantId}`
+    );
+
+    yield put(actions.removeVariant(payload.payload));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      )
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 export function* productSagas() {
   yield all([
     takeEvery(actions.productRequest.type, getProduct),
@@ -165,6 +204,8 @@ export function* productSagas() {
     takeEvery(actions.updateProductRequest.type, updateProduct),
     takeEvery(actions.addVariantToProductRequest.type, addVariantToProduct),
     takeEvery(actions.updateVariantRequest.type, updateVariant),
+    takeEvery(actions.deleteProductRequest.type, removeProduct),
+    takeEvery(actions.deleteVariantRequest.type, removeVariant),
     takeEvery(
       actions.createProductWithVariantRequest.type,
       createProductWithVariant

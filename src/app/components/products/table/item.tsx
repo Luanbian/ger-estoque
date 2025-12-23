@@ -17,12 +17,13 @@ import {
 import { getStatusChip } from "../../../../utils/getStockStatus";
 import { ProductVariantGridList } from "./variantList";
 import { Category } from "../../../../features/categories/types";
-import { IconPencil, IconPlus } from "@tabler/icons-react";
+import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { ModalComponent } from "../../modal";
 import { useDispatch } from "../../../../store/hooks";
 import { actions as productActions } from "../../../../features/products";
 import { CreateOrUpdateVariant } from "../createOrUpdateVariant";
 import { CreateOrUpdateProduct } from "../createOrUpdate/product";
+import { DialogComponent } from "../../dialog";
 
 interface Props {
   data: {
@@ -32,15 +33,18 @@ interface Props {
   };
   actions: {
     reset(): void;
+    deleteProduct(id: string): void;
   };
 }
 
 const ProductRowComponent = ({ data, actions }: Props) => {
-  const { reset } = actions;
+  const { reset, deleteProduct } = actions;
   const { product, category, categories } = data;
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
   const hasVariants =
     product.hasVariants && product.variants && product.variants.length > 0;
   const { label, color } = getStatusChip(product.stockStatus);
@@ -53,6 +57,14 @@ const ProductRowComponent = ({ data, actions }: Props) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     reset();
+  };
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
   };
 
   const ModalComponentContent = (): JSX.Element => {
@@ -127,9 +139,14 @@ const ProductRowComponent = ({ data, actions }: Props) => {
         </TableCell>
         <TableCell align="center">
           {!hasVariants && (
-            <IconButton color="primary" onClick={() => handleOpenModal(true)}>
-              <IconPencil size={20} />
-            </IconButton>
+            <Box>
+              <IconButton color="primary" onClick={() => handleOpenModal(true)}>
+                <IconPencil size={20} />
+              </IconButton>
+              <IconButton color="primary" onClick={handleOpenDialog}>
+                <IconTrash size={20} />
+              </IconButton>
+            </Box>
           )}
           <IconButton color="primary" onClick={() => handleOpenModal(false)}>
             <IconPlus size={20} />
@@ -145,6 +162,16 @@ const ProductRowComponent = ({ data, actions }: Props) => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         content={<ModalComponentContent />}
+      />
+
+      <DialogComponent
+        title="Confirmar Exclusão"
+        message="Tem certeza de que deseja excluir este produto?"
+        isOpen={isDialogOpen}
+        onClose={handleCloseDialog}
+        confirm={() => {
+          deleteProduct(product._id);
+        }}
       />
     </>
   );
@@ -165,5 +192,9 @@ export const ProductRow = ({ data }: ProductRowProps) => {
     dispatch(productActions.resetRegister());
   };
 
-  return <ProductRowComponent data={data} actions={{ reset }} />;
+  const deleteProduct = (id: string) => {
+    dispatch(productActions.deleteProductRequest(id));
+  };
+
+  return <ProductRowComponent data={data} actions={{ reset, deleteProduct }} />;
 };

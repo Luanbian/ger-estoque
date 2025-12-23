@@ -55,6 +55,11 @@ export const productSlice = createSlice({
       _state,
       _action: PayloadAction<UpdateVariantPayload>
     ) => {},
+    deleteProductRequest: (_state, _action: PayloadAction<string>) => {},
+    deleteVariantRequest: (
+      _state,
+      _action: PayloadAction<{ productId: string; variantId: string }>
+    ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -112,6 +117,28 @@ export const productSlice = createSlice({
         ...state.registerSteps,
         ...action.payload,
       };
+    },
+    removeProduct: (state, action: PayloadAction<string>) => {
+      if (state.data) {
+        state.data = state.data?.filter(
+          (product) => product._id !== action.payload
+        );
+      }
+    },
+    removeVariant: (
+      state,
+      action: PayloadAction<{ productId: string; variantId: string }>
+    ) => {
+      if (state.data) {
+        const productIndex = state.data.findIndex(
+          (product) => product._id === action.payload.productId
+        );
+        state.data[productIndex].variants = state.data[
+          productIndex
+        ].variants!.filter(
+          (variant) => variant._id !== action.payload.variantId
+        );
+      }
     },
     setRegisterForm: (
       state,

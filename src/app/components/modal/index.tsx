@@ -20,7 +20,6 @@ export const ModalComponent = ({
     <Modal
       open={isOpen}
       onClose={onClose}
-      aria-labelledby="modal-title"
       sx={{
         display: "flex",
         alignItems: "center",
