@@ -21,6 +21,7 @@ export interface Product {
 }
 
 export interface VariantAttributes {
+  _id?: string;
   type: string;
   value: string | string[];
 }
