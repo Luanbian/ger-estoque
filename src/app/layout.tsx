@@ -5,6 +5,7 @@ import { Header } from "./components/header/container";
 import { Sidebar } from "./components/sidebar/container";
 import { useDispatch, useSelector } from "../store/hooks";
 import { actions as categoryActions } from "../features/categories";
+import { actions as unitOfMeasureActions } from "../features/unitOfMeasure";
 
 export const MainLayout = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ export const MainLayout = () => {
 
   useEffect(() => {
     dispatch(categoryActions.categoryRequest());
+    dispatch(unitOfMeasureActions.unitOfMeasureRequest());
   }, []);
 
   return (

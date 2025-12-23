@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   Alert,
   Box,
@@ -14,8 +13,6 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "../../../../../store/hooks";
 import { ProductType } from "../../../../../features/common/productTypeEnum";
 import { actions } from "../../../../../features/products";
-import { actions as categoryActions } from "../../../../../features/categories";
-import { actions as unitOfMeasureActions } from "../../../../../features/unitOfMeasure";
 import { Category } from "../../../../../features/categories/types";
 import { unitOfMeasure } from "../../../../../features/unitOfMeasure/types";
 import { IconArrowBack, IconArrowForward } from "@tabler/icons-react";
@@ -216,11 +213,6 @@ export const StepCategory = ({ data }: StepCategoryProps) => {
       })
     );
   };
-
-  useEffect(() => {
-    dispatch(categoryActions.categoryRequest());
-    dispatch(unitOfMeasureActions.unitOfMeasureRequest());
-  }, []);
 
   return (
     <StepCategoryComponent
