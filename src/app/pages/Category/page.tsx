@@ -1,26 +1,19 @@
 import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { IconPlus } from "@tabler/icons-react";
-import {
-  Category,
-  CreateCategoryPayload,
-} from "../../../features/categories/types";
+import { Category } from "../../../features/categories/types";
 import { CategoryGridList } from "../../components/categories/table/list";
 import { ModalComponent } from "../../components/modal";
-import { CreateCategoryComponent } from "../../components/categories/create/category";
+import { CreateCategory } from "../../components/categories/create/category";
 
 interface Props {
   data: {
     categories: Category[];
-    categoriesPlain: Category[];
-  };
-  actions: {
-    createCategory: (value: CreateCategoryPayload) => void;
   };
 }
-export const CategoryPage = ({ data, actions }: Props) => {
-  const { categories, categoriesPlain } = data;
-  const { createCategory } = actions;
+
+export const CategoryPage = ({ data }: Props) => {
+  const { categories } = data;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -58,12 +51,7 @@ export const CategoryPage = ({ data, actions }: Props) => {
       <ModalComponent
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        content={
-          <CreateCategoryComponent
-            actions={{ createCategory, onClose: handleCloseModal }}
-            data={{ categories: categoriesPlain }}
-          />
-        }
+        content={<CreateCategory actions={{ onClose: handleCloseModal }} />}
         maxWidth={550}
       />
     </>

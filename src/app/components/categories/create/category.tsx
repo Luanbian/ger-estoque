@@ -16,6 +16,8 @@ import {
   Category,
   CreateCategoryPayload,
 } from "../../../../features/categories/types";
+import { useDispatch, useSelector } from "../../../../store/hooks";
+import { actions as categoryActions } from "../../../../features/categories";
 
 interface Props {
   data: {
@@ -27,7 +29,7 @@ interface Props {
   };
 }
 
-export const CreateCategoryComponent = ({ actions, data }: Props) => {
+const CreateCategoryComponent = ({ actions, data }: Props) => {
   const { categories } = data;
   const { createCategory, onClose } = actions;
   const {
@@ -166,5 +168,38 @@ export const CreateCategoryComponent = ({ actions, data }: Props) => {
         </Stack>
       </Stack>
     </Box>
+  );
+};
+
+interface CreateCategoryProps {
+  actions: {
+    onClose?: () => void;
+  };
+}
+
+export const CreateCategory = ({ actions }: CreateCategoryProps) => {
+  const dispatch = useDispatch();
+  const { dataPlain } = useSelector((state) => state.category);
+
+  const { onClose } = actions;
+
+  const createCategory = (value: CreateCategoryPayload) => {
+    if (value.fatherCategoryId) {
+      dispatch(categoryActions.createSubCategoryRequest(value));
+      return;
+    }
+
+    dispatch(categoryActions.createCategoryRequest(value));
+  };
+
+  if (!dataPlain) {
+    return <div>Carregando categorias...</div>;
+  }
+
+  return (
+    <CreateCategoryComponent
+      actions={{ onClose, createCategory }}
+      data={{ categories: dataPlain }}
+    />
   );
 };
