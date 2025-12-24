@@ -138,6 +138,9 @@ export const productSlice = createSlice({
         ].variants!.filter(
           (variant) => variant._id !== action.payload.variantId
         );
+        if (state.data[productIndex].variants!.length === 0) {
+          state.data[productIndex].hasVariants = false;
+        }
       }
     },
     setRegisterForm: (
