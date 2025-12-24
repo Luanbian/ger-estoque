@@ -17,6 +17,7 @@ import { SubCategory } from "./subCategory";
 import { IconPencil, IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../modal";
 import { CreateOrUpdateCategory } from "../createOrUpdate/category";
+import { CreateOrUpdateSub } from "../createOrUpdateSub/sub";
 
 interface Props {
   data: {
@@ -53,7 +54,7 @@ export const CategoryRow = ({ data }: Props) => {
       );
     }
     return (
-      <CreateOrUpdateCategory
+      <CreateOrUpdateSub
         data={{ fatherCategoryId: category._id }}
         actions={{ onClose: handleCloseModal }}
       />
@@ -128,7 +129,7 @@ export const CategoryRow = ({ data }: Props) => {
         </TableCell>
       </TableRow>
 
-      {hasSubCategories && <SubCategory category={category} open={open} />}
+      {hasSubCategories && <SubCategory data={{ category, open }} />}
 
       <ModalComponent
         isOpen={isModalOpen}

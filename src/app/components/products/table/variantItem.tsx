@@ -12,7 +12,7 @@ import { getStatusChip } from "../../../../utils/getStockStatus";
 import { Category } from "../../../../features/categories/types";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { ModalComponent } from "../../modal";
-import { CreateOrUpdateVariant } from "../createOrUpdateVariant";
+import { CreateOrUpdateVariant } from "../createOrUpdateVariant/variant";
 import { useDispatch } from "../../../../store/hooks";
 import { actions as productActions } from "../../../../features/products";
 import { DialogComponent } from "../../dialog";

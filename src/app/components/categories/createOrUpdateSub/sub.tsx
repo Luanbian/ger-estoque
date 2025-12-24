@@ -21,20 +21,20 @@ import { actions as categoryActions } from "../../../../features/categories";
 
 interface Props {
   data: {
-    categories: Category[];
-    category?: Category;
+    category?: Category | null;
     fatherCategoryId?: string;
+    categories: Category[] | null;
   };
   actions: {
-    createCategory: (value: CategoryPayload) => void;
-    updateCategory: (id: string, data: CategoryPayload) => void;
+    createSubCategory: (value: CategoryPayload) => void;
+    updateSubCategory: (id: string, data: CategoryPayload) => void;
     onClose?: () => void;
   };
 }
 
-const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
-  const { categories, category, fatherCategoryId } = data;
-  const { createCategory, updateCategory, onClose } = actions;
+const CreateOrUpdateSubComponent = ({ actions, data }: Props) => {
+  const { category, fatherCategoryId, categories } = data;
+  const { createSubCategory, updateSubCategory, onClose } = actions;
   const {
     register,
     handleSubmit,
@@ -44,9 +44,9 @@ const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
 
   const onSubmit = (data: CategoryPayload) => {
     if (category?._id) {
-      updateCategory(category._id, data);
+      updateSubCategory(category._id, data);
     } else {
-      createCategory(data);
+      createSubCategory(data);
     }
 
     reset();
@@ -73,11 +73,11 @@ const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
       }}
     >
       <Typography variant="h5" gutterBottom fontWeight={600}>
-        {category?._id ? "Editar Categoria" : "Nova Categoria"}
+        {category?._id ? "Editar" : "Criar"} Sub categoria
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Preencha os dados para {category?._id ? "editar" : "criar"} uma
+        Preencha os dados para {category?._id ? "editar essa" : "criar uma"} sub
         categoria
       </Typography>
 
@@ -124,7 +124,7 @@ const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
         />
 
         <Typography variant="h6" color="text.primary">
-          {category?._id && "Tornar uma "} Sub categoria (opcional)
+          Sub categoria
         </Typography>
 
         <FormControl fullWidth variant="outlined">
@@ -132,17 +132,18 @@ const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
           <Select
             label="Categoria Pai"
             {...register("fatherCategoryId", { required: false })}
-            defaultValue={fatherCategoryId || category?.fatherCategoryId || ""}
+            value={fatherCategoryId || category?.fatherCategoryId || ""}
+            disabled
           >
-            {categories.length === 0 ? (
-              <MenuItem disabled>Nenhuma categoria disponível</MenuItem>
-            ) : (
-              categories.map((category) => (
-                <MenuItem key={category._id} value={category._id}>
-                  {category.name}
-                </MenuItem>
-              ))
-            )}
+            <MenuItem
+              value={fatherCategoryId || category?.fatherCategoryId || ""}
+            >
+              {categories?.find(
+                (cat) =>
+                  cat._id ===
+                  (fatherCategoryId || category?.fatherCategoryId || "")
+              )?.name || ""}
+            </MenuItem>
           </Select>
         </FormControl>
 
@@ -167,7 +168,7 @@ const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
             color="primary"
             startIcon={<IconDeviceFloppy size={18} />}
           >
-            Salvar Categoria
+            Salvar Sub Categoria
           </Button>
         </Stack>
       </Stack>
@@ -175,9 +176,9 @@ const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
   );
 };
 
-interface CreateCategoryProps {
+interface CreateOrUpdateSubProps {
   data?: {
-    category?: Category;
+    category?: Category | null;
     fatherCategoryId?: string;
   };
   actions: {
@@ -185,22 +186,21 @@ interface CreateCategoryProps {
   };
 }
 
-export const CreateOrUpdateCategory = ({
+export const CreateOrUpdateSub = ({
   actions,
   data,
-}: CreateCategoryProps) => {
+}: CreateOrUpdateSubProps) => {
   const dispatch = useDispatch();
   const { dataPlain } = useSelector((state) => state.category);
-  let filteredCategories = dataPlain;
 
   const { onClose } = actions;
   const { category, fatherCategoryId } = data || {};
 
-  const createCategory = (value: CategoryPayload) => {
-    dispatch(categoryActions.createCategoryRequest(value));
+  const createSubCategory = (value: CategoryPayload) => {
+    dispatch(categoryActions.createSubCategoryRequest(value));
   };
 
-  const updateCategory = (id: string, data: CategoryPayload) => {
+  const updateSubCategory = (id: string, data: CategoryPayload) => {
     dispatch(
       categoryActions.updateCategoryRequest({
         id,
@@ -209,20 +209,14 @@ export const CreateOrUpdateCategory = ({
     );
   };
 
-  if (!filteredCategories) {
-    return <div>Carregando categorias...</div>;
-  }
-
-  if (category && filteredCategories) {
-    filteredCategories = filteredCategories.filter(
-      (cat) => cat._id !== category._id
-    );
-  }
-
   return (
-    <CreateOrUpdateCategoryComponent
-      actions={{ onClose, createCategory, updateCategory }}
-      data={{ categories: filteredCategories, category, fatherCategoryId }}
+    <CreateOrUpdateSubComponent
+      actions={{
+        onClose,
+        createSubCategory,
+        updateSubCategory,
+      }}
+      data={{ category, fatherCategoryId, categories: dataPlain }}
     />
   );
 };

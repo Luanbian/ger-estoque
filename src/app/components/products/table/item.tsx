@@ -21,7 +21,7 @@ import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { ModalComponent } from "../../modal";
 import { useDispatch } from "../../../../store/hooks";
 import { actions as productActions } from "../../../../features/products";
-import { CreateOrUpdateVariant } from "../createOrUpdateVariant";
+import { CreateOrUpdateVariant } from "../createOrUpdateVariant/variant";
 import { CreateOrUpdateProduct } from "../createOrUpdate/product";
 import { DialogComponent } from "../../dialog";
 
