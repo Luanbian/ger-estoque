@@ -16,9 +16,9 @@ export interface CategoryState {
   error: string | null;
 }
 
-export interface CreateCategoryPayload {
+export interface CategoryPayload {
   name: string;
   description?: string;
-  fatherCategoryId?: string;
+  fatherCategoryId?: string | null;
   displayOrder?: number;
 }

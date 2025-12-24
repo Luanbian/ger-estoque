@@ -14,7 +14,7 @@ import {
 import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
 import {
   Category,
-  CreateCategoryPayload,
+  CategoryPayload,
 } from "../../../../features/categories/types";
 import { useDispatch, useSelector } from "../../../../store/hooks";
 import { actions as categoryActions } from "../../../../features/categories";
@@ -22,25 +22,32 @@ import { actions as categoryActions } from "../../../../features/categories";
 interface Props {
   data: {
     categories: Category[];
+    category?: Category;
   };
   actions: {
-    createCategory: (value: CreateCategoryPayload) => void;
+    createCategory: (value: CategoryPayload) => void;
+    updateCategory: (id: string, data: CategoryPayload) => void;
     onClose?: () => void;
   };
 }
 
-const CreateCategoryComponent = ({ actions, data }: Props) => {
-  const { categories } = data;
-  const { createCategory, onClose } = actions;
+const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
+  const { categories, category } = data;
+  const { createCategory, updateCategory, onClose } = actions;
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateCategoryPayload>();
+  } = useForm<CategoryPayload>();
 
-  const onSubmit = (data: CreateCategoryPayload) => {
-    createCategory(data);
+  const onSubmit = (data: CategoryPayload) => {
+    if (category?._id) {
+      updateCategory(category._id, data);
+    } else {
+      createCategory(data);
+    }
+
     reset();
     if (onClose) {
       onClose();
@@ -65,21 +72,18 @@ const CreateCategoryComponent = ({ actions, data }: Props) => {
       }}
     >
       <Typography variant="h5" gutterBottom fontWeight={600}>
-        Nova Categoria
+        {category?._id ? "Editar Categoria" : "Nova Categoria"}
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Preencha os dados para criar uma nova categoria
+        Preencha os dados para {category?._id ? "editar" : "criar"} uma
+        categoria
       </Typography>
 
       <Stack spacing={3}>
         <TextField
           {...register("name", {
             required: "O nome da categoria é obrigatório",
-            minLength: {
-              value: 3,
-              message: "O nome deve ter pelo menos 3 caracteres",
-            },
           })}
           label="Nome da Categoria"
           placeholder="Digite o nome da categoria"
@@ -87,7 +91,7 @@ const CreateCategoryComponent = ({ actions, data }: Props) => {
           required
           error={!!errors.name}
           helperText={errors.name?.message}
-          autoFocus
+          defaultValue={category?.name || ""}
         />
 
         <TextField
@@ -99,15 +103,12 @@ const CreateCategoryComponent = ({ actions, data }: Props) => {
           rows={4}
           error={!!errors.description}
           helperText={errors.description?.message}
+          defaultValue={category?.description || ""}
         />
 
         <TextField
           {...register("displayOrder", {
             valueAsNumber: true,
-            min: {
-              value: 0,
-              message: "A ordem deve ser um número positivo",
-            },
           })}
           label="Ordem de Exibição"
           placeholder="0"
@@ -118,6 +119,7 @@ const CreateCategoryComponent = ({ actions, data }: Props) => {
             errors.displayOrder?.message ||
             "Defina a ordem de exibição da categoria"
           }
+          defaultValue={category?.displayOrder || 0}
         />
 
         <Typography variant="h6" color="text.primary">
@@ -129,6 +131,7 @@ const CreateCategoryComponent = ({ actions, data }: Props) => {
           <Select
             label="Categoria Pai"
             {...register("fatherCategoryId", { required: false })}
+            defaultValue={category?.fatherCategoryId || ""}
           >
             {categories.length === 0 ? (
               <MenuItem disabled>Nenhuma categoria disponível</MenuItem>
@@ -172,18 +175,25 @@ const CreateCategoryComponent = ({ actions, data }: Props) => {
 };
 
 interface CreateCategoryProps {
+  data?: {
+    category?: Category;
+  };
   actions: {
     onClose?: () => void;
   };
 }
 
-export const CreateCategory = ({ actions }: CreateCategoryProps) => {
+export const CreateOrUpdateCategory = ({
+  actions,
+  data,
+}: CreateCategoryProps) => {
   const dispatch = useDispatch();
   const { dataPlain } = useSelector((state) => state.category);
 
   const { onClose } = actions;
+  const { category } = data || {};
 
-  const createCategory = (value: CreateCategoryPayload) => {
+  const createCategory = (value: CategoryPayload) => {
     if (value.fatherCategoryId) {
       dispatch(categoryActions.createSubCategoryRequest(value));
       return;
@@ -192,14 +202,23 @@ export const CreateCategory = ({ actions }: CreateCategoryProps) => {
     dispatch(categoryActions.createCategoryRequest(value));
   };
 
+  const updateCategory = (id: string, data: CategoryPayload) => {
+    dispatch(
+      categoryActions.updateCategoryRequest({
+        id,
+        data: { ...data, fatherCategoryId: data?.fatherCategoryId || null },
+      })
+    );
+  };
+
   if (!dataPlain) {
     return <div>Carregando categorias...</div>;
   }
 
   return (
-    <CreateCategoryComponent
-      actions={{ onClose, createCategory }}
-      data={{ categories: dataPlain }}
+    <CreateOrUpdateCategoryComponent
+      actions={{ onClose, createCategory, updateCategory }}
+      data={{ categories: dataPlain, category }}
     />
   );
 };

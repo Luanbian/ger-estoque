@@ -6,6 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { Category } from "../../../../features/categories/types";
 import { CategoryRow } from "./category";
@@ -25,10 +26,31 @@ export const CategoryGridList = ({ data }: Props) => {
         <TableHead>
           <TableRow>
             <TableCell width={50} />
-            <TableCell>Nome</TableCell>
-            <TableCell>Slug</TableCell>
-            <TableCell>Descrição</TableCell>
-            <TableCell align="center">Ordem</TableCell>
+            <TableCell>
+              <Typography variant="subtitle2" fontWeight={600}>
+                NOME
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography variant="subtitle2" fontWeight={600}>
+                SLUG
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography variant="subtitle2" fontWeight={600}>
+                DESCRIÇÃO
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography variant="subtitle2" fontWeight={600}>
+                ORDEM
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography variant="subtitle2" fontWeight={600}>
+                AÇÕES
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

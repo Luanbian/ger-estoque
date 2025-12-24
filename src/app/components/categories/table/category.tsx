@@ -14,6 +14,9 @@ import {
 } from "@mui/icons-material";
 import { Category } from "../../../../features/categories/types";
 import { SubCategory } from "./subCategory";
+import { IconPencil } from "@tabler/icons-react";
+import { ModalComponent } from "../../modal";
+import { CreateOrUpdateCategory } from "../createOrUpdate/category";
 
 interface Props {
   data: {
@@ -25,8 +28,18 @@ export const CategoryRow = ({ data }: Props) => {
   const { category } = data;
 
   const [open, setOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const hasSubCategories =
     category.subCategories && category.subCategories.length > 0;
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -76,9 +89,27 @@ export const CategoryRow = ({ data }: Props) => {
             {category.displayOrder}
           </Typography>
         </TableCell>
+        <TableCell align="center">
+          {!category.subCategories && (
+            <IconButton size="small" color="primary" onClick={handleOpenModal}>
+              <IconPencil size={16} />
+            </IconButton>
+          )}
+        </TableCell>
       </TableRow>
 
       {hasSubCategories && <SubCategory category={category} open={open} />}
+
+      <ModalComponent
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        content={
+          <CreateOrUpdateCategory
+            actions={{ onClose: handleCloseModal }}
+            data={{ category }}
+          />
+        }
+      />
     </>
   );
 };

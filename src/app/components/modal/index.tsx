@@ -3,7 +3,6 @@ import { IconX } from "@tabler/icons-react";
 import { JSX } from "react";
 
 interface Props {
-  title?: string;
   content: JSX.Element;
   isOpen: boolean;
   onClose: () => void;

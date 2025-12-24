@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Category, CategoryState, CreateCategoryPayload } from "./types.ts";
+import { Category, CategoryState, CategoryPayload } from "./types.ts";
 
 export const initialState: CategoryState = {
   data: null,
@@ -16,11 +16,15 @@ export const categorySlice = createSlice({
     categoryTreeRequest: () => {},
     createCategoryRequest: (
       _state,
-      _action: PayloadAction<CreateCategoryPayload>
+      _action: PayloadAction<CategoryPayload>
     ) => {},
     createSubCategoryRequest: (
       _state,
-      _action: PayloadAction<CreateCategoryPayload>
+      _action: PayloadAction<CategoryPayload>
+    ) => {},
+    updateCategoryRequest: (
+      _state,
+      _action: PayloadAction<{ id: string; data: CategoryPayload }>
     ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -52,6 +56,16 @@ export const categorySlice = createSlice({
     ) => {
       state.dataPlain = action.payload;
       state.error = null;
+    },
+    setOneCategory: (state, action: PayloadAction<Category>) => {
+      const categoryIndex = state.data?.findIndex(
+        (cat) => cat._id === action.payload._id
+      );
+      state.data![categoryIndex!] = action.payload;
+      const plainIndex = state.dataPlain?.findIndex(
+        (cat) => cat._id === action.payload._id
+      );
+      state.dataPlain![plainIndex!] = action.payload;
     },
   },
 });

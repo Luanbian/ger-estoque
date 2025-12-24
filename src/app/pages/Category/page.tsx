@@ -4,7 +4,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { Category } from "../../../features/categories/types";
 import { CategoryGridList } from "../../components/categories/table/list";
 import { ModalComponent } from "../../components/modal";
-import { CreateCategory } from "../../components/categories/create/category";
+import { CreateOrUpdateCategory } from "../../components/categories/createOrUpdate/category";
 
 interface Props {
   data: {
@@ -51,7 +51,9 @@ export const CategoryPage = ({ data }: Props) => {
       <ModalComponent
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        content={<CreateCategory actions={{ onClose: handleCloseModal }} />}
+        content={
+          <CreateOrUpdateCategory actions={{ onClose: handleCloseModal }} />
+        }
         maxWidth={550}
       />
     </>
