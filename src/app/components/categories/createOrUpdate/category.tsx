@@ -23,6 +23,7 @@ interface Props {
   data: {
     categories: Category[];
     category?: Category;
+    fatherCategoryId?: string;
   };
   actions: {
     createCategory: (value: CategoryPayload) => void;
@@ -32,7 +33,7 @@ interface Props {
 }
 
 const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
-  const { categories, category } = data;
+  const { categories, category, fatherCategoryId } = data;
   const { createCategory, updateCategory, onClose } = actions;
   const {
     register,
@@ -131,7 +132,7 @@ const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
           <Select
             label="Categoria Pai"
             {...register("fatherCategoryId", { required: false })}
-            defaultValue={category?.fatherCategoryId || ""}
+            defaultValue={fatherCategoryId || category?.fatherCategoryId || ""}
           >
             {categories.length === 0 ? (
               <MenuItem disabled>Nenhuma categoria disponível</MenuItem>
@@ -177,6 +178,7 @@ const CreateOrUpdateCategoryComponent = ({ actions, data }: Props) => {
 interface CreateCategoryProps {
   data?: {
     category?: Category;
+    fatherCategoryId?: string;
   };
   actions: {
     onClose?: () => void;
@@ -191,7 +193,7 @@ export const CreateOrUpdateCategory = ({
   const { dataPlain } = useSelector((state) => state.category);
 
   const { onClose } = actions;
-  const { category } = data || {};
+  const { category, fatherCategoryId } = data || {};
 
   const createCategory = (value: CategoryPayload) => {
     if (value.fatherCategoryId) {
@@ -218,7 +220,7 @@ export const CreateOrUpdateCategory = ({
   return (
     <CreateOrUpdateCategoryComponent
       actions={{ onClose, createCategory, updateCategory }}
-      data={{ categories: dataPlain, category }}
+      data={{ categories: dataPlain, category, fatherCategoryId }}
     />
   );
 };

@@ -49,7 +49,7 @@ const ProductRowComponent = ({ data, actions }: Props) => {
     product.hasVariants && product.variants && product.variants.length > 0;
   const { label, color } = getStatusChip(product.stockStatus);
 
-  const handleOpenModal = (isEditing: boolean) => {
+  const handleOpenModal = ({ isEditing }: { isEditing: boolean }) => {
     setIsEditing(isEditing);
     setIsModalOpen(true);
   };
@@ -140,7 +140,10 @@ const ProductRowComponent = ({ data, actions }: Props) => {
         <TableCell align="center">
           {!hasVariants && (
             <Box>
-              <IconButton color="primary" onClick={() => handleOpenModal(true)}>
+              <IconButton
+                color="primary"
+                onClick={() => handleOpenModal({ isEditing: true })}
+              >
                 <IconPencil size={20} />
               </IconButton>
               <IconButton color="primary" onClick={handleOpenDialog}>
@@ -148,7 +151,10 @@ const ProductRowComponent = ({ data, actions }: Props) => {
               </IconButton>
             </Box>
           )}
-          <IconButton color="primary" onClick={() => handleOpenModal(false)}>
+          <IconButton
+            color="primary"
+            onClick={() => handleOpenModal({ isEditing: false })}
+          >
             <IconPlus size={20} />
           </IconButton>
         </TableCell>

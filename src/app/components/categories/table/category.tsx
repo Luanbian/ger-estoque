@@ -5,7 +5,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { JSX, useState } from "react";
 import {
   KeyboardArrowDown,
   KeyboardArrowUp,
@@ -14,7 +14,7 @@ import {
 } from "@mui/icons-material";
 import { Category } from "../../../../features/categories/types";
 import { SubCategory } from "./subCategory";
-import { IconPencil } from "@tabler/icons-react";
+import { IconPencil, IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../modal";
 import { CreateOrUpdateCategory } from "../createOrUpdate/category";
 
@@ -29,16 +29,35 @@ export const CategoryRow = ({ data }: Props) => {
 
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const hasSubCategories =
     category.subCategories && category.subCategories.length > 0;
 
-  const handleOpenModal = () => {
+  const handleOpenModal = ({ isEditing }: { isEditing: boolean }) => {
+    setIsEditing(isEditing);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const ModalComponentContent = (): JSX.Element => {
+    if (isEditing) {
+      return (
+        <CreateOrUpdateCategory
+          data={{ category }}
+          actions={{ onClose: handleCloseModal }}
+        />
+      );
+    }
+    return (
+      <CreateOrUpdateCategory
+        data={{ fatherCategoryId: category._id }}
+        actions={{ onClose: handleCloseModal }}
+      />
+    );
   };
 
   return (
@@ -91,10 +110,21 @@ export const CategoryRow = ({ data }: Props) => {
         </TableCell>
         <TableCell align="center">
           {!category.subCategories && (
-            <IconButton size="small" color="primary" onClick={handleOpenModal}>
-              <IconPencil size={16} />
+            <IconButton
+              size="small"
+              color="primary"
+              onClick={() => handleOpenModal({ isEditing: true })}
+            >
+              <IconPencil size={20} />
             </IconButton>
           )}
+          <IconButton
+            size="small"
+            color="primary"
+            onClick={() => handleOpenModal({ isEditing: false })}
+          >
+            <IconPlus size={20} />
+          </IconButton>
         </TableCell>
       </TableRow>
 
@@ -103,12 +133,7 @@ export const CategoryRow = ({ data }: Props) => {
       <ModalComponent
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        content={
-          <CreateOrUpdateCategory
-            actions={{ onClose: handleCloseModal }}
-            data={{ category }}
-          />
-        }
+        content={<ModalComponentContent />}
       />
     </>
   );
