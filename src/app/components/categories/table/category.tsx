@@ -14,22 +14,30 @@ import {
 } from "@mui/icons-material";
 import { Category } from "../../../../features/categories/types";
 import { SubCategory } from "./subCategory";
-import { IconPencil, IconPlus } from "@tabler/icons-react";
+import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { ModalComponent } from "../../modal";
 import { CreateOrUpdateCategory } from "../createOrUpdate/category";
 import { CreateOrUpdateSub } from "../createOrUpdateSub/sub";
+import { DialogComponent } from "../../dialog";
+import { useDispatch } from "../../../../store/hooks";
+import { actions as categoryActions } from "../../../../features/categories";
 
 interface Props {
   data: {
     category: Category;
   };
+  actions: {
+    deleteCategory: (id: string) => void;
+  };
 }
 
-export const CategoryRow = ({ data }: Props) => {
+const CategoryRowComponent = ({ data, actions }: Props) => {
   const { category } = data;
+  const { deleteCategory } = actions;
 
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const hasSubCategories =
@@ -42,6 +50,14 @@ export const CategoryRow = ({ data }: Props) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
   };
 
   const ModalComponentContent = (): JSX.Element => {
@@ -111,13 +127,22 @@ export const CategoryRow = ({ data }: Props) => {
         </TableCell>
         <TableCell align="center">
           {!category.subCategories && (
-            <IconButton
-              size="small"
-              color="primary"
-              onClick={() => handleOpenModal({ isEditing: true })}
-            >
-              <IconPencil size={20} />
-            </IconButton>
+            <Box>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={() => handleOpenModal({ isEditing: true })}
+              >
+                <IconPencil size={20} />
+              </IconButton>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={handleOpenDialog}
+              >
+                <IconTrash size={20} />
+              </IconButton>
+            </Box>
           )}
           <IconButton
             size="small"
@@ -136,6 +161,30 @@ export const CategoryRow = ({ data }: Props) => {
         onClose={handleCloseModal}
         content={<ModalComponentContent />}
       />
+
+      <DialogComponent
+        title="Confirmar exclusão"
+        message="Tem certeza que deseja excluir esta categoria?"
+        isOpen={isDialogOpen}
+        onClose={handleCloseDialog}
+        confirm={() => deleteCategory(category._id)}
+      />
     </>
   );
+};
+
+interface CategoryRowProps {
+  data: {
+    category: Category;
+  };
+}
+
+export const CategoryRow = ({ data }: CategoryRowProps) => {
+  const dispatch = useDispatch();
+
+  const deleteCategory = (id: string) => {
+    dispatch(categoryActions.deleteCategoryRequest(id));
+  };
+
+  return <CategoryRowComponent data={data} actions={{ deleteCategory }} />;
 };

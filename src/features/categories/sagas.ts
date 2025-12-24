@@ -121,6 +121,48 @@ function* updateCategory(
   }
 }
 
+function* deleteCategory(payload: PayloadAction<string>) {
+  yield put(actions.setLoading(true));
+  try {
+    yield call(
+      apiService.delete,
+      `${API_BASE_URL}/category/${payload.payload}`
+    );
+
+    yield put(actions.removeCategory(payload.payload));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      )
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
+function* deleteSubCategory(
+  payload: PayloadAction<{ fatherCategoryId: string; id: string }>
+) {
+  yield put(actions.setLoading(true));
+  try {
+    yield call(
+      apiService.delete,
+      `${API_BASE_URL}/category/${payload.payload.id}`
+    );
+
+    yield put(actions.removeSubCategory(payload.payload));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      )
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 export function* categorySagas() {
   yield all([
     takeEvery(actions.categoryTreeRequest.type, getCategoryTree),
@@ -128,5 +170,7 @@ export function* categorySagas() {
     takeEvery(actions.createCategoryRequest.type, createCategory),
     takeEvery(actions.createSubCategoryRequest.type, createSubCategory),
     takeEvery(actions.updateCategoryRequest.type, updateCategory),
+    takeEvery(actions.deleteCategoryRequest.type, deleteCategory),
+    takeEvery(actions.deleteSubCategoryRequest.type, deleteSubCategory),
   ]);
 }

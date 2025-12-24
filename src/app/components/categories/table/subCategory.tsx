@@ -10,18 +10,27 @@ import {
 } from "@mui/material";
 import { SubdirectoryArrowRight } from "@mui/icons-material";
 import { Category } from "../../../../features/categories/types";
-import { IconPencil } from "@tabler/icons-react";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 import { ModalComponent } from "../../modal";
 import { CreateOrUpdateSub } from "../createOrUpdateSub/sub";
+import { useDispatch } from "../../../../store/hooks";
+import { actions as categoryActions } from "../../../../features/categories";
+import { DialogComponent } from "../../dialog";
 
 interface Props {
   data: { category: Category; open: boolean };
+  actions: {
+    deleteSubCategory(fatherCategoryId: string, id: string): void;
+  };
 }
 
-const SubCategoryComponent = ({ data }: Props) => {
+const SubCategoryComponent = ({ data, actions }: Props) => {
   const { category, open } = data;
+  const { deleteSubCategory } = actions;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [subCategoryToEdit, setSubCategoryToEdit] = useState<Category | null>(
     null
   );
@@ -33,6 +42,15 @@ const SubCategoryComponent = ({ data }: Props) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleOpenDialog = (sub: Category) => {
+    setSubCategoryToEdit(sub);
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
   };
 
   return (
@@ -72,13 +90,22 @@ const SubCategoryComponent = ({ data }: Props) => {
                         </Typography>
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton
-                          size="small"
-                          color="primary"
-                          onClick={() => handleOpenModal(subCategory)}
-                        >
-                          <IconPencil size={20} />
-                        </IconButton>
+                        <Box>
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            onClick={() => handleOpenModal(subCategory)}
+                          >
+                            <IconPencil size={20} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            onClick={() => handleOpenDialog(subCategory)}
+                          >
+                            <IconTrash size={20} />
+                          </IconButton>
+                        </Box>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -102,6 +129,14 @@ const SubCategoryComponent = ({ data }: Props) => {
           />
         }
       />
+
+      <DialogComponent
+        title="Confirmar exclusão"
+        message="Tem certeza que deseja excluir esta subcategoria?"
+        isOpen={isDialogOpen}
+        onClose={handleCloseDialog}
+        confirm={() => deleteSubCategory(category._id, subCategoryToEdit!._id)}
+      />
     </>
   );
 };
@@ -111,7 +146,19 @@ interface SubCategoryProps {
 }
 
 export const SubCategory = ({ data }: SubCategoryProps) => {
+  const dispatch = useDispatch();
   const { category, open } = data;
 
-  return <SubCategoryComponent data={{ category, open }} />;
+  const deleteSubCategory = (fatherCategoryId: string, id: string) => {
+    dispatch(
+      categoryActions.deleteSubCategoryRequest({ fatherCategoryId, id })
+    );
+  };
+
+  return (
+    <SubCategoryComponent
+      data={{ category, open }}
+      actions={{ deleteSubCategory }}
+    />
+  );
 };
