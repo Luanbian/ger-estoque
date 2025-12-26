@@ -5,6 +5,7 @@ import { HomePage } from "../app/pages/Home";
 import { Stock } from "../app/pages/Stock/layout";
 import { ProtectedRoute } from "./protectedRoutes";
 import { Category } from "../app/pages/Category/layout";
+import { Finance } from "../app/pages/Finance/layout";
 
 export const AppRoutes = () => {
   return (
@@ -21,6 +22,7 @@ export const AppRoutes = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/stock" element={<Stock />} />
           <Route path="/category" element={<Category />} />
+          <Route path="/finance" element={<Finance />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

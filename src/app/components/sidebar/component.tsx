@@ -14,6 +14,7 @@ import {
   IconHome,
   IconCategory,
   IconStack3Filled,
+  IconReportMoney,
 } from "@tabler/icons-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -31,6 +32,7 @@ export const SidebarComponent = ({ isOpen, onToggle, sidebarWidth }: Props) => {
     { text: "Início", icon: <IconHome />, path: "/" },
     { text: "Produtos", icon: <IconStack3Filled />, path: "/stock" },
     { text: "Categorias", icon: <IconCategory />, path: "/category" },
+    { text: "Financeiro", icon: <IconReportMoney />, path: "/finance" },
   ];
 
   const handleNavigation = (path: string) => {
