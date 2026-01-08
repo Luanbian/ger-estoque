@@ -7,6 +7,7 @@ import { ProtectedRoute } from "./protectedRoutes";
 import { Category } from "../app/pages/Category/layout";
 import { Finance } from "../app/pages/Finance/layout";
 import { ForgotPassword } from "../app/auth/forgotPassword/container";
+import { ResetPassword } from "../app/auth/resetPassword/container";
 
 export const AppRoutes = () => {
   return (
@@ -14,6 +15,7 @@ export const AppRoutes = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           element={
             <ProtectedRoute>

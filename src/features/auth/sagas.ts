@@ -7,6 +7,8 @@ import {
   ForgotPasswordResponse,
   LoginCredentials,
   LoginResponse,
+  ResetPasswordPayload,
+  ResetPasswordResponse,
 } from "./types";
 import { APIResponse } from "../common/types";
 import { API_BASE_URL } from "../../constants/api";
@@ -70,9 +72,34 @@ function* forgotPasswordSaga(action: PayloadAction<ForgotPasswordPayload>) {
   }
 }
 
+function* resetPasswordSaga(action: PayloadAction<ResetPasswordPayload>) {
+  yield put(actions.setLoading(true));
+  try {
+    const response: APIResponse<ResetPasswordResponse> = yield call(
+      apiService.post,
+      `${API_BASE_URL}/auth/reset-password?token=${action.payload.token}`,
+      { password: action.payload.newPassword }
+    );
+    const { data } = response;
+
+    yield put(actions.setResetPasswordMessage(data.message));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof AxiosError
+          ? error.response?.data.error
+          : "An unknown error occurred"
+      )
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 export function* authSagas() {
   yield all([
     takeEvery(actions.loginRequest.type, loginSaga),
     takeEvery(actions.forgotPasswordRequest.type, forgotPasswordSaga),
+    takeEvery(actions.resetPasswordRequest.type, resetPasswordSaga),
   ]);
 }

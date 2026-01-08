@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthState, ForgotPasswordPayload, LoginCredentials } from "./types";
+import {
+  AuthState,
+  ForgotPasswordPayload,
+  LoginCredentials,
+  ResetPasswordPayload,
+} from "./types";
 
 export const initialState: AuthState = {
   data: null,
@@ -16,6 +21,10 @@ export const authSlice = createSlice({
     forgotPasswordRequest: (
       _state,
       _action: PayloadAction<ForgotPasswordPayload>
+    ) => {},
+    resetPasswordRequest: (
+      _state,
+      _action: PayloadAction<ResetPasswordPayload>
     ) => {},
     logout: (state) => {
       state.data = null;
@@ -42,6 +51,12 @@ export const authSlice = createSlice({
       action: PayloadAction<string | undefined>
     ) => {
       state.forgotPasswordMessage = action.payload;
+    },
+    setResetPasswordMessage: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
+      state.resetPasswordMessage = action.payload;
     },
   },
 });

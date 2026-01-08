@@ -9,6 +9,7 @@ export interface AuthState {
   loading: boolean;
   error: string | null;
   forgotPasswordMessage?: string;
+  resetPasswordMessage?: string;
 }
 
 export interface LoginCredentials {
@@ -28,5 +29,14 @@ export interface ForgotPasswordPayload {
 }
 
 export interface ForgotPasswordResponse {
+  message: string;
+}
+
+export interface ResetPasswordPayload {
+  token: string;
+  newPassword: string;
+}
+
+export interface ResetPasswordResponse {
   message: string;
 }
