@@ -16,6 +16,7 @@ export const ForgotPassword = () => {
 
   if (forgotPasswordMessage) {
     toast.success(forgotPasswordMessage);
+    dispatch(actions.setForgotPasswordMessage(undefined));
   }
 
   return (
