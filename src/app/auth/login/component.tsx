@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { LoginCredentials } from "../../../features/auth/types";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   onLogin: (username: string, password: string) => void;
@@ -17,10 +18,15 @@ interface Props {
 }
 
 export const LoginComponent = ({ onLogin, loading, error }: Props) => {
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm<LoginCredentials>();
 
   const onSubmit = (data: LoginCredentials) => {
     onLogin(data.email, data.password);
+  };
+
+  const handleForgotPassword = () => {
+    navigate("/forgot-password");
   };
 
   return (
@@ -69,6 +75,9 @@ export const LoginComponent = ({ onLogin, loading, error }: Props) => {
               {loading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
+          <Button variant="text" sx={{ mt: 2 }} onClick={handleForgotPassword}>
+            Esqueci minha senha
+          </Button>
         </CardContent>
       </Card>
     </Box>

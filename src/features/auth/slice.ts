@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthState, LoginCredentials } from "./types";
+import { AuthState, ForgotPasswordPayload, LoginCredentials } from "./types";
 
 export const initialState: AuthState = {
   data: null,
@@ -13,6 +13,10 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     loginRequest: (_state, _action: PayloadAction<LoginCredentials>) => {},
+    forgotPasswordRequest: (
+      _state,
+      _action: PayloadAction<ForgotPasswordPayload>
+    ) => {},
     logout: (state) => {
       state.data = null;
       state.token = null;
@@ -32,6 +36,12 @@ export const authSlice = createSlice({
       state.data = action.payload.data;
       state.token = action.payload.token;
       state.error = null;
+    },
+    setForgotPasswordMessage: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
+      state.forgotPasswordMessage = action.payload;
     },
   },
 });

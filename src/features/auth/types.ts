@@ -8,6 +8,7 @@ export interface AuthState {
   token: string | null;
   loading: boolean;
   error: string | null;
+  forgotPasswordMessage?: string;
 }
 
 export interface LoginCredentials {
@@ -20,4 +21,12 @@ export interface LoginResponse {
   email: string;
   tenantId: string;
   accessToken: string;
+}
+
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  message: string;
 }

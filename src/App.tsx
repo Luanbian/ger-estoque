@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
 import { Box, CircularProgress } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -47,9 +48,21 @@ function ThemedApp() {
 
 function App() {
   return (
-    <Provider store={store}>
-      <ThemedApp />
-    </Provider>
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
+      <Provider store={store}>
+        <ThemedApp />
+      </Provider>
+    </>
   );
 }
 
