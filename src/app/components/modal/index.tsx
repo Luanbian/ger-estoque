@@ -8,6 +8,7 @@ interface Props {
   onClose: () => void;
   maxWidth?: number;
   maxHeight?: number;
+  disablePortal?: boolean;
 }
 
 export const ModalComponent = ({
@@ -16,11 +17,13 @@ export const ModalComponent = ({
   onClose,
   maxWidth = 600,
   maxHeight = 800,
+  disablePortal = false,
 }: Props) => {
   return (
     <Modal
       open={isOpen}
       onClose={onClose}
+      disablePortal={disablePortal}
       sx={{
         display: "flex",
         alignItems: "center",

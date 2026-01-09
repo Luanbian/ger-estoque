@@ -16,14 +16,10 @@ interface Props {
     loading: boolean;
     error: string | null;
   };
-  actions: {
-    selectedPlanType: (planTypeId: string) => void;
-  };
 }
 
-export const Plans = ({ data, actions }: Props) => {
+export const Plans = ({ data }: Props) => {
   const { planTypes, loading, error } = data;
-  const { selectedPlanType } = actions;
 
   if (loading) return <CircularProgress />;
 
@@ -54,21 +50,9 @@ export const Plans = ({ data, actions }: Props) => {
           {planTypes &&
             planTypes.map((plan) => {
               if (plan.name.toLowerCase().includes("gratuito"))
-                return (
-                  <FreePlan
-                    key={plan._id}
-                    data={{ plan }}
-                    actions={{ selectedPlanType }}
-                  />
-                );
+                return <FreePlan key={plan._id} data={{ plan }} />;
               if (plan.name.toLowerCase().includes("padrão"))
-                return (
-                  <StandardPlan
-                    key={plan._id}
-                    data={{ plan }}
-                    actions={{ selectedPlanType }}
-                  />
-                );
+                return <StandardPlan key={plan._id} data={{ plan }} />;
             })}
         </Box>
       </CardContent>

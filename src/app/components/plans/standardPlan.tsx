@@ -11,21 +11,31 @@ import {
 } from "@mui/material";
 import { convertFromCents } from "../../../utils/convertTocents";
 import { PlanType } from "../../../features/plans/types";
+import { useFormContext } from "react-hook-form";
+import { CreateAccountShopkeeperPayload } from "../../../features/accountShopkeeper/types";
+import { SubscriptionBillingStatus } from "../../../features/common/billingStatusEnum";
 
 interface Props {
   data: {
     plan: PlanType;
   };
-  actions: {
-    selectedPlanType: (planTypeId: string) => void;
-  };
 }
 
-export const StandardPlan = ({ data, actions }: Props) => {
+export const StandardPlan = ({ data }: Props) => {
   const { _id, name, price, features } = data.plan;
-  const { selectedPlanType } = actions;
 
   const theme = useTheme();
+
+  const methods = useFormContext<CreateAccountShopkeeperPayload>();
+
+  const handleSelect = (_id?: string) => {
+    if (!_id) return;
+    methods.setValue("subscription.planTypeId", _id);
+    methods.setValue(
+      "subscription.billingStatus",
+      SubscriptionBillingStatus.UNPAID
+    );
+  };
 
   return (
     <Box
@@ -114,7 +124,7 @@ export const StandardPlan = ({ data, actions }: Props) => {
               variant="contained"
               color="primary"
               size="large"
-              onClick={() => selectedPlanType(_id!)}
+              onClick={() => handleSelect(_id)}
               type="submit"
             >
               Prosseguir

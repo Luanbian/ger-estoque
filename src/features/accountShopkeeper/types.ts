@@ -1,3 +1,5 @@
+import { SubscriptionBillingStatus } from "../common/billingStatusEnum";
+
 export interface AccountShopkeeper {
   _id: string;
   name: string;
@@ -20,6 +22,6 @@ export interface CreateAccountShopkeeperPayload {
   };
   subscription: {
     planTypeId: string;
-    billingStatus: string;
+    billingStatus: SubscriptionBillingStatus;
   };
 }
