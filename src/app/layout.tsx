@@ -6,10 +6,26 @@ import { Sidebar } from "./components/sidebar/container";
 import { useDispatch, useSelector } from "../store/hooks";
 import { actions as categoryActions } from "../features/categories";
 import { actions as unitOfMeasureActions } from "../features/unitOfMeasure";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { UnpaidWarning } from "./components/billingWarn/unpaid";
+import { SubscriptionBillingStatus } from "../features/common/billingStatusEnum";
 
 export const MainLayout = () => {
   const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
   const { isCollapse, SidebarWidth } = useSelector((state) => state.customizer);
+
+  let isUnpaid = false;
+  if (token) {
+    try {
+      const payload: JwtPayload = jwtDecode(token);
+      const billingStatus =
+        "billingStatus" in payload ? (payload.billingStatus as string) : "";
+      isUnpaid = billingStatus === SubscriptionBillingStatus.UNPAID;
+    } catch (err) {
+      // ignore decode errors
+    }
+  }
 
   useEffect(() => {
     dispatch(categoryActions.categoryRequest());
@@ -33,6 +49,7 @@ export const MainLayout = () => {
         >
           <Outlet />
         </Box>
+        {isUnpaid && <UnpaidWarning />}
       </Box>
     </Box>
   );
