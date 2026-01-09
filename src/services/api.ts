@@ -56,6 +56,10 @@ api.interceptors.response.use(
     // evita loop de retry
     if (originalRequest._retry) return Promise.reject(error);
 
+    if (shouldSkipRefreshRequest(originalRequest.url)) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401) {
       originalRequest._retry = true;
       try {
