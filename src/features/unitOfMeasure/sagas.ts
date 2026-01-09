@@ -1,6 +1,6 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { actions } from "./slice.ts";
-import { unitOfMeasure } from "./types.ts";
+import { UnitOfMeasure } from "./types.ts";
 import { APIResponse } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
@@ -8,7 +8,7 @@ import { apiService } from "../../services/api.ts";
 function* getUnitOfMeasure() {
   yield put(actions.setLoading(true));
   try {
-    const response: APIResponse<unitOfMeasure[]> = yield call(
+    const response: APIResponse<UnitOfMeasure[]> = yield call(
       apiService.get,
       `${API_BASE_URL}/unit-of-measure`
     );

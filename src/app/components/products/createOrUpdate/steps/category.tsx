@@ -14,14 +14,14 @@ import { useDispatch, useSelector } from "../../../../../store/hooks";
 import { ProductType } from "../../../../../features/common/productTypeEnum";
 import { actions } from "../../../../../features/products";
 import { Category } from "../../../../../features/categories/types";
-import { unitOfMeasure } from "../../../../../features/unitOfMeasure/types";
+import { UnitOfMeasure } from "../../../../../features/unitOfMeasure/types";
 import { IconArrowBack, IconArrowForward } from "@tabler/icons-react";
 import { Product } from "../../../../../features/products/types";
 
 interface Props {
   data: {
     categories: Category[];
-    unitOfMeasures: unitOfMeasure[];
+    unitOfMeasures: UnitOfMeasure[];
     type?: ProductType;
     categoryId?: string;
     unitOfMeasureId?: string;

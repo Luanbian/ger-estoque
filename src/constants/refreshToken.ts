@@ -4,4 +4,5 @@ export const EXCLUDED_REFRESH_PATHS = [
   "/account-shopkeeper",
   "/auth/forgot-password",
   "/auth/reset-password",
+  "/plan-type",
 ];

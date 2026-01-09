@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { Box, CircularProgress } from "@mui/material";
@@ -7,6 +7,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ThemeSettings } from "./utils/theme/Theme";
 import store from "./store";
 import { AppRoutes } from "./routes";
+import { useDispatch } from "./store/hooks";
+import { actions as planActions } from "./features/plans";
 
 const LoadingFallback = () => {
   return (
@@ -25,6 +27,12 @@ const LoadingFallback = () => {
 };
 
 function ThemedApp() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(planActions.planTypeRequest());
+  }, []);
+
   const theme = createTheme({
     ...ThemeSettings(),
     direction: ThemeSettings().direction,

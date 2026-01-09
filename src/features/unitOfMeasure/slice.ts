@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { unitOfMeasure, unitOfMeasureState } from "./types.ts";
+import { UnitOfMeasure, UnitOfMeasureState } from "./types.ts";
 
-export const initialState: unitOfMeasureState = {
+export const initialState: UnitOfMeasureState = {
   data: null,
   loading: false,
   error: null,
@@ -18,7 +18,7 @@ export const unitOfMeasureSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
-    setUnitOfMeasures: (state, action: PayloadAction<unitOfMeasure[]>) => {
+    setUnitOfMeasures: (state, action: PayloadAction<UnitOfMeasure[]>) => {
       state.data = action.payload;
     },
   },

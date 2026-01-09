@@ -18,4 +18,8 @@ export interface CreateAccountShopkeeperPayload {
     email: string;
     password: string;
   };
+  subscription: {
+    planTypeId: string;
+    billingStatus: string;
+  };
 }

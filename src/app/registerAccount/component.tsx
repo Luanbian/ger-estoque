@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -9,22 +10,40 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { CreateAccountShopkeeperPayload } from "../../features/accountShopkeeper/types";
+import { ModalComponent } from "../components/modal";
+import { Plans } from "../components/plans";
+import { PlanType } from "../../features/plans/types";
 
 interface Props {
-  onRegisterAccount: (data: CreateAccountShopkeeperPayload) => void;
-  loading: boolean;
-  error: string | null;
+  data: {
+    planTypes: PlanType[] | null;
+    loading: boolean;
+    error: string | null;
+    planTypeLoading: boolean;
+    planTypeError: string | null;
+  };
+  actions: {
+    onRegisterAccount: (data: CreateAccountShopkeeperPayload) => void;
+    selectedPlanType: (planTypeId: string) => void;
+  };
 }
 
-export const RegisterAccountComponent = ({
-  onRegisterAccount,
-  loading,
-  error,
-}: Props) => {
+export const RegisterAccountComponent = ({ data, actions }: Props) => {
+  const { loading, error, planTypeError, planTypeLoading, planTypes } = data;
+  const { onRegisterAccount, selectedPlanType } = actions;
   const { register, handleSubmit } = useForm<CreateAccountShopkeeperPayload>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onSubmit = (data: CreateAccountShopkeeperPayload) => {
     onRegisterAccount(data);
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -80,12 +99,30 @@ export const RegisterAccountComponent = ({
             <Button
               fullWidth
               variant="contained"
-              type="submit"
+              type="button"
               sx={{ mt: 2 }}
               disabled={loading}
+              onClick={handleOpenModal}
             >
               {loading ? "Criando..." : "Criar Conta"}
             </Button>
+
+            <ModalComponent
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+              maxWidth={900}
+              maxHeight={900}
+              content={
+                <Plans
+                  data={{
+                    error: planTypeError,
+                    loading: planTypeLoading,
+                    planTypes,
+                  }}
+                  actions={{ selectedPlanType }}
+                />
+              }
+            />
           </form>
         </CardContent>
       </Card>

@@ -11,6 +11,11 @@ export const RegisterAccount = () => {
   const { loading, error, responseMessage } = useSelector(
     (state) => state.accountShopkeeper
   );
+  const {
+    loading: planTypeLoading,
+    error: planTypeError,
+    data,
+  } = useSelector((state) => state.planType);
 
   const handleRegisterAccount = (data: CreateAccountShopkeeperPayload) => {
     dispatch(actions.registerAccountRequest(data));
@@ -24,9 +29,16 @@ export const RegisterAccount = () => {
 
   return (
     <RegisterAccountComponent
-      onRegisterAccount={handleRegisterAccount}
-      loading={loading}
-      error={error}
+      data={{
+        loading,
+        error,
+        planTypeLoading,
+        planTypeError,
+        planTypes: data,
+      }}
+      actions={{
+        onRegisterAccount: handleRegisterAccount,
+      }}
     />
   );
 };

@@ -7,6 +7,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   maxWidth?: number;
+  maxHeight?: number;
 }
 
 export const ModalComponent = ({
@@ -14,6 +15,7 @@ export const ModalComponent = ({
   isOpen,
   onClose,
   maxWidth = 600,
+  maxHeight = 800,
 }: Props) => {
   return (
     <Modal
@@ -31,7 +33,7 @@ export const ModalComponent = ({
           position: "relative",
           width: "90%",
           maxWidth: maxWidth,
-          maxHeight: "90vh",
+          maxHeight: maxHeight,
           overflow: "auto",
           borderRadius: 2,
           outline: "none",
