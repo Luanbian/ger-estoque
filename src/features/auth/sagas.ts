@@ -13,6 +13,7 @@ import {
 import { APIResponse } from "../common/types";
 import { API_BASE_URL } from "../../constants/api";
 import { apiService } from "../../services/api";
+import { setAccessTokenCookie } from "../../services/token";
 
 function* loginSaga(action: PayloadAction<LoginCredentials>) {
   yield put(actions.setLoading(true));
@@ -28,13 +29,19 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
     yield put(
       actions.setAuth({
         data: {
-          email: data.email,
           tenantId: data.tenantId,
         },
         token: data.accessToken,
       })
     );
+
+    try {
+      yield call(setAccessTokenCookie, data.accessToken);
+    } catch (error) {
+      // ignore token storage errors
+    }
   } catch (error) {
+    console.log(error);
     yield put(
       actions.setError(
         error instanceof AxiosError

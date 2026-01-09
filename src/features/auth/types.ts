@@ -1,6 +1,5 @@
 export interface User {
   tenantId: string;
-  email: string;
 }
 
 export interface AuthState {
@@ -18,8 +17,6 @@ export interface LoginCredentials {
 }
 
 export interface LoginResponse {
-  _id: string;
-  email: string;
   tenantId: string;
   accessToken: string;
 }
