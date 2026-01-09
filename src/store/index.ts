@@ -9,6 +9,7 @@ import { authSlice } from "../features/auth/slice";
 import { productSlice } from "../features/products/slice";
 import { categorySlice } from "../features/categories/slice";
 import { unitOfMeasureSlice } from "../features/unitOfMeasure/slice";
+import { accountShopkeeperSlice } from "../features/accountShopkeeper/slice";
 
 // Sagas
 import { healthSagas } from "../features/healthcheck";
@@ -16,6 +17,7 @@ import { authSagas } from "../features/auth";
 import { productSagas } from "../features/products";
 import { categorySagas } from "../features/categories";
 import { unitOfMeasureSagas } from "../features/unitOfMeasure";
+import { accountShopkeeperSagas } from "../features/accountShopkeeper";
 
 const sagaMiddleware = createSagaMiddleware({
   onError: (error, errorInfo) => {
@@ -31,6 +33,7 @@ const rootReducer = combineReducers({
   product: productSlice.reducer,
   category: categorySlice.reducer,
   unitOfMeasure: unitOfMeasureSlice.reducer,
+  accountShopkeeper: accountShopkeeperSlice.reducer,
 });
 
 export const store = configureStore({
@@ -50,6 +53,7 @@ function* rootSaga() {
     spawn(productSagas),
     spawn(categorySagas),
     spawn(unitOfMeasureSagas),
+    spawn(accountShopkeeperSagas),
   ]);
 }
 

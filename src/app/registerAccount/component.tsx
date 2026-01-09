@@ -8,29 +8,23 @@ import {
   Alert,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { LoginCredentials } from "../../../features/auth/types";
-import { useNavigate } from "react-router-dom";
+import { CreateAccountShopkeeperPayload } from "../../features/accountShopkeeper/types";
 
 interface Props {
-  onLogin: (username: string, password: string) => void;
+  onRegisterAccount: (data: CreateAccountShopkeeperPayload) => void;
   loading: boolean;
   error: string | null;
 }
 
-export const LoginComponent = ({ onLogin, loading, error }: Props) => {
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<LoginCredentials>();
+export const RegisterAccountComponent = ({
+  onRegisterAccount,
+  loading,
+  error,
+}: Props) => {
+  const { register, handleSubmit } = useForm<CreateAccountShopkeeperPayload>();
 
-  const onSubmit = (data: LoginCredentials) => {
-    onLogin(data.email, data.password);
-  };
-
-  const handleForgotPassword = () => {
-    navigate("/forgot-password");
-  };
-
-  const handleRegister = () => {
-    navigate("/register");
+  const onSubmit = (data: CreateAccountShopkeeperPayload) => {
+    onRegisterAccount(data);
   };
 
   return (
@@ -43,7 +37,7 @@ export const LoginComponent = ({ onLogin, loading, error }: Props) => {
       <Card sx={{ maxWidth: 400, width: "100%", p: 2 }}>
         <CardContent>
           <Typography variant="h4" align="center" gutterBottom>
-            Login
+            Criar Conta
           </Typography>
 
           {error && (
@@ -55,8 +49,22 @@ export const LoginComponent = ({ onLogin, loading, error }: Props) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
               fullWidth
+              label="Nome"
+              {...register("name")}
+              margin="normal"
+              required
+              disabled={loading}
+            />
+            <TextField
+              label="CNPJ"
+              {...register("cnpj")}
+              margin="normal"
+              required
+              disabled={loading}
+            />
+            <TextField
               label="Email"
-              {...register("email")}
+              {...register("auth.email")}
               margin="normal"
               required
               disabled={loading}
@@ -64,7 +72,7 @@ export const LoginComponent = ({ onLogin, loading, error }: Props) => {
             <TextField
               label="Senha"
               type="password"
-              {...register("password")}
+              {...register("auth.password")}
               margin="normal"
               required
               disabled={loading}
@@ -76,21 +84,9 @@ export const LoginComponent = ({ onLogin, loading, error }: Props) => {
               sx={{ mt: 2 }}
               disabled={loading}
             >
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Criando..." : "Criar Conta"}
             </Button>
           </form>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              variant="text"
-              sx={{ mt: 2 }}
-              onClick={handleForgotPassword}
-            >
-              Esqueci minha senha
-            </Button>
-            <Button variant="text" sx={{ mt: 2 }} onClick={handleRegister}>
-              Criar nova conta
-            </Button>
-          </Box>
         </CardContent>
       </Card>
     </Box>
