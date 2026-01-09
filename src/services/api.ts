@@ -1,15 +1,12 @@
 import axios, { AxiosResponse } from "axios";
 import { API_BASE_URL } from "../constants/api";
 import { APIResponse } from "../features/common/types";
+import { getAccessTokenCookie, isTokenExpiringSoon } from "./token";
 import {
-  clearAccessTokenCookie,
-  getAccessTokenCookie,
-  isTokenExpiringSoon,
-  setAccessTokenCookie,
-} from "./token";
-import { LoginResponse } from "../features/auth/types";
-import store from "../store";
-import { actions } from "../features/auth";
+  attachAuthHeader,
+  ensureRefreshPromise,
+  shouldSkipRefreshRequest,
+} from "./refreshToken";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -20,62 +17,12 @@ const api = axios.create({
   withCredentials: true,
 });
 
-const refreshClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 1_000 * 60 * 5, // 5 minutes
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true,
-});
-let refreshPromise: Promise<void> | null = null;
-
-async function doRefresh(): Promise<void> {
-  try {
-    const resp = await refreshClient.post<APIResponse<LoginResponse>>(
-      "/auth/refresh",
-      {}
-    );
-    const newToken = resp.data?.data?.accessToken;
-    if (newToken) {
-      await setAccessTokenCookie(newToken);
-      const currentUser = store.getState().auth.data;
-      store.dispatch(
-        actions.setAuth({
-          data: currentUser,
-          token: newToken,
-        })
-      );
-    } else {
-      clearAccessTokenCookie();
-      store.dispatch(actions.logout());
-      throw new Error("no-token");
-    }
-  } catch (err) {
-    clearAccessTokenCookie();
-    store.dispatch(actions.logout());
-    throw err;
-  }
-}
-
-function ensureRefreshPromise(): Promise<void> {
-  if (!refreshPromise) {
-    refreshPromise = doRefresh().finally(() => {
-      refreshPromise = null;
-    });
-  }
-  return refreshPromise;
-}
-
-function attachAuthHeader(headers: any, token?: string | null) {
-  if (!token) return headers;
-  headers = headers ?? {};
-  headers["Authorization"] = `Bearer ${token}`;
-  return headers;
-}
-
 api.interceptors.request.use(
   async (config) => {
+    if (shouldSkipRefreshRequest(config.url)) {
+      return config;
+    }
+
     let token = await getAccessTokenCookie();
     const isTokenExpiring = await isTokenExpiringSoon();
 
