@@ -9,28 +9,32 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { LoginCredentials } from "../../../features/auth/types";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
-  onLogin: (username: string, password: string) => void;
-  loading: boolean;
-  error: string | null;
+  data: {
+    error: string | null;
+    loading: boolean;
+  };
+  actions: {
+    navigateTo: (path: string) => void;
+    onLogin: (username: string, password: string) => void;
+  };
 }
 
-export const LoginComponent = ({ onLogin, loading, error }: Props) => {
-  const navigate = useNavigate();
+export const LoginComponent = ({ actions, data }: Props) => {
+  const { error, loading } = data;
   const { register, handleSubmit } = useForm<LoginCredentials>();
 
   const onSubmit = (data: LoginCredentials) => {
-    onLogin(data.email, data.password);
+    actions.onLogin(data.email, data.password);
   };
 
   const handleForgotPassword = () => {
-    navigate("/forgot-password");
+    actions.navigateTo("/forgot-password");
   };
 
   const handleRegister = () => {
-    navigate("/register");
+    actions.navigateTo("/register");
   };
 
   return (

@@ -19,6 +19,7 @@ function* registerAccountSaga(
     const { data } = response;
 
     yield put(actions.setAccountShopkeeper({ data }));
+    yield put(actions.setResponseMessage(response.message));
   } catch (error) {
     yield put(
       actions.setError(

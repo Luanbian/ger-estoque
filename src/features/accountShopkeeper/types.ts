@@ -8,6 +8,7 @@ export interface AccountShopkeeperState {
   data: AccountShopkeeper | null;
   loading: boolean;
   error: string | null;
+  responseMessage?: string;
 }
 
 export interface CreateAccountShopkeeperPayload {

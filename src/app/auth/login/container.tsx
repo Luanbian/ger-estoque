@@ -20,6 +20,9 @@ export const Login = () => {
   };
 
   return (
-    <LoginComponent onLogin={handleLogin} loading={loading} error={error} />
+    <LoginComponent
+      data={{ error, loading }}
+      actions={{ onLogin: handleLogin, navigateTo: navigate }}
+    />
   );
 };

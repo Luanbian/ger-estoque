@@ -30,6 +30,9 @@ export const accountShopkeeperSlice = createSlice({
     ) => {
       state.data = action.payload.data;
     },
+    setResponseMessage: (state, action: PayloadAction<string | undefined>) => {
+      state.responseMessage = action.payload;
+    },
   },
 });
 
