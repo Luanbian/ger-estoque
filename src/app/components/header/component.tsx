@@ -2,16 +2,13 @@ import { Box, Button } from "@mui/material";
 import { HealthCheck } from "./healthCheck/container";
 import { IconBurger, IconLogout } from "@tabler/icons-react";
 import { useDispatch } from "../../../store/hooks";
-import { useNavigate } from "react-router-dom";
 import { actions as authActions } from "../../../features/auth";
 
 export const HeaderComponent = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(authActions.logout());
-    navigate("/login");
   };
 
   return (

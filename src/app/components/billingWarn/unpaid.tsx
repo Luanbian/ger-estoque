@@ -1,10 +1,16 @@
-import React from "react";
 import { Box, Paper, Typography, Button, Stack, useTheme } from "@mui/material";
 import PaymentIcon from "@mui/icons-material/Payment";
 import ReportProblemRoundedIcon from "@mui/icons-material/ReportProblemRounded";
+import { useDispatch } from "react-redux";
+import { actions } from "../../../features/auth";
 
-export const UnpaidWarning: React.FC = () => {
+export const UnpaidWarning = () => {
+  const dispatch = useDispatch();
   const theme = useTheme();
+
+  const handleLogout = () => {
+    dispatch(actions.logout());
+  };
 
   return (
     <Box
@@ -87,6 +93,14 @@ export const UnpaidWarning: React.FC = () => {
                 sx={{ textTransform: "none" }}
               >
                 Contatar suporte
+              </Button>
+              <Button
+                variant="outlined"
+                color="inherit"
+                sx={{ textTransform: "none" }}
+                onClick={handleLogout}
+              >
+                Sair
               </Button>
             </Stack>
           </Box>

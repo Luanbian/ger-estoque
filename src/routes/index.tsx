@@ -6,6 +6,8 @@ import { Stock } from "../app/pages/Stock/layout";
 import { ProtectedRoute } from "./protectedRoutes";
 import { Category } from "../app/pages/Category/layout";
 import { Finance } from "../app/pages/Finance/layout";
+import RequireFeature from "./RequiredFeatures";
+import { Features } from "../features/common/featuresEnum";
 import { ForgotPassword } from "../app/auth/forgotPassword/container";
 import { ResetPassword } from "../app/auth/resetPassword/container";
 import { RegisterAccount } from "../app/registerAccount/container";
@@ -28,7 +30,14 @@ export const AppRoutes = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/stock" element={<Stock />} />
           <Route path="/category" element={<Category />} />
-          <Route path="/finance" element={<Finance />} />
+          <Route
+            path="/finance"
+            element={
+              <RequireFeature feature={Features.FINANCIAL_DASHBOARD}>
+                <Finance />
+              </RequireFeature>
+            }
+          />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

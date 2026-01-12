@@ -1,0 +1,3 @@
+export enum Features {
+  FINANCIAL_DASHBOARD = "FINANCIAL_DASHBOARD",
+}

@@ -15,24 +15,58 @@ import {
   IconCategory,
   IconStack3Filled,
   IconReportMoney,
+  IconLockFilled,
 } from "@tabler/icons-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Features } from "../../../features/common/featuresEnum";
 
 interface Props {
   isOpen: boolean;
   onToggle: () => void;
   sidebarWidth: number;
+  features: Record<Features, string | boolean | number>;
 }
 
-export const SidebarComponent = ({ isOpen, onToggle, sidebarWidth }: Props) => {
+interface IMenuItem {
+  text: string;
+  icon: React.ReactNode;
+  path: string;
+  planIcon?: React.ReactNode;
+}
+
+export const SidebarComponent = ({
+  isOpen,
+  onToggle,
+  sidebarWidth,
+  features,
+}: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const menuItems = [
-    { text: "Início", icon: <IconHome />, path: "/" },
-    { text: "Produtos", icon: <IconStack3Filled />, path: "/stock" },
-    { text: "Categorias", icon: <IconCategory />, path: "/category" },
-    { text: "Financeiro", icon: <IconReportMoney />, path: "/finance" },
+  const menuItems: IMenuItem[] = [
+    {
+      text: "Início",
+      icon: <IconHome />,
+      path: "/",
+    },
+    {
+      text: "Produtos",
+      icon: <IconStack3Filled />,
+      path: "/stock",
+    },
+    {
+      text: "Categorias",
+      icon: <IconCategory />,
+      path: "/category",
+    },
+    {
+      text: "Financeiro",
+      icon: <IconReportMoney />,
+      path: "/finance",
+      planIcon: !features[Features.FINANCIAL_DASHBOARD] ? (
+        <IconLockFilled color="gray" />
+      ) : null,
+    },
   ];
 
   const handleNavigation = (path: string) => {
@@ -65,6 +99,8 @@ export const SidebarComponent = ({ isOpen, onToggle, sidebarWidth }: Props) => {
                   selected={location.pathname === item.path}
                   onClick={() => handleNavigation(item.path)}
                   sx={{
+                    paddingInline: 0,
+                    alignItems: "center",
                     "&.Mui-selected": {
                       backgroundColor: (theme) => theme.palette.primary.main,
                       color: "white",
@@ -77,8 +113,18 @@ export const SidebarComponent = ({ isOpen, onToggle, sidebarWidth }: Props) => {
                     },
                   }}
                 >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
+                  <Box
+                    display={"flex"}
+                    alignItems="center"
+                    width="100%"
+                    justifyContent={"space-between"}
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.text} />
+                    {item.planIcon && (
+                      <ListItemIcon>{item.planIcon}</ListItemIcon>
+                    )}
+                  </Box>
                 </ListItemButton>
               </ListItem>
             ))}
