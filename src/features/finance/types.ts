@@ -23,7 +23,7 @@ export interface FinanceStock {
     productId: string;
     productName: string;
     status: StockStatusEnum;
-  };
+  }[];
 }
 
 export interface FinanceAggregate {

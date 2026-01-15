@@ -22,6 +22,8 @@ import {
   FinancePerProduct,
   FinanceStock,
 } from "../../../features/finance/types";
+import { formatCurrency } from "../../../utils/formatPrice";
+import { getStatusChip } from "../../../utils/getStockStatus";
 
 interface Props {
   data: {
@@ -32,14 +34,6 @@ interface Props {
     };
   };
 }
-
-const formatCurrency = (value: number | null | undefined) => {
-  if (value === null || value === undefined || Number.isNaN(value)) return "-";
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value);
-};
 
 export const FinancePage = ({ data }: Props) => {
   const { dashboard } = data;
@@ -80,9 +74,7 @@ export const FinancePage = ({ data }: Props) => {
                   Margem Média de Estoque
                 </Typography>
                 <Typography variant="h6">
-                  {aggregate
-                    ? `${aggregate.averageStockMargin.toFixed(2)}%`
-                    : "-"}
+                  {aggregate ? `${aggregate.averageStockMargin}%` : "-"}
                 </Typography>
 
                 <Typography
@@ -127,11 +119,9 @@ export const FinancePage = ({ data }: Props) => {
               <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
                 <Box sx={{ flex: "1 1 200px" }}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    Total em estoque
+                    Total em estoque (itens diferentes)
                   </Typography>
-                  <Typography variant="h6">
-                    {formatCurrency(stock?.totalStock ?? null)}
-                  </Typography>
+                  <Typography variant="h6">{stock?.totalStock}</Typography>
                 </Box>
 
                 <Box sx={{ flex: "1 1 200px" }}>
@@ -140,10 +130,16 @@ export const FinancePage = ({ data }: Props) => {
                   </Typography>
                   <Box sx={{ mt: 1 }}>
                     {stock?.stockZeroOrLow ? (
-                      <Chip
-                        label={`${stock.stockZeroOrLow.productName} (${stock.stockZeroOrLow.status})`}
-                        color="warning"
-                      />
+                      stock.stockZeroOrLow.map((item) => {
+                        const { label, color } = getStatusChip(item.status);
+                        return (
+                          <Chip
+                            key={item.productId}
+                            label={`${item.productName} (${label})`}
+                            color={color}
+                          />
+                        );
+                      })
                     ) : (
                       <Typography variant="body2" color="text.secondary">
                         Nenhum
@@ -173,14 +169,14 @@ export const FinancePage = ({ data }: Props) => {
                     <TableBody>
                       {stock?.stockConcentration &&
                       stock.stockConcentration.length > 0 ? (
-                        stock.stockConcentration.slice(0, 6).map((p) => (
+                        stock.stockConcentration.map((p) => (
                           <TableRow key={p.productId}>
                             <TableCell>{p.productName}</TableCell>
                             <TableCell align="right">
                               {formatCurrency(p.stockValue)}
                             </TableCell>
                             <TableCell align="right">
-                              {(p.cumulativePercentage * 100).toFixed(2)}%
+                              {p.cumulativePercentage}%
                             </TableCell>
                           </TableRow>
                         ))
@@ -230,9 +226,7 @@ export const FinancePage = ({ data }: Props) => {
                       perProduct.map((p: FinancePerProduct) => (
                         <TableRow key={p.productId} hover>
                           <TableCell>{p.productName}</TableCell>
-                          <TableCell align="right">
-                            {p.marginGross?.toFixed(2)}%
-                          </TableCell>
+                          <TableCell align="right">{p.marginGross}%</TableCell>
                           <TableCell align="right">
                             {formatCurrency(p.valueOfStock)}
                           </TableCell>
@@ -242,9 +236,7 @@ export const FinancePage = ({ data }: Props) => {
                           <TableCell align="right">
                             {formatCurrency(p.potentialGrossProfitOfStock)}
                           </TableCell>
-                          <TableCell align="right">
-                            {p.markup?.toFixed(2)}x
-                          </TableCell>
+                          <TableCell align="right">{p.markup}%</TableCell>
                           <TableCell align="center">
                             {p.isBelowIdealMarkup ? (
                               <Chip label="Abaixo" color="error" size="small" />
