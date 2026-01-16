@@ -1,6 +1,6 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { actions } from "./slice.ts";
+import { actions } from "./slice";
 import {
   ProductPayload,
   CreateProductWithVariantPayload,

@@ -1,9 +1,24 @@
 import { SubscriptionBillingStatus } from "../common/billingStatusEnum";
 
 export interface AccountShopkeeper {
-  _id: string;
-  name: string;
-  cnpj: string;
+  auth: {
+    email: string;
+    profileId: string;
+  };
+  accountShopkeeper: {
+    name: string;
+    cnpj: string;
+  };
+  subscription: {
+    planTypeId: string;
+    billingStatus: SubscriptionBillingStatus;
+    card: {
+      brand: string;
+      digits: string;
+      id: string;
+    };
+    expiresAt: string;
+  };
 }
 
 export interface AccountShopkeeperState {

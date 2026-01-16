@@ -11,6 +11,7 @@ import { Features } from "../features/common/featuresEnum";
 import { ForgotPassword } from "../app/auth/forgotPassword/container";
 import { ResetPassword } from "../app/auth/resetPassword/container";
 import { RegisterAccount } from "../app/registerAccount/container";
+import { Profile } from "../app/pages/Profile/layout";
 
 export const AppRoutes = () => {
   return (
@@ -30,6 +31,7 @@ export const AppRoutes = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/stock" element={<Stock />} />
           <Route path="/category" element={<Category />} />
+          <Route path="/profile" element={<Profile />} />
           <Route
             path="/finance"
             element={
