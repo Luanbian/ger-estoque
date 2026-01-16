@@ -30,7 +30,7 @@ function* getAccountShopkeeper() {
   try {
     const response: APIResponse<AccountShopkeeper> = yield call(
       apiService.get,
-      "/account-shopkeeper"
+      "/account-shopkeeper/profile"
     );
 
     const { data } = response;

@@ -51,9 +51,7 @@ export const shouldSkipRefreshRequest = (url?: string): boolean => {
     const path = url.startsWith("http")
       ? new URL(url).pathname
       : new URL(url, API_BASE_URL).pathname;
-    return EXCLUDED_REFRESH_PATHS.some((excludedPath) =>
-      path.startsWith(excludedPath)
-    );
+    return EXCLUDED_REFRESH_PATHS.includes(path);
   } catch (error) {
     return false;
   }
