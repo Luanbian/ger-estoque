@@ -13,6 +13,8 @@ import { PlanType } from "../../../features/plans/types";
 import { useFormContext } from "react-hook-form";
 import { CreateAccountShopkeeperPayload } from "../../../features/accountShopkeeper/types";
 import { SubscriptionBillingStatus } from "../../../features/common/billingStatusEnum";
+import { featureMapper } from "../../../utils/featuresMapper";
+import { IconCircleCheck, IconXboxX } from "@tabler/icons-react";
 
 interface Props {
   data: {
@@ -21,7 +23,7 @@ interface Props {
 }
 
 export const FreePlan = ({ data }: Props) => {
-  const { _id, name, price, durationInDays, features } = data.plan;
+  const { _id, name, price, features } = data.plan;
 
   const theme = useTheme();
 
@@ -32,7 +34,7 @@ export const FreePlan = ({ data }: Props) => {
     methods.setValue("subscription.planTypeId", _id);
     methods.setValue(
       "subscription.billingStatus",
-      SubscriptionBillingStatus.UNPAID
+      SubscriptionBillingStatus.UNPAID,
     );
   };
 
@@ -75,7 +77,6 @@ export const FreePlan = ({ data }: Props) => {
             </Stack>
           </Stack>
 
-          {/* TODO: Implement feature mapper to work properly */}
           <Box>
             {Object.entries(features).map(([key, value]) => (
               <Box
@@ -83,18 +84,21 @@ export const FreePlan = ({ data }: Props) => {
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
-                  alignItems: "center",
-                  py: 0.5,
+                  p: 0.5,
                 }}
               >
                 <Typography
                   variant="body1"
                   sx={{ textTransform: "capitalize" }}
                 >
-                  {key.replace(/_/g, " ")}
+                  {featureMapper[key as keyof typeof featureMapper]}
                 </Typography>
                 <Typography variant="body1">
-                  {typeof value === "boolean" ? (value ? "Sim" : "Não") : value}
+                  {Boolean(value) ? (
+                    <IconCircleCheck color={theme.palette.success.main} />
+                  ) : (
+                    <IconXboxX color={theme.palette.error.main} />
+                  )}
                 </Typography>
               </Box>
             ))}
@@ -119,8 +123,7 @@ export const FreePlan = ({ data }: Props) => {
             color="text.secondary"
             sx={{ display: "block", mt: 1, textAlign: "center" }}
           >
-            Sem cobrança. Atualize a qualquer momento. experimente por
-            {durationInDays} dias
+            Cancelamento a qualquer momento.
           </Typography>
         </CardContent>
       </Card>
