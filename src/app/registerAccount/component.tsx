@@ -30,12 +30,13 @@ interface Props {
 export const RegisterAccountComponent = ({ data, actions }: Props) => {
   const { loading, error, planTypeError, planTypeLoading, planTypes } = data;
   const { onRegisterAccount } = actions;
+
   const methods = useForm<CreateAccountShopkeeperPayload>();
   const { register, handleSubmit } = methods;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onSubmit = (data: CreateAccountShopkeeperPayload) => {
-    console.log(data);
     onRegisterAccount(data);
   };
 

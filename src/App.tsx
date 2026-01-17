@@ -33,14 +33,15 @@ function ThemedApp() {
     dispatch(planActions.planTypeRequest());
   }, []);
 
+  const themeSettings = ThemeSettings();
   const theme = createTheme({
     ...ThemeSettings(),
-    direction: ThemeSettings().direction,
-    palette: ThemeSettings().palette,
-    typography: ThemeSettings().typography,
-    shadows: ThemeSettings().shadows,
+    direction: themeSettings.direction,
+    palette: themeSettings.palette,
+    typography: themeSettings.typography,
+    shadows: themeSettings.shadows,
     shape: {
-      borderRadius: ThemeSettings().shape.borderRadius,
+      borderRadius: themeSettings.shape.borderRadius,
     },
   });
 
