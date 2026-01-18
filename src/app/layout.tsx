@@ -26,7 +26,7 @@ export const MainLayout = () => {
 
     const billingStatus =
       "billingStatus" in payload ? (payload.billingStatus as string) : "";
-    isUnpaid = billingStatus === SubscriptionBillingStatus.UNPAID;
+    isUnpaid = billingStatus === SubscriptionBillingStatus.FAILED;
 
     features =
       "features" in payload

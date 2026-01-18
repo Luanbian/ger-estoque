@@ -34,7 +34,7 @@ export const FreePlan = ({ data }: Props) => {
     methods.setValue("subscription.planTypeId", _id);
     methods.setValue(
       "subscription.billingStatus",
-      SubscriptionBillingStatus.UNPAID,
+      SubscriptionBillingStatus.FAILED,
     );
   };
 
