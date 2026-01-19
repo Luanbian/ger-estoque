@@ -25,11 +25,11 @@ export const salesSlice = createSlice({
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
-    addSale: (state, action: PayloadAction<Sales>) => {
+    addSale: (state, action: PayloadAction<Sales[]>) => {
       if (state.data) {
-        state.data.push(action.payload);
+        state.data = [...state.data, ...action.payload];
       } else {
-        state.data = [action.payload];
+        state.data = action.payload;
       }
     },
   },
