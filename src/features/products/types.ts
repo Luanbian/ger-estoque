@@ -28,7 +28,6 @@ export interface VariantAttributes {
 
 export interface ProductState {
   data: Product[] | null;
-  dataPlain: Product[] | null;
   loading: boolean;
   error: string | null;
   registerSteps: RegisterSteps;

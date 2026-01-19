@@ -75,15 +75,6 @@ export const SalesComponent = ({ data }: Props) => {
                 <Typography color="text.secondary">
                   Quando você registrar vendas, elas aparecerão aqui.
                 </Typography>
-                <Box mt={3} display="flex" justifyContent="center">
-                  <Button
-                    variant="contained"
-                    onClick={handleOpenModal}
-                    startIcon={<IconPlus size={20} />}
-                  >
-                    Criar primeira venda
-                  </Button>
-                </Box>
               </Box>
             )}
           </Paper>

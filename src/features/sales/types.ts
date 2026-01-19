@@ -15,6 +15,5 @@ export interface SalesState {
 }
 
 export interface CreateSalePayload {
-  productId: string;
-  quantity: number;
+  [key: string]: string | number;
 }

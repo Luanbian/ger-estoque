@@ -12,7 +12,6 @@ import {
 
 export const initialState: ProductState = {
   data: null,
-  dataPlain: null,
   loading: false,
   error: null,
   registerSteps: {
@@ -36,7 +35,6 @@ export const productSlice = createSlice({
       _state,
       _action: PayloadAction<RequestTreeProduct>,
     ) => {},
-    productRequest: () => {},
     createProductRequest: (
       _state,
       _action: PayloadAction<ProductPayload>,
@@ -74,9 +72,6 @@ export const productSlice = createSlice({
     setProduct: (state, action: PayloadAction<ProductState["data"]>) => {
       state.data = action.payload;
       state.error = null;
-    },
-    setProductPlain: (state, action: PayloadAction<Product[]>) => {
-      state.dataPlain = action.payload;
     },
     setOneProduct: (state, action: PayloadAction<Product>) => {
       if (state.data) {

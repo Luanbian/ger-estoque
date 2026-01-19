@@ -20,7 +20,6 @@ interface Props {
 
 export const Plans = ({ data }: Props) => {
   const { planTypes, loading, error } = data;
-  console.log({ data });
 
   if (loading) return <CircularProgress />;
 

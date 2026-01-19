@@ -21,7 +21,7 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
     const response: APIResponse<LoginResponse> = yield call(
       apiService.post,
       `${API_BASE_URL}/auth/login`,
-      action.payload
+      action.payload,
     );
 
     const { data } = response;
@@ -32,7 +32,7 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
           tenantId: data.tenantId,
         },
         token: data.accessToken,
-      })
+      }),
     );
 
     try {
@@ -41,13 +41,12 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
       // ignore token storage errors
     }
   } catch (error) {
-    console.log(error);
     yield put(
       actions.setError(
         error instanceof AxiosError
           ? error.response?.data.error
-          : "An unknown error occurred"
-      )
+          : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -60,7 +59,7 @@ function* forgotPasswordSaga(action: PayloadAction<ForgotPasswordPayload>) {
     const response: APIResponse<ForgotPasswordResponse> = yield call(
       apiService.post,
       `${API_BASE_URL}/auth/forgot-password`,
-      action.payload
+      action.payload,
     );
 
     const { data } = response;
@@ -71,8 +70,8 @@ function* forgotPasswordSaga(action: PayloadAction<ForgotPasswordPayload>) {
       actions.setError(
         error instanceof AxiosError
           ? error.response?.data.error
-          : "An unknown error occurred"
-      )
+          : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -85,7 +84,7 @@ function* resetPasswordSaga(action: PayloadAction<ResetPasswordPayload>) {
     const response: APIResponse<ResetPasswordResponse> = yield call(
       apiService.post,
       `${API_BASE_URL}/auth/reset-password?token=${action.payload.token}`,
-      { password: action.payload.newPassword }
+      { password: action.payload.newPassword },
     );
     const { data } = response;
 
@@ -95,8 +94,8 @@ function* resetPasswordSaga(action: PayloadAction<ResetPasswordPayload>) {
       actions.setError(
         error instanceof AxiosError
           ? error.response?.data.error
-          : "An unknown error occurred"
-      )
+          : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));

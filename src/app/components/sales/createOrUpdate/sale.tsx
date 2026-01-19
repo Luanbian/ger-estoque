@@ -1,26 +1,22 @@
 import { CreateSalePayload, Sales } from "../../../../features/sales/types";
 import { actions as salesActions } from "../../../../features/sales";
-import { useDispatch, useSelector } from "../../../../store/hooks";
+import { useDispatch } from "../../../../store/hooks";
 import { useForm } from "react-hook-form";
 import {
   Alert,
   Box,
   Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
-import { Product } from "../../../../features/products/types";
+import { AsyncSelect, Option } from "../../asyncSelect";
+import { useState } from "react";
 
 interface Props {
   data: {
     sale?: Sales;
-    products: Product[] | null;
   };
   actions: {
     createSale: (data: CreateSalePayload) => void;
@@ -29,8 +25,10 @@ interface Props {
 }
 
 const CreateOrUpdateCategoryComponent = ({ data, actions }: Props) => {
-  const { sale, products } = data;
+  const { sale } = data;
   const { createSale, onClose } = actions;
+
+  const [selected, setSelected] = useState<Option[] | null>(null);
 
   const {
     register,
@@ -74,36 +72,28 @@ const CreateOrUpdateCategoryComponent = ({ data, actions }: Props) => {
       </Typography>
 
       <Stack spacing={3}>
-        <TextField
-          {...register("quantity", {
-            required: "A quantidade é obrigatória",
-          })}
-          label="Quantidade do produto"
-          placeholder="Digite a quantidade do produto"
-          fullWidth
-          required
-          error={!!errors.quantity}
-          helperText={errors.quantity?.message}
-          defaultValue={sale?.quantity || "0"}
+        <AsyncSelect
+          data={{ endpoint: "/product", defaultValue: selected ?? undefined }}
+          actions={{ onChange: (value) => setSelected(value as Option[]) }}
         />
 
-        <FormControl fullWidth variant="outlined">
-          <InputLabel>Produto vendido</InputLabel>
-          <Select
-            label="Produto vendido"
-            {...register("productId", { required: false })}
-          >
-            {!products || products?.length === 0 ? (
-              <MenuItem disabled>Nenhum produto encontrado</MenuItem>
-            ) : (
-              products.map((product) => (
-                <MenuItem key={product._id} value={product._id}>
-                  {product.name}
-                </MenuItem>
-              ))
-            )}
-          </Select>
-        </FormControl>
+        {selected &&
+          selected.length > 0 &&
+          selected.map((item, index) => (
+            <TextField
+              key={index}
+              {...register(`${item.value}`, {
+                required: "A quantidade é obrigatória",
+              })}
+              label={`Quantidade do produto ${item.label}`}
+              placeholder={`Digite a quantidade de ${item.label}`}
+              fullWidth
+              required
+              error={!!errors.quantity}
+              helperText={errors.quantity?.message}
+              defaultValue={sale?.quantity || "0"}
+            />
+          ))}
 
         {Object.keys(errors).length > 0 && (
           <Alert severity="error">
@@ -148,7 +138,6 @@ export const CreateOrUpdateSale = ({
   actions,
 }: CreateOrUpdateSaleProps) => {
   const dispatch = useDispatch();
-  const { dataPlain } = useSelector((state) => state.product);
 
   const { sale } = data || {};
   const { onClose } = actions;
@@ -159,7 +148,7 @@ export const CreateOrUpdateSale = ({
 
   return (
     <CreateOrUpdateCategoryComponent
-      data={{ sale, products: dataPlain }}
+      data={{ sale }}
       actions={{ createSale, onClose }}
     />
   );

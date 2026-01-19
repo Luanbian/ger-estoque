@@ -36,28 +36,6 @@ function* getProductTree(action: PayloadAction<RequestTreeProduct>) {
   }
 }
 
-function* getProduct() {
-  yield put(actions.setLoading(true));
-  try {
-    const response: APIResponse<Product[]> = yield call(
-      apiService.get,
-      `${API_BASE_URL}/product`,
-    );
-
-    const { data } = response;
-
-    yield put(actions.setProductPlain(data));
-  } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
-  } finally {
-    yield put(actions.setLoading(false));
-  }
-}
-
 function* createProduct(payload: PayloadAction<ProductPayload>) {
   yield put(actions.setLoading(true));
   try {
@@ -222,7 +200,6 @@ function* removeVariant(
 export function* productSagas() {
   yield all([
     takeEvery(actions.productTreeRequest.type, getProductTree),
-    takeEvery(actions.productRequest.type, getProduct),
     takeEvery(actions.createProductRequest.type, createProduct),
     takeEvery(actions.updateProductRequest.type, updateProduct),
     takeEvery(actions.addVariantToProductRequest.type, addVariantToProduct),
