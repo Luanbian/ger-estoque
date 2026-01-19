@@ -12,6 +12,7 @@ import {
 
 export const initialState: ProductState = {
   data: null,
+  dataPlain: null,
   loading: false,
   error: null,
   registerSteps: {
@@ -34,31 +35,31 @@ export const productSlice = createSlice({
     productRequest: (_state, _action: PayloadAction<RequestProduct>) => {},
     createProductRequest: (
       _state,
-      _action: PayloadAction<ProductPayload>
+      _action: PayloadAction<ProductPayload>,
     ) => {},
     createProductWithVariantRequest: (
       _state,
-      _action: PayloadAction<CreateProductWithVariantPayload>
+      _action: PayloadAction<CreateProductWithVariantPayload>,
     ) => {},
     updateProductRequest: (
       _state,
-      _action: PayloadAction<{ id: string; data: ProductPayload }>
+      _action: PayloadAction<{ id: string; data: ProductPayload }>,
     ) => {},
     addVariantToProductRequest: (
       _state,
       _action: PayloadAction<{
         id: string;
         data: AddVariantPayload[];
-      }>
+      }>,
     ) => {},
     updateVariantRequest: (
       _state,
-      _action: PayloadAction<UpdateVariantPayload>
+      _action: PayloadAction<UpdateVariantPayload>,
     ) => {},
     deleteProductRequest: (_state, _action: PayloadAction<string>) => {},
     deleteVariantRequest: (
       _state,
-      _action: PayloadAction<{ productId: string; variantId: string }>
+      _action: PayloadAction<{ productId: string; variantId: string }>,
     ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -70,10 +71,13 @@ export const productSlice = createSlice({
       state.data = action.payload;
       state.error = null;
     },
+    setProductPlain: (state, action: PayloadAction<Product[]>) => {
+      state.dataPlain = action.payload;
+    },
     setOneProduct: (state, action: PayloadAction<Product>) => {
       if (state.data) {
         const index = state.data.findIndex(
-          (product) => product._id === action.payload._id
+          (product) => product._id === action.payload._id,
         );
         state.data[index] = action.payload;
       } else {
@@ -83,10 +87,10 @@ export const productSlice = createSlice({
     },
     addVariant: (
       state,
-      action: PayloadAction<{ id: string; data: Product }>
+      action: PayloadAction<{ id: string; data: Product }>,
     ) => {
       const index = state.data!.findIndex(
-        (product) => product._id === action.payload.id
+        (product) => product._id === action.payload.id,
       );
       if (!state.data![index].variants) {
         state.data![index].variants = [];
@@ -99,18 +103,22 @@ export const productSlice = createSlice({
     },
     setOneVariant: (state, action: PayloadAction<Product>) => {
       const productIndex = state.data!.findIndex(
-        (product) => product._id === action.payload.parentProductId
+        (product) => product._id === action.payload.parentProductId,
       );
       if (state.data![productIndex].variants) {
         const variantIndex = state.data![productIndex].variants!.findIndex(
-          (variant) => variant._id === action.payload._id
+          (variant) => variant._id === action.payload._id,
         );
         state.data![productIndex].variants![variantIndex] = action.payload;
       }
       state.error = null;
     },
     addProduct: (state, action: PayloadAction<Product>) => {
-      state.data?.push(action.payload);
+      if (state.data) {
+        state.data.push(action.payload);
+      } else {
+        state.data = [action.payload];
+      }
     },
     setRegisterSteps: (state, action: PayloadAction<RegisterSteps>) => {
       state.registerSteps = {
@@ -121,22 +129,22 @@ export const productSlice = createSlice({
     removeProduct: (state, action: PayloadAction<string>) => {
       if (state.data) {
         state.data = state.data?.filter(
-          (product) => product._id !== action.payload
+          (product) => product._id !== action.payload,
         );
       }
     },
     removeVariant: (
       state,
-      action: PayloadAction<{ productId: string; variantId: string }>
+      action: PayloadAction<{ productId: string; variantId: string }>,
     ) => {
       if (state.data) {
         const productIndex = state.data.findIndex(
-          (product) => product._id === action.payload.productId
+          (product) => product._id === action.payload.productId,
         );
         state.data[productIndex].variants = state.data[
           productIndex
         ].variants!.filter(
-          (variant) => variant._id !== action.payload.variantId
+          (variant) => variant._id !== action.payload.variantId,
         );
         if (state.data[productIndex].variants!.length === 0) {
           state.data[productIndex].hasVariants = false;
@@ -145,7 +153,7 @@ export const productSlice = createSlice({
     },
     setRegisterForm: (
       state,
-      action: PayloadAction<CreateProductWithVariantPayload | ProductPayload>
+      action: PayloadAction<CreateProductWithVariantPayload | ProductPayload>,
     ) => {
       state.registerForm = action.payload;
     },

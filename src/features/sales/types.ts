@@ -1,3 +1,20 @@
 export interface Sales {
-  id: string;
+  _id: string;
+  tenantId: string;
+  productId: string;
+  quantity: number;
+  costPrice: number;
+  salePrice: number;
+  createdAt: string;
+}
+
+export interface SalesState {
+  data: Sales[] | null;
+  loading: boolean;
+  error: string | null;
+}
+
+export interface CreateSalePayload {
+  productId: string;
+  quantity: number;
 }
