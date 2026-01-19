@@ -46,7 +46,7 @@ export interface RegisterSteps {
   };
 }
 
-export interface RequestProduct {
+export interface RequestTreeProduct {
   page?: string;
   limit?: string;
   sort?: string;

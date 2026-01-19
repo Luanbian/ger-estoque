@@ -3,7 +3,7 @@ import {
   ProductPayload,
   Product,
   ProductState,
-  RequestProduct,
+  RequestTreeProduct,
   RegisterSteps,
   CreateProductWithVariantPayload,
   AddVariantPayload,
@@ -32,7 +32,11 @@ export const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    productRequest: (_state, _action: PayloadAction<RequestProduct>) => {},
+    productTreeRequest: (
+      _state,
+      _action: PayloadAction<RequestTreeProduct>,
+    ) => {},
+    productRequest: () => {},
     createProductRequest: (
       _state,
       _action: PayloadAction<ProductPayload>,

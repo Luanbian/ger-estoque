@@ -6,5 +6,7 @@ export const generateBasicPlanFeatures = (): Record<
 > => {
   return {
     FINANCIAL_DASHBOARD: false,
+    SALES_REPORTS: false,
+    UPLOAD_PRODUCTS_EXCEL: false,
   };
 };

@@ -13,7 +13,9 @@ export const Stock = () => {
   };
 
   useEffect(() => {
-    dispatch(actions.productRequest({ page: "1", limit: "100", sort: "asc" }));
+    dispatch(
+      actions.productTreeRequest({ page: "1", limit: "100", sort: "asc" }),
+    );
   }, []);
 
   if (loading || !data || !categories) {

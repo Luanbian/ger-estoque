@@ -5,7 +5,7 @@ import {
   ProductPayload,
   CreateProductWithVariantPayload,
   Product,
-  RequestProduct,
+  RequestTreeProduct,
   AddVariantPayload,
   UpdateVariantPayload,
 } from "./types.ts";
@@ -13,13 +13,13 @@ import { APIResponse } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
 
-function* getProduct(action: PayloadAction<RequestProduct>) {
+function* getProductTree(action: PayloadAction<RequestTreeProduct>) {
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Product[]> = yield call(
       apiService.get,
-      `${API_BASE_URL}/product`,
-      action.payload
+      `${API_BASE_URL}/product/tree`,
+      action.payload,
     );
 
     const { data } = response;
@@ -28,8 +28,30 @@ function* getProduct(action: PayloadAction<RequestProduct>) {
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
+function* getProduct() {
+  yield put(actions.setLoading(true));
+  try {
+    const response: APIResponse<Product[]> = yield call(
+      apiService.get,
+      `${API_BASE_URL}/product`,
+    );
+
+    const { data } = response;
+
+    yield put(actions.setProductPlain(data));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -42,7 +64,7 @@ function* createProduct(payload: PayloadAction<ProductPayload>) {
     const response: APIResponse<Product> = yield call(
       apiService.post,
       `${API_BASE_URL}/product`,
-      payload.payload
+      payload.payload,
     );
 
     const { data } = response;
@@ -51,8 +73,8 @@ function* createProduct(payload: PayloadAction<ProductPayload>) {
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.resetRegister());
@@ -61,14 +83,14 @@ function* createProduct(payload: PayloadAction<ProductPayload>) {
 }
 
 function* createProductWithVariant(
-  payload: PayloadAction<CreateProductWithVariantPayload>
+  payload: PayloadAction<CreateProductWithVariantPayload>,
 ) {
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Product> = yield call(
       apiService.post,
       `${API_BASE_URL}/product/with-variant`,
-      payload.payload
+      payload.payload,
     );
 
     const { data } = response;
@@ -77,8 +99,8 @@ function* createProductWithVariant(
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.resetRegister());
@@ -87,14 +109,14 @@ function* createProductWithVariant(
 }
 
 function* updateProduct(
-  payload: PayloadAction<{ id: string; data: ProductPayload }>
+  payload: PayloadAction<{ id: string; data: ProductPayload }>,
 ) {
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Product> = yield call(
       apiService.put,
       `${API_BASE_URL}/product/${payload.payload.id}`,
-      payload.payload.data
+      payload.payload.data,
     );
 
     const { data } = response;
@@ -102,8 +124,8 @@ function* updateProduct(
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -111,14 +133,14 @@ function* updateProduct(
 }
 
 function* addVariantToProduct(
-  payload: PayloadAction<{ id: string; data: AddVariantPayload[] }>
+  payload: PayloadAction<{ id: string; data: AddVariantPayload[] }>,
 ) {
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Product> = yield call(
       apiService.post,
       `${API_BASE_URL}/product/${payload.payload.id}/variant`,
-      payload.payload.data
+      payload.payload.data,
     );
 
     const { data } = response;
@@ -126,8 +148,8 @@ function* addVariantToProduct(
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -142,7 +164,7 @@ function* updateVariant(payload: PayloadAction<UpdateVariantPayload>) {
     const response: APIResponse<Product> = yield call(
       apiService.put,
       `${API_BASE_URL}/product/variant/${id}`,
-      rest
+      rest,
     );
 
     const { data } = response;
@@ -150,8 +172,8 @@ function* updateVariant(payload: PayloadAction<UpdateVariantPayload>) {
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -167,8 +189,8 @@ function* removeProduct(payload: PayloadAction<string>) {
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -176,21 +198,21 @@ function* removeProduct(payload: PayloadAction<string>) {
 }
 
 function* removeVariant(
-  payload: PayloadAction<{ productId: string; variantId: string }>
+  payload: PayloadAction<{ productId: string; variantId: string }>,
 ) {
   yield put(actions.setLoading(true));
   try {
     yield call(
       apiService.delete,
-      `${API_BASE_URL}/product/variant/${payload.payload.variantId}/${payload.payload.productId}`
+      `${API_BASE_URL}/product/variant/${payload.payload.variantId}/${payload.payload.productId}`,
     );
 
     yield put(actions.removeVariant(payload.payload));
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -199,6 +221,7 @@ function* removeVariant(
 
 export function* productSagas() {
   yield all([
+    takeEvery(actions.productTreeRequest.type, getProductTree),
     takeEvery(actions.productRequest.type, getProduct),
     takeEvery(actions.createProductRequest.type, createProduct),
     takeEvery(actions.updateProductRequest.type, updateProduct),
@@ -208,7 +231,7 @@ export function* productSagas() {
     takeEvery(actions.deleteVariantRequest.type, removeVariant),
     takeEvery(
       actions.createProductWithVariantRequest.type,
-      createProductWithVariant
+      createProductWithVariant,
     ),
   ]);
 }
