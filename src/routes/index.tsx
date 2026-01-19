@@ -12,6 +12,7 @@ import { ForgotPassword } from "../app/auth/forgotPassword/container";
 import { ResetPassword } from "../app/auth/resetPassword/container";
 import { RegisterAccount } from "../app/registerAccount/container";
 import { Profile } from "../app/pages/Profile/layout";
+import { Sales } from "../app/pages/Sales/layout";
 
 export const AppRoutes = () => {
   return (
@@ -37,6 +38,14 @@ export const AppRoutes = () => {
             element={
               <RequireFeature feature={Features.FINANCIAL_DASHBOARD}>
                 <Finance />
+              </RequireFeature>
+            }
+          />
+          <Route
+            path="/sales"
+            element={
+              <RequireFeature feature={Features.SALES_REPORTS}>
+                <Sales />
               </RequireFeature>
             }
           />
