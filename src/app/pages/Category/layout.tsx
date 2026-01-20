@@ -8,8 +8,10 @@ export const Category = () => {
   const { data, loading } = useSelector((state) => state.category);
 
   useEffect(() => {
-    dispatch(actions.categoryTreeRequest());
-  }, []);
+    if (!data || data.length === 0) {
+      dispatch(actions.categoryTreeRequest());
+    }
+  }, [data]);
 
   if (loading || !data) {
     return <div>Carregando categorias...</div>;

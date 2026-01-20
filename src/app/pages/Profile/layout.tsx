@@ -10,15 +10,16 @@ export const Profile = () => {
   const { data: planTypes } = useSelector((state) => state.planType);
 
   useEffect(() => {
-    dispatch(actions.getAccountShopkeeperRequest());
-  }, []);
+    if (!data) {
+      dispatch(actions.getAccountShopkeeperRequest());
+    }
+    if (!planTypes) {
+      dispatch(planActions.planTypeRequest());
+    }
+  }, [data, planTypes]);
 
   if (loading || !data) {
     return <div>Loading...</div>;
-  }
-
-  if (!planTypes) {
-    dispatch(planActions.planTypeRequest());
   }
 
   return (
