@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
+  Collapse,
 } from "@mui/material";
 import {
   IconChevronLeft,
@@ -17,8 +18,10 @@ import {
   IconReportMoney,
   IconLockFilled,
   IconShoppingBag,
+  IconGardenCart,
 } from "@tabler/icons-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 import { Features } from "../../../features/common/featuresEnum";
 
 interface Props {
@@ -33,6 +36,7 @@ interface IMenuItem {
   icon: React.ReactNode;
   path: string;
   planIcon?: React.ReactNode;
+  children?: IMenuItem[];
 }
 
 export const SidebarComponent = ({
@@ -51,14 +55,29 @@ export const SidebarComponent = ({
       path: "/",
     },
     {
-      text: "Produtos",
-      icon: <IconStack3Filled />,
-      path: "/stock",
-    },
-    {
-      text: "Categorias",
-      icon: <IconCategory />,
-      path: "/category",
+      text: "PDV",
+      icon: <IconGardenCart />,
+      path: "/pdv",
+      children: [
+        {
+          text: "Produtos",
+          icon: <IconStack3Filled />,
+          path: "/stock",
+        },
+        {
+          text: "Categorias",
+          icon: <IconCategory />,
+          path: "/category",
+        },
+        {
+          text: "Vendas",
+          icon: <IconShoppingBag />,
+          path: "/sales",
+          planIcon: !features[Features.SALES_REPORTS] ? (
+            <IconLockFilled color="gray" />
+          ) : null,
+        },
+      ],
     },
     {
       text: "Financeiro",
@@ -68,15 +87,20 @@ export const SidebarComponent = ({
         <IconLockFilled color="gray" />
       ) : null,
     },
-    {
-      text: "Vendas",
-      icon: <IconShoppingBag />,
-      path: "/sales",
-      planIcon: !features[Features.SALES_REPORTS] ? (
-        <IconLockFilled color="gray" />
-      ) : null,
-    },
   ];
+
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>(() => {
+    const init: Record<string, boolean> = {};
+    menuItems.forEach((m) => {
+      if (m.children && m.children.some((c) => c.path === location.pathname)) {
+        init[m.text] = true;
+      }
+    });
+    return init;
+  });
+
+  const toggleMenu = (key: string) =>
+    setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -102,41 +126,126 @@ export const SidebarComponent = ({
       >
         <Box sx={{ overflow: "auto", height: "100%" }}>
           <List>
-            {menuItems.map((item) => (
-              <ListItem key={item.text} disablePadding>
-                <ListItemButton
-                  selected={location.pathname === item.path}
-                  onClick={() => handleNavigation(item.path)}
-                  sx={{
-                    paddingInline: 0,
-                    alignItems: "center",
-                    "&.Mui-selected": {
-                      backgroundColor: (theme) => theme.palette.primary.main,
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: (theme) => theme.palette.primary.dark,
-                      },
-                      "& .MuiListItemIcon-root": {
-                        color: "white",
-                      },
-                    },
-                  }}
-                >
-                  <Box
-                    display={"flex"}
-                    alignItems="center"
-                    width="100%"
-                    justifyContent={"space-between"}
-                  >
-                    <ListItemIcon>{item.icon}</ListItemIcon>
-                    <ListItemText primary={item.text} />
-                    {item.planIcon && (
-                      <ListItemIcon>{item.planIcon}</ListItemIcon>
-                    )}
-                  </Box>
-                </ListItemButton>
-              </ListItem>
-            ))}
+            {menuItems.map((item) => {
+              const hasChildren = !!item.children && item.children.length > 0;
+              const isActiveParent =
+                location.pathname === item.path ||
+                (hasChildren &&
+                  item.children!.some((c) => c.path === location.pathname));
+
+              return (
+                <Box key={item.text}>
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      selected={isActiveParent}
+                      onClick={() =>
+                        hasChildren
+                          ? toggleMenu(item.text)
+                          : handleNavigation(item.path)
+                      }
+                      sx={{
+                        paddingInline: 0,
+                        alignItems: "center",
+                        "&.Mui-selected": {
+                          backgroundColor: (theme) =>
+                            theme.palette.primary.main,
+                          color: "white",
+                          "&:hover": {
+                            backgroundColor: (theme) =>
+                              theme.palette.primary.dark,
+                          },
+                          "& .MuiListItemIcon-root": {
+                            color: "white",
+                          },
+                        },
+                      }}
+                    >
+                      <Box
+                        display={"flex"}
+                        alignItems="center"
+                        width="100%"
+                        justifyContent={"space-between"}
+                      >
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <ListItemIcon>{item.icon}</ListItemIcon>
+                          <ListItemText primary={item.text} />
+                        </Box>
+
+                        <Box display="flex" alignItems="center" gap={1}>
+                          {item.planIcon && (
+                            <ListItemIcon>{item.planIcon}</ListItemIcon>
+                          )}
+                          {hasChildren && (
+                            <Box sx={{ pr: 1 }}>
+                              <IconChevronRight
+                                size={16}
+                                style={{
+                                  transform: openMenus[item.text]
+                                    ? "rotate(90deg)"
+                                    : "rotate(0deg)",
+                                  transition: "transform 0.18s",
+                                }}
+                              />
+                            </Box>
+                          )}
+                        </Box>
+                      </Box>
+                    </ListItemButton>
+                  </ListItem>
+
+                  {hasChildren && (
+                    <Collapse
+                      in={!!openMenus[item.text]}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <List component="div" disablePadding>
+                        {item.children!.map((child) => (
+                          <ListItem key={child.text} disablePadding>
+                            <ListItemButton
+                              selected={location.pathname === child.path}
+                              onClick={() => handleNavigation(child.path)}
+                              sx={{
+                                paddingInline: 0,
+                                alignItems: "center",
+                                pl: 4,
+                                "&.Mui-selected": {
+                                  backgroundColor: (theme) =>
+                                    theme.palette.primary.main,
+                                  color: "white",
+                                  "&:hover": {
+                                    backgroundColor: (theme) =>
+                                      theme.palette.primary.dark,
+                                  },
+                                  "& .MuiListItemIcon-root": {
+                                    color: "white",
+                                  },
+                                },
+                              }}
+                            >
+                              <Box
+                                display="flex"
+                                alignItems="center"
+                                width="100%"
+                                justifyContent="space-between"
+                              >
+                                <Box display="flex" alignItems="center" gap={1}>
+                                  <ListItemIcon>{child.icon}</ListItemIcon>
+                                  <ListItemText primary={child.text} />
+                                </Box>
+                                {child.planIcon && (
+                                  <ListItemIcon>{child.planIcon}</ListItemIcon>
+                                )}
+                              </Box>
+                            </ListItemButton>
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Collapse>
+                  )}
+                </Box>
+              );
+            })}
           </List>
         </Box>
       </Drawer>
