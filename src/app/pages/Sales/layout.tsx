@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "../../../store/hooks";
 import { SalesComponent } from "./page";
 import { actions } from "../../../features/sales";
+import { actions as productActions } from "../../../features/products";
 
 export const Sales = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,16 @@ export const Sales = () => {
 
   if (loading || !data) {
     return <div>Loading sales...</div>;
+  }
+
+  if (!products) {
+    dispatch(
+      productActions.productTreeRequest({
+        page: "1",
+        limit: "100",
+        sort: "asc",
+      }),
+    );
   }
 
   return <SalesComponent data={{ sales: data, products }} />;
