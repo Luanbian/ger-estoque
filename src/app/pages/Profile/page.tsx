@@ -13,16 +13,16 @@ import {
 interface Props {
   data: {
     account: AccountShopkeeper;
+    planName: string;
   };
 }
 
 export const ProfilePage = ({ data }: Props) => {
-  const { account } = data;
+  const { account, planName } = data;
 
   const name = account?.accountShopkeeper?.name ?? "-";
   const email = account?.auth?.email ?? "-";
   const cnpj = account?.accountShopkeeper?.cnpj ?? "-";
-  const planId = account?.subscription?.planTypeId ?? "-";
   const billingStatus = account?.subscription?.billingStatus ?? "-";
   const cardBrand = account?.subscription?.card?.brand ?? "-";
   const cardDigits = account?.subscription?.card?.digits ?? "-";
@@ -95,7 +95,7 @@ export const ProfilePage = ({ data }: Props) => {
                   <Typography variant="subtitle2" color="text.secondary">
                     Plano
                   </Typography>
-                  <Typography variant="body1">{planId}</Typography>
+                  <Typography variant="body1">{planName}</Typography>
                 </Box>
 
                 <Box sx={{ flex: "1 1 200px" }}>
