@@ -1,5 +1,6 @@
 import { CreateSalePayload, Sales } from "../../../../features/sales/types";
 import { actions as salesActions } from "../../../../features/sales";
+import { actions as productsActions } from "../../../../features/products";
 import { useDispatch } from "../../../../store/hooks";
 import { useForm } from "react-hook-form";
 import {
@@ -144,6 +145,13 @@ export const CreateOrUpdateSale = ({
 
   const createSale = (data: CreateSalePayload) => {
     dispatch(salesActions.createSaleRequest(data));
+    dispatch(
+      productsActions.productTreeRequest({
+        page: "1",
+        limit: "100",
+        sort: "asc",
+      }),
+    );
   };
 
   return (
