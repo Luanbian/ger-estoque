@@ -1,10 +1,10 @@
 export interface Sales {
   _id: string;
   tenantId: string;
-  productId: string;
-  quantity: number;
-  costPrice: number;
-  salePrice: number;
+  products: Record<
+    string,
+    { quantity: number; costPrice: number; salePrice: number }
+  >;
   createdAt: string;
 }
 

@@ -5,10 +5,10 @@ import {
   Paper,
   Typography,
   Stack,
+  CircularProgress,
 } from "@mui/material";
 import { Sales } from "../../../features/sales/types";
 import { IconPlus } from "@tabler/icons-react";
-import { Product } from "../../../features/products/types";
 import { SaleGridList } from "../../components/sales/table/list";
 import { useState } from "react";
 import { ModalComponent } from "../../components/modal";
@@ -16,13 +16,13 @@ import { CreateOrUpdateSale } from "../../components/sales/createOrUpdate/sale";
 
 interface Props {
   data: {
-    sales: Sales[];
-    products: Product[] | null;
+    sales: Sales[] | null;
+    loading: boolean;
   };
 }
 
 export const SalesComponent = ({ data }: Props) => {
-  const { sales, products } = data;
+  const { sales, loading } = data;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -65,17 +65,12 @@ export const SalesComponent = ({ data }: Props) => {
 
         <Box mt={3}>
           <Paper elevation={2} sx={{ overflow: "hidden" }}>
-            {sales && sales.length > 0 ? (
-              <SaleGridList data={{ sales, products }} />
+            {loading ? (
+              <CircularProgress />
+            ) : !sales || sales.length === 0 ? (
+              <Typography variant="body1">Nenhuma venda encontrada.</Typography>
             ) : (
-              <Box p={6} textAlign="center">
-                <Typography variant="h6" gutterBottom>
-                  Ainda não há vendas
-                </Typography>
-                <Typography color="text.secondary">
-                  Quando você registrar vendas, elas aparecerão aqui.
-                </Typography>
-              </Box>
+              <SaleGridList data={{ sales }} />
             )}
           </Paper>
         </Box>

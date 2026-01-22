@@ -7,24 +7,22 @@ import {
 } from "@mui/material";
 import { Sales } from "../../../../features/sales/types";
 import { SaleRow } from "./sale";
-import { Product } from "../../../../features/products/types";
 
 interface Props {
   data: {
     sales: Sales[];
-    products: Product[] | null;
   };
 }
 
 export const SaleGridList = ({ data }: Props) => {
-  const { sales, products } = data;
+  const { sales } = data;
 
   return (
     <Table>
       <TableHead>
         <TableRow>
           <TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
-          <TableCell sx={{ fontWeight: 600 }}>Produto</TableCell>
+          <TableCell sx={{ fontWeight: 600 }}>Produtos</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Quantidade</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Preço venda</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Custo</TableCell>
@@ -33,15 +31,7 @@ export const SaleGridList = ({ data }: Props) => {
       </TableHead>
       <TableBody>
         {sales.map((sale) => (
-          <SaleRow
-            key={sale._id}
-            data={{
-              sale,
-              productName:
-                products?.find((p) => p._id === sale.productId)?.name ||
-                "Produto deletado ou inexistente",
-            }}
-          />
+          <SaleRow key={sale._id} data={{ sale }} />
         ))}
       </TableBody>
     </Table>

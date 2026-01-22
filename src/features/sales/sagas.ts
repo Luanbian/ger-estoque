@@ -27,7 +27,7 @@ function* getSales() {
 function* createSales(payload: PayloadAction<CreateSalePayload>) {
   yield put(actions.setLoading(true));
   try {
-    const response: APIResponse<Sales[]> = yield call(
+    const response: APIResponse<Sales> = yield call(
       apiService.post,
       `/sales`,
       payload.payload,
