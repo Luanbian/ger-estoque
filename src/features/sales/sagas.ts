@@ -1,14 +1,19 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import actions from "./slice";
-import { APIResponse } from "../common/types";
+import { APIResponse, PaginationRequest } from "../common/types";
 import { apiService } from "../../services/api";
 import { CreateSalePayload, Sales } from "./types";
 import { PayloadAction } from "@reduxjs/toolkit";
 
-function* getSales() {
+function* getSales(payload: PayloadAction<PaginationRequest>) {
   yield put(actions.setLoading(true));
   try {
-    const response: APIResponse<Sales[]> = yield call(apiService.get, `/sales`);
+    const response: APIResponse<Sales[]> = yield call(
+      apiService.post,
+      `/sales/list`,
+      {},
+      payload.payload,
+    );
 
     const { data } = response;
 
