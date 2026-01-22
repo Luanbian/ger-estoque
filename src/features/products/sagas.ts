@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { actions } from "./slice";
 import {
@@ -12,20 +12,26 @@ import {
 import { APIResponse } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
+import { Filters } from "../filters/types.ts";
+import { AppState } from "../../store/index.ts";
 
 function* getProductTree(action: PayloadAction<RequestTreeProduct>) {
   yield put(actions.setLoading(true));
   try {
+    const filters: Filters = yield select((state: AppState) => state.filter);
+
     const response: APIResponse<Product[]> = yield call(
-      apiService.get,
+      apiService.post,
       `${API_BASE_URL}/product/tree`,
-      action.payload,
+      filters?.product || {},
+      { ...action.payload },
     );
 
     const { data } = response;
 
     yield put(actions.setProduct(data));
   } catch (error) {
+    console.error(error);
     yield put(
       actions.setError(
         error instanceof Error ? error.message : "An unknown error occurred",

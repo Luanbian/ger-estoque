@@ -14,7 +14,7 @@ export const Stock = () => {
   };
 
   useEffect(() => {
-    if (!data || data.length === 0) {
+    if (data === null) {
       dispatch(
         actions.productTreeRequest({ page: "1", limit: "100", sort: "asc" }),
       );
@@ -24,11 +24,14 @@ export const Stock = () => {
     }
   }, [data, categories]);
 
-  if (loading || !data || !categories) {
+  if (!categories) {
     return <div>Carregando produtos...</div>;
   }
 
   return (
-    <StockPage data={{ products: data, categories }} actions={{ resetForm }} />
+    <StockPage
+      data={{ products: data, categories, loading }}
+      actions={{ resetForm }}
+    />
   );
 };

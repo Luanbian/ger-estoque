@@ -14,6 +14,7 @@ import { planTypeSlice } from "../features/plans/slice";
 import { financeSlice } from "../features/finance/slice";
 import { paymentSlice } from "../features/payment/slice";
 import { salesSlice } from "../features/sales/slice";
+import { filterSlice } from "../features/filters/slice";
 
 // Sagas
 import { healthSagas } from "../features/healthcheck";
@@ -46,6 +47,7 @@ const rootReducer = combineReducers({
   finance: financeSlice.reducer,
   payment: paymentSlice.reducer,
   sales: salesSlice.reducer,
+  filter: filterSlice.reducer,
 });
 
 export const store = configureStore({

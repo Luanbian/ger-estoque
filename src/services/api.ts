@@ -44,7 +44,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 api.interceptors.response.use(
@@ -68,7 +68,7 @@ api.interceptors.response.use(
         if (token) {
           originalRequest.headers = attachAuthHeader(
             originalRequest.headers ?? {},
-            token
+            token,
           );
           return api(originalRequest);
         }
@@ -78,24 +78,27 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export const apiService = {
   get: async <T = unknown>(
     url: string,
-    data?: any
+    params?: any,
   ): Promise<APIResponse<T>> => {
     const response: AxiosResponse = await api.get<APIResponse<T>>(url, {
-      params: data,
+      params,
     });
     return response.data;
   },
   post: async <T = unknown>(
     url: string,
-    data: any
+    data: any,
+    params?: any,
   ): Promise<APIResponse<T>> => {
-    const response: AxiosResponse = await api.post<APIResponse<T>>(url, data);
+    const response: AxiosResponse = await api.post<APIResponse<T>>(url, data, {
+      params,
+    });
     return response.data;
   },
   put: async <T = unknown>(url: string, data: any): Promise<APIResponse<T>> => {
@@ -104,7 +107,7 @@ export const apiService = {
   },
   delete: async <T = unknown>(
     url: string,
-    data?: any
+    data?: any,
   ): Promise<APIResponse<T>> => {
     const response: AxiosResponse = await api.delete<APIResponse<T>>(url, {
       data,
@@ -113,7 +116,7 @@ export const apiService = {
   },
   patch: async <T = unknown>(
     url: string,
-    data: any
+    data: any,
   ): Promise<APIResponse<T>> => {
     const response: AxiosResponse = await api.patch<APIResponse<T>>(url, data);
     return response.data;
