@@ -1,19 +1,33 @@
 import { useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Pagination as MUIPagination,
+  Typography,
+} from "@mui/material";
 import { IconPlus } from "@tabler/icons-react";
 import { Category } from "../../../features/categories/types";
 import { CategoryGridList } from "../../components/categories/table/list";
 import { ModalComponent } from "../../components/modal";
 import { CreateOrUpdateCategory } from "../../components/categories/createOrUpdate/category";
+import { CategoryFilters } from "../../components/categories/filters";
+import { Pagination } from "../../../features/common/types";
 
 interface Props {
   data: {
-    categories: Category[];
+    categories: Category[] | null;
+    loading: boolean;
+    pagination: Pagination | null;
+  };
+  actions: {
+    onChangePage: (page: number) => void;
   };
 }
 
-export const CategoryPage = ({ data }: Props) => {
-  const { categories } = data;
+export const CategoryPage = ({ data, actions }: Props) => {
+  const { categories, loading, pagination } = data;
+  const { onChangePage } = actions;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -46,8 +60,31 @@ export const CategoryPage = ({ data }: Props) => {
             Nova Categoria
           </Button>
         </Box>
-        <CategoryGridList data={{ categories }} />
+
+        <Box display={"flex"} flexDirection="column" gap={4} paddingInline={2}>
+          <CategoryFilters />
+          {loading ? (
+            <CircularProgress />
+          ) : !categories || categories.length === 0 ? (
+            <Typography variant="body1">
+              Nenhuma categoria encontrada.
+            </Typography>
+          ) : (
+            <CategoryGridList data={{ categories }} />
+          )}
+        </Box>
+
+        <Box mt={4} display="flex" justifyContent="center">
+          {pagination && (
+            <MUIPagination
+              count={pagination.totalPages}
+              page={pagination.page}
+              onChange={(_, page) => onChangePage(page)}
+            />
+          )}
+        </Box>
       </Box>
+
       <ModalComponent
         isOpen={isModalOpen}
         onClose={handleCloseModal}

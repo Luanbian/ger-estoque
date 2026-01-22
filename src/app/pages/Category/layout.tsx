@@ -5,17 +5,34 @@ import actions from "../../../features/categories/slice.ts";
 
 export const Category = () => {
   const dispatch = useDispatch();
-  const { data, loading } = useSelector((state) => state.category);
+  const { data, loading, pagination } = useSelector((state) => state.category);
+
+  const onChangePage = (page: number) => {
+    dispatch(
+      actions.categoryTreeRequest({
+        page: page.toString(),
+        limit: "25",
+        sort: "asc",
+      }),
+    );
+  };
 
   useEffect(() => {
-    if (!data || data.length === 0) {
-      dispatch(actions.categoryTreeRequest());
+    if (data === null) {
+      dispatch(
+        actions.categoryTreeRequest({
+          page: "1",
+          limit: "25",
+          sort: "asc",
+        }),
+      );
     }
   }, [data]);
 
-  if (loading || !data) {
-    return <div>Carregando categorias...</div>;
-  }
-
-  return <CategoryPage data={{ categories: data }} />;
+  return (
+    <CategoryPage
+      data={{ categories: data, loading, pagination }}
+      actions={{ onChangePage }}
+    />
+  );
 };

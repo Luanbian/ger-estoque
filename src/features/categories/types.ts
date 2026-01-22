@@ -1,3 +1,5 @@
+import { Pagination } from "../common/types";
+
 export interface Category {
   _id: string;
   name: string;
@@ -14,6 +16,7 @@ export interface CategoryState {
   dataPlain: Category[] | null;
   loading: boolean;
   error: string | null;
+  pagination: Pagination | null;
 }
 
 export interface CategoryPayload {
@@ -21,4 +24,10 @@ export interface CategoryPayload {
   description?: string;
   fatherCategoryId?: string | null;
   displayOrder?: number;
+}
+
+export interface RequestTreeCategory {
+  page?: string;
+  limit?: string;
+  sort?: string;
 }

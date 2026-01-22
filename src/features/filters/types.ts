@@ -3,6 +3,7 @@ import { StockStatusEnum } from "../common/stockStatusEnum";
 
 export interface Filters {
   product: FilterProduct;
+  category: FilterCategory;
 }
 
 export interface FilterProduct {
@@ -11,4 +12,8 @@ export interface FilterProduct {
   unitOfMeasureId?: string;
   type?: ProductType;
   stockStatus?: StockStatusEnum;
+}
+
+export interface FilterCategory {
+  name?: string;
 }

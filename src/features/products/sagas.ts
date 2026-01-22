@@ -15,7 +15,7 @@ import { apiService } from "../../services/api.ts";
 import { Filters } from "../filters/types.ts";
 import { AppState } from "../../store/index.ts";
 
-function* getProductTree(action: PayloadAction<RequestTreeProduct>) {
+function* getProductTree(payload: PayloadAction<RequestTreeProduct>) {
   yield put(actions.setLoading(true));
   try {
     const filters: Filters = yield select((state: AppState) => state.filter);
@@ -24,7 +24,7 @@ function* getProductTree(action: PayloadAction<RequestTreeProduct>) {
       apiService.post,
       `${API_BASE_URL}/product/tree`,
       filters?.product || {},
-      { ...action.payload },
+      payload.payload,
     );
 
     const { data } = response;

@@ -1,27 +1,34 @@
-import { all, call, put, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { actions } from "./slice.ts";
-import { Category, CategoryPayload } from "./types.ts";
+import { Category, CategoryPayload, RequestTreeCategory } from "./types.ts";
 import { APIResponse } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { Filters } from "../filters/types.ts";
+import { AppState } from "../../store/index.ts";
 
-function* getCategoryTree() {
+function* getCategoryTree(payload: PayloadAction<RequestTreeCategory>) {
   yield put(actions.setLoading(true));
   try {
+    const filters: Filters = yield select((state: AppState) => state.filter);
+
     const response: APIResponse<Category[]> = yield call(
-      apiService.get,
-      `${API_BASE_URL}/category/tree`
+      apiService.post,
+      `${API_BASE_URL}/category/tree`,
+      filters.category || {},
+      payload.payload,
     );
 
     const { data } = response;
 
     yield put(actions.setCategory(data));
+    yield put(actions.setPagination(response.pagination || null));
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -33,7 +40,7 @@ function* getCategory() {
   try {
     const response: APIResponse<Category[]> = yield call(
       apiService.get,
-      `${API_BASE_URL}/category`
+      `${API_BASE_URL}/category`,
     );
 
     const { data } = response;
@@ -42,8 +49,8 @@ function* getCategory() {
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -56,7 +63,7 @@ function* createCategory(payload: PayloadAction<CategoryPayload>) {
     const response: APIResponse<Category> = yield call(
       apiService.post,
       `${API_BASE_URL}/category`,
-      payload.payload
+      payload.payload,
     );
 
     const { data } = response;
@@ -65,8 +72,8 @@ function* createCategory(payload: PayloadAction<CategoryPayload>) {
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -79,7 +86,7 @@ function* createSubCategory(payload: PayloadAction<CategoryPayload>) {
     const response: APIResponse<Category> = yield call(
       apiService.post,
       `${API_BASE_URL}/category/${payload.payload.fatherCategoryId}/subcategory`,
-      payload.payload
+      payload.payload,
     );
 
     const { data } = response;
@@ -88,8 +95,8 @@ function* createSubCategory(payload: PayloadAction<CategoryPayload>) {
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -97,14 +104,14 @@ function* createSubCategory(payload: PayloadAction<CategoryPayload>) {
 }
 
 function* updateCategory(
-  payload: PayloadAction<{ id: string; data: CategoryPayload }>
+  payload: PayloadAction<{ id: string; data: CategoryPayload }>,
 ) {
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Category> = yield call(
       apiService.put,
       `${API_BASE_URL}/category/${payload.payload.id}`,
-      payload.payload.data
+      payload.payload.data,
     );
 
     const { data } = response;
@@ -113,8 +120,8 @@ function* updateCategory(
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -126,15 +133,15 @@ function* deleteCategory(payload: PayloadAction<string>) {
   try {
     yield call(
       apiService.delete,
-      `${API_BASE_URL}/category/${payload.payload}`
+      `${API_BASE_URL}/category/${payload.payload}`,
     );
 
     yield put(actions.removeCategory(payload.payload));
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));
@@ -142,21 +149,21 @@ function* deleteCategory(payload: PayloadAction<string>) {
 }
 
 function* deleteSubCategory(
-  payload: PayloadAction<{ fatherCategoryId: string; id: string }>
+  payload: PayloadAction<{ fatherCategoryId: string; id: string }>,
 ) {
   yield put(actions.setLoading(true));
   try {
     yield call(
       apiService.delete,
-      `${API_BASE_URL}/category/${payload.payload.id}`
+      `${API_BASE_URL}/category/${payload.payload.id}`,
     );
 
     yield put(actions.removeSubCategory(payload.payload));
   } catch (error) {
     yield put(
       actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
     );
   } finally {
     yield put(actions.setLoading(false));

@@ -5,6 +5,7 @@ import { Filters } from "./types";
 
 const initialState: Filters = {
   product: {},
+  category: {},
 };
 
 export const filterSlice = createSlice({
@@ -25,6 +26,9 @@ export const filterSlice = createSlice({
     },
     setProductStockStatus: (state, action: PayloadAction<StockStatusEnum>) => {
       state.product.stockStatus = action.payload;
+    },
+    setCategoryName: (state, action: PayloadAction<string>) => {
+      state.category.name = action.payload;
     },
   },
 });
