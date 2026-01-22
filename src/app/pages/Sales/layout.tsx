@@ -13,11 +13,11 @@ export const Sales = () => {
     if (!data || data.length === 0) {
       dispatch(actions.salesRequest());
     }
-    if (!products || products.length === 0) {
+    if (products === null) {
       dispatch(
         productActions.productTreeRequest({
           page: "1",
-          limit: "100",
+          limit: "25",
           sort: "asc",
         }),
       );

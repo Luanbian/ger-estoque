@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Pagination as MUIPagination,
+  Typography,
+} from "@mui/material";
 import { ProductGridList } from "../../components/products/table/list";
 import { Product } from "../../../features/products/types";
 import { IconPlus } from "@tabler/icons-react";
@@ -7,21 +13,24 @@ import { ModalComponent } from "../../components/modal";
 import { CreateOrUpdateProduct } from "../../components/products/createOrUpdate/product";
 import { Category } from "../../../features/categories/types";
 import { ProductFilters } from "../../components/products/filters";
+import { Pagination } from "../../../features/common/types";
 
 interface Props {
   data: {
     products: Product[] | null;
     categories: Category[];
     loading: boolean;
+    pagination: Pagination | null;
   };
   actions: {
     resetForm: () => void;
+    onChangePage: (page: number) => void;
   };
 }
 
 export const StockPage = ({ data, actions }: Props) => {
-  const { products, categories, loading } = data;
-  const { resetForm } = actions;
+  const { products, categories, loading, pagination } = data;
+  const { resetForm, onChangePage } = actions;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -64,6 +73,16 @@ export const StockPage = ({ data, actions }: Props) => {
             <Typography variant="body1">Nenhum produto encontrado.</Typography>
           ) : (
             <ProductGridList data={{ products, categories }} />
+          )}
+        </Box>
+
+        <Box mt={4} display="flex" justifyContent="center">
+          {pagination && (
+            <MUIPagination
+              count={pagination.totalPages}
+              page={pagination.page}
+              onChange={(_, page) => onChangePage(page)}
+            />
           )}
         </Box>
       </Box>

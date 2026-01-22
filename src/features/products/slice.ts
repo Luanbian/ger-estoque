@@ -25,6 +25,7 @@ export const initialState: ProductState = {
     },
   },
   registerForm: null,
+  pagination: null,
 };
 
 export const productSlice = createSlice({
@@ -72,6 +73,12 @@ export const productSlice = createSlice({
     setProduct: (state, action: PayloadAction<ProductState["data"]>) => {
       state.data = action.payload;
       state.error = null;
+    },
+    setPagination: (
+      state,
+      action: PayloadAction<ProductState["pagination"]>,
+    ) => {
+      state.pagination = action.payload;
     },
     setOneProduct: (state, action: PayloadAction<Product>) => {
       if (state.data) {

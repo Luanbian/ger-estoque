@@ -148,7 +148,7 @@ export const CreateOrUpdateSale = ({
     dispatch(
       productsActions.productTreeRequest({
         page: "1",
-        limit: "100",
+        limit: "25",
         sort: "asc",
       }),
     );

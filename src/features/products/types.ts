@@ -1,5 +1,6 @@
 import { ProductType } from "../common/productTypeEnum.ts";
 import { StockStatusEnum } from "../common/stockStatusEnum.ts";
+import { Pagination } from "../common/types.ts";
 
 export interface Product {
   _id: string;
@@ -32,6 +33,7 @@ export interface ProductState {
   error: string | null;
   registerSteps: RegisterSteps;
   registerForm: ProductPayload | CreateProductWithVariantPayload | null;
+  pagination: Pagination | null;
 }
 
 export interface RegisterSteps {

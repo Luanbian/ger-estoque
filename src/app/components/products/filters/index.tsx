@@ -186,7 +186,7 @@ export const ProductFilters = () => {
     dispatch(
       productActions.productTreeRequest({
         page: "1",
-        limit: "10",
+        limit: "25",
         sort: "asc",
       }),
     );
@@ -197,7 +197,7 @@ export const ProductFilters = () => {
     dispatch(
       productActions.productTreeRequest({
         page: "1",
-        limit: "10",
+        limit: "25",
         sort: "asc",
       }),
     );
@@ -207,7 +207,7 @@ export const ProductFilters = () => {
     dispatch(
       productActions.productTreeRequest({
         page: "1",
-        limit: "10",
+        limit: "25",
         sort: "asc",
       }),
     );
@@ -217,7 +217,7 @@ export const ProductFilters = () => {
     dispatch(
       productActions.productTreeRequest({
         page: "1",
-        limit: "10",
+        limit: "25",
         sort: "asc",
       }),
     );
@@ -227,7 +227,7 @@ export const ProductFilters = () => {
     dispatch(
       productActions.productTreeRequest({
         page: "1",
-        limit: "10",
+        limit: "25",
         sort: "asc",
       }),
     );

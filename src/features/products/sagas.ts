@@ -30,6 +30,7 @@ function* getProductTree(action: PayloadAction<RequestTreeProduct>) {
     const { data } = response;
 
     yield put(actions.setProduct(data));
+    yield put(actions.setPagination(response.pagination || null));
   } catch (error) {
     console.error(error);
     yield put(

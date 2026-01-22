@@ -3,10 +3,12 @@ export interface APIResponse<T> {
   message: string;
   data: T;
   error?: string;
-  pagination?: {
-    page: number;
-    totalPages: number;
-    total: number;
-    limit: number;
-  };
+  pagination?: Pagination;
+}
+
+export interface Pagination {
+  page: number;
+  totalPages: number;
+  total: number;
+  limit: number;
 }
