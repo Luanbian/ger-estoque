@@ -19,6 +19,7 @@ import {
   IconLockFilled,
   IconShoppingBag,
   IconGardenCart,
+  IconUsers,
 } from "@tabler/icons-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -84,6 +85,14 @@ export const SidebarComponent = ({
       icon: <IconReportMoney />,
       path: "/finance",
       planIcon: !features[Features.FINANCIAL_DASHBOARD] ? (
+        <IconLockFilled color="gray" />
+      ) : null,
+    },
+    {
+      text: "Clientes",
+      icon: <IconUsers />,
+      path: "/customers",
+      planIcon: !features[Features.CUSTOMER_MANAGEMENT] ? (
         <IconLockFilled color="gray" />
       ) : null,
     },

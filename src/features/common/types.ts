@@ -14,7 +14,7 @@ export interface Pagination {
 }
 
 export interface PaginationRequest {
-  page?: number;
-  limit?: number;
+  page?: string;
+  limit?: string;
   sort?: string;
 }

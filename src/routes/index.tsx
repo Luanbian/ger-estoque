@@ -13,6 +13,7 @@ import { ResetPassword } from "../app/auth/resetPassword/container";
 import { RegisterAccount } from "../app/registerAccount/container";
 import { Profile } from "../app/pages/Profile/layout";
 import { Sales } from "../app/pages/Sales/layout";
+import { Customer } from "../app/pages/Customer/layout";
 
 export const AppRoutes = () => {
   return (
@@ -46,6 +47,14 @@ export const AppRoutes = () => {
             element={
               <RequireFeature feature={Features.SALES_REPORTS}>
                 <Sales />
+              </RequireFeature>
+            }
+          />
+          <Route
+            path="/customers"
+            element={
+              <RequireFeature feature={Features.CUSTOMER_MANAGEMENT}>
+                <Customer />
               </RequireFeature>
             }
           />
