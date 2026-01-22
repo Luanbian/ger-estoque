@@ -47,12 +47,6 @@ export interface RegisterSteps {
   };
 }
 
-export interface RequestTreeProduct {
-  page?: string;
-  limit?: string;
-  sort?: string;
-}
-
 export interface ProductPayload {
   name: string;
   type: ProductType;

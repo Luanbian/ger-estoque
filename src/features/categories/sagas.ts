@@ -1,14 +1,14 @@
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { actions } from "./slice.ts";
-import { Category, CategoryPayload, RequestTreeCategory } from "./types.ts";
-import { APIResponse } from "../common/types.ts";
+import { Category, CategoryPayload } from "./types.ts";
+import { APIResponse, PaginationRequest } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { Filters } from "../filters/types.ts";
 import { AppState } from "../../store/index.ts";
 
-function* getCategoryTree(payload: PayloadAction<RequestTreeCategory>) {
+function* getCategoryTree(payload: PayloadAction<PaginationRequest>) {
   yield put(actions.setLoading(true));
   try {
     const filters: Filters = yield select((state: AppState) => state.filter);

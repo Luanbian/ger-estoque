@@ -1,10 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  Category,
-  CategoryState,
-  CategoryPayload,
-  RequestTreeCategory,
-} from "./types.ts";
+import { Category, CategoryState, CategoryPayload } from "./types.ts";
+import { PaginationRequest } from "../common/types.ts";
 
 export const initialState: CategoryState = {
   data: null,
@@ -21,7 +17,7 @@ export const categorySlice = createSlice({
     categoryRequest: () => {},
     categoryTreeRequest: (
       _state,
-      _action: PayloadAction<RequestTreeCategory>,
+      _action: PayloadAction<PaginationRequest>,
     ) => {},
     createCategoryRequest: (
       _state,

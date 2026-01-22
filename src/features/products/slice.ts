@@ -3,12 +3,12 @@ import {
   ProductPayload,
   Product,
   ProductState,
-  RequestTreeProduct,
   RegisterSteps,
   CreateProductWithVariantPayload,
   AddVariantPayload,
   UpdateVariantPayload,
 } from "./types.ts";
+import { PaginationRequest } from "../common/types.ts";
 
 export const initialState: ProductState = {
   data: null,
@@ -34,7 +34,7 @@ export const productSlice = createSlice({
   reducers: {
     productTreeRequest: (
       _state,
-      _action: PayloadAction<RequestTreeProduct>,
+      _action: PayloadAction<PaginationRequest>,
     ) => {},
     createProductRequest: (
       _state,

@@ -12,3 +12,9 @@ export interface Pagination {
   total: number;
   limit: number;
 }
+
+export interface PaginationRequest {
+  page?: number;
+  limit?: number;
+  sort?: string;
+}

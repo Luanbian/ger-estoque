@@ -25,9 +25,3 @@ export interface CategoryPayload {
   fatherCategoryId?: string | null;
   displayOrder?: number;
 }
-
-export interface RequestTreeCategory {
-  page?: string;
-  limit?: string;
-  sort?: string;
-}

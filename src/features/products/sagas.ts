@@ -5,17 +5,16 @@ import {
   ProductPayload,
   CreateProductWithVariantPayload,
   Product,
-  RequestTreeProduct,
   AddVariantPayload,
   UpdateVariantPayload,
 } from "./types.ts";
-import { APIResponse } from "../common/types.ts";
+import { APIResponse, PaginationRequest } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
 import { Filters } from "../filters/types.ts";
 import { AppState } from "../../store/index.ts";
 
-function* getProductTree(payload: PayloadAction<RequestTreeProduct>) {
+function* getProductTree(payload: PayloadAction<PaginationRequest>) {
   yield put(actions.setLoading(true));
   try {
     const filters: Filters = yield select((state: AppState) => state.filter);
