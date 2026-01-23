@@ -47,12 +47,12 @@ export const SalesFilters = () => {
 
   const changeQuantity = (min: number, max: number) => {
     dispatch(filterActions.setSalesQuantity({ min, max }));
-    dispatch(actions.salesRequest({ page: "1", limit: "25", sort: "asc" }));
+    dispatch(actions.salesRequest());
   };
 
   const changeSalePrice = (min: number, max: number) => {
     dispatch(filterActions.setSalesPrice({ min, max }));
-    dispatch(actions.salesRequest({ page: "1", limit: "25", sort: "asc" }));
+    dispatch(actions.salesRequest());
   };
 
   return (

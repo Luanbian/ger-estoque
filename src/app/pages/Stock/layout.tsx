@@ -25,9 +25,7 @@ export const Stock = () => {
 
   useEffect(() => {
     if (data === null) {
-      dispatch(
-        actions.productTreeRequest({ page: "1", limit: "25", sort: "asc" }),
-      );
+      dispatch(actions.productTreeRequest());
     }
     if (!categories || categories.length === 0) {
       dispatch(categoryActions.categoryRequest());

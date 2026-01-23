@@ -183,54 +183,24 @@ export const ProductFilters = () => {
 
   const onChangeName = (name: string) => {
     dispatch(actions.setProductName(name));
-    dispatch(
-      productActions.productTreeRequest({
-        page: "1",
-        limit: "25",
-        sort: "asc",
-      }),
-    );
+    dispatch(productActions.productTreeRequest());
   };
   const onChangeCategoryId = (options: Option[]) => {
     const categoryId = options.length > 0 ? (options[0].value as string) : "";
     dispatch(actions.setProductCategoryId(categoryId));
-    dispatch(
-      productActions.productTreeRequest({
-        page: "1",
-        limit: "25",
-        sort: "asc",
-      }),
-    );
+    dispatch(productActions.productTreeRequest());
   };
   const onChangeUnitOfMeasureId = (unitOfMeasureId: string) => {
     dispatch(actions.setProductUnitOfMeasureId(unitOfMeasureId));
-    dispatch(
-      productActions.productTreeRequest({
-        page: "1",
-        limit: "25",
-        sort: "asc",
-      }),
-    );
+    dispatch(productActions.productTreeRequest());
   };
   const onChangeType = (type: ProductType) => {
     dispatch(actions.setProductType(type));
-    dispatch(
-      productActions.productTreeRequest({
-        page: "1",
-        limit: "25",
-        sort: "asc",
-      }),
-    );
+    dispatch(productActions.productTreeRequest());
   };
   const onChangeStockStatus = (stockStatus: StockStatusEnum) => {
     dispatch(actions.setProductStockStatus(stockStatus));
-    dispatch(
-      productActions.productTreeRequest({
-        page: "1",
-        limit: "25",
-        sort: "asc",
-      }),
-    );
+    dispatch(productActions.productTreeRequest());
   };
 
   if (!unitOfMeasures) {

@@ -145,13 +145,7 @@ export const CreateOrUpdateSale = ({
 
   const createSale = (data: CreateSalePayload) => {
     dispatch(salesActions.createSaleRequest(data));
-    dispatch(
-      productsActions.productTreeRequest({
-        page: "1",
-        limit: "25",
-        sort: "asc",
-      }),
-    );
+    dispatch(productsActions.productTreeRequest());
   };
 
   return (

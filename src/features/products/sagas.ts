@@ -13,8 +13,11 @@ import { API_BASE_URL } from "../../constants/api";
 import { apiService } from "../../services/api";
 import { Filters } from "../filters/types";
 import { AppState } from "../../store/index";
+import { generatePagination } from "../../utils/generatePagination";
 
-function* getProductTree(payload: PayloadAction<PaginationRequest>) {
+function* getProductTree(
+  payload: PayloadAction<PaginationRequest | undefined>,
+) {
   yield put(actions.setLoading(true));
   try {
     const filters: Filters = yield select((state: AppState) => state.filter);
@@ -23,7 +26,7 @@ function* getProductTree(payload: PayloadAction<PaginationRequest>) {
       apiService.post,
       `${API_BASE_URL}/product/tree`,
       filters?.product || {},
-      payload.payload,
+      generatePagination(payload.payload),
     );
 
     const { data } = response;

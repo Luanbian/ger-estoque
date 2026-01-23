@@ -47,13 +47,7 @@ export const CategoryFilters = () => {
 
   const onChangeName = (name: string) => {
     dispatch(actions.setCategoryName(name));
-    dispatch(
-      categoryActions.categoryTreeRequest({
-        page: "1",
-        limit: "25",
-        sort: "asc",
-      }),
-    );
+    dispatch(categoryActions.categoryTreeRequest());
   };
 
   return (

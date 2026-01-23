@@ -15,7 +15,7 @@ export const Sales = () => {
 
   useEffect(() => {
     if (data === null) {
-      dispatch(actions.salesRequest({ page: "1", limit: "25", sort: "asc" }));
+      dispatch(actions.salesRequest());
     }
   }, [data]);
 

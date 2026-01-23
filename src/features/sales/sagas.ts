@@ -6,8 +6,9 @@ import { CreateSalePayload, Sales } from "./types";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { Filters } from "../filters/types";
 import { AppState } from "../../store";
+import { generatePagination } from "../../utils/generatePagination";
 
-function* getSales(payload: PayloadAction<PaginationRequest>) {
+function* getSales(payload: PayloadAction<PaginationRequest | undefined>) {
   yield put(actions.setLoading(true));
   try {
     const filters: Filters = yield select((state: AppState) => state.filter);
@@ -16,7 +17,7 @@ function* getSales(payload: PayloadAction<PaginationRequest>) {
       apiService.post,
       `/sales/list`,
       filters.sales || {},
-      payload.payload,
+      generatePagination(payload.payload),
     );
 
     const { data } = response;

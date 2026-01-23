@@ -13,7 +13,10 @@ export const salesSlice = createSlice({
   name: "sales",
   initialState,
   reducers: {
-    salesRequest: (_state, _action: PayloadAction<PaginationRequest>) => {},
+    salesRequest: (
+      _state,
+      _action: PayloadAction<PaginationRequest | undefined>,
+    ) => {},
     createSaleRequest: (
       _state,
       _action: PayloadAction<CreateSalePayload>,

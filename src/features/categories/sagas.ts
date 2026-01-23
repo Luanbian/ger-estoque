@@ -7,8 +7,11 @@ import { apiService } from "../../services/api.ts";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { Filters } from "../filters/types.ts";
 import { AppState } from "../../store/index.ts";
+import { generatePagination } from "../../utils/generatePagination.ts";
 
-function* getCategoryTree(payload: PayloadAction<PaginationRequest>) {
+function* getCategoryTree(
+  payload: PayloadAction<PaginationRequest | undefined>,
+) {
   yield put(actions.setLoading(true));
   try {
     const filters: Filters = yield select((state: AppState) => state.filter);
@@ -17,7 +20,7 @@ function* getCategoryTree(payload: PayloadAction<PaginationRequest>) {
       apiService.post,
       `${API_BASE_URL}/category/tree`,
       filters.category || {},
-      payload.payload,
+      generatePagination(payload.payload),
     );
 
     const { data } = response;

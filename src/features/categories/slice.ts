@@ -17,7 +17,7 @@ export const categorySlice = createSlice({
     categoryRequest: () => {},
     categoryTreeRequest: (
       _state,
-      _action: PayloadAction<PaginationRequest>,
+      _action: PayloadAction<PaginationRequest | undefined>,
     ) => {},
     createCategoryRequest: (
       _state,

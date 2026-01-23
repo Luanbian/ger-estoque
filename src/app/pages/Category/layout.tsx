@@ -19,13 +19,7 @@ export const Category = () => {
 
   useEffect(() => {
     if (data === null) {
-      dispatch(
-        actions.categoryTreeRequest({
-          page: "1",
-          limit: "25",
-          sort: "asc",
-        }),
-      );
+      dispatch(actions.categoryTreeRequest());
     }
   }, [data]);
 

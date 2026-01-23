@@ -34,7 +34,7 @@ export const productSlice = createSlice({
   reducers: {
     productTreeRequest: (
       _state,
-      _action: PayloadAction<PaginationRequest>,
+      _action: PayloadAction<PaginationRequest | undefined>,
     ) => {},
     createProductRequest: (
       _state,
