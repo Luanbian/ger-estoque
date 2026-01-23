@@ -13,7 +13,7 @@ import { API_BASE_URL } from "../../constants/api";
 import { apiService } from "../../services/api";
 import { Filters } from "../filters/types";
 import { AppState } from "../../store/index";
-import { generatePagination } from "../../utils/generatePagination";
+import { generateParams } from "../../utils/generateParams";
 
 function* getProductTree(
   payload: PayloadAction<PaginationRequest | undefined>,
@@ -26,7 +26,7 @@ function* getProductTree(
       apiService.post,
       `${API_BASE_URL}/product/tree`,
       filters?.product || {},
-      generatePagination(payload.payload),
+      generateParams(payload.payload),
     );
 
     const { data } = response;

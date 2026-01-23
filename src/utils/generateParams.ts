@@ -1,8 +1,6 @@
 import { PaginationRequest } from "../features/common/types";
 
-export const generatePagination = (
-  data?: PaginationRequest,
-): PaginationRequest => {
+export const generateParams = (data?: PaginationRequest) => {
   const page = data?.page || "1";
   const limit = data?.limit || "25";
   const sort = data?.sort || "asc";
