@@ -15,6 +15,7 @@ import { useState } from "react";
 import { ModalComponent } from "../../components/modal";
 import { CreateOrUpdateSale } from "../../components/sales/createOrUpdate/sale";
 import { Pagination } from "../../../features/common/types";
+import { SalesFilters } from "../../components/sales/filters";
 
 interface Props {
   data: {
@@ -71,6 +72,7 @@ export const SalesComponent = ({ data, actions }: Props) => {
         </Stack>
 
         <Box display={"flex"} flexDirection="column" gap={4} paddingInline={2}>
+          <SalesFilters />
           <Paper elevation={2} sx={{ overflow: "hidden" }}>
             {loading ? (
               <CircularProgress />

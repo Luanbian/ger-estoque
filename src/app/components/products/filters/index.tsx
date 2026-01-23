@@ -20,8 +20,8 @@ import { useDispatch, useSelector } from "../../../../store/hooks";
 import { UnitOfMeasure } from "../../../../features/unitOfMeasure/types";
 import { stockMapper } from "../../../../utils/stockMapper";
 import { FilterProduct } from "../../../../features/filters/types";
-import { actions } from "../../../../features/filters/slice";
-import { actions as productActions } from "../../../../features/products/slice";
+import { actions } from "../../../../features/filters";
+import { actions as productActions } from "../../../../features/products";
 import { StockStatusEnum } from "../../../../features/common/stockStatusEnum";
 
 interface Props {

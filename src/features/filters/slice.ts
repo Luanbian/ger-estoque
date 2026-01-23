@@ -6,6 +6,7 @@ import { Filters } from "./types";
 const initialState: Filters = {
   product: {},
   category: {},
+  sales: {},
 };
 
 export const filterSlice = createSlice({
@@ -29,6 +30,26 @@ export const filterSlice = createSlice({
     },
     setCategoryName: (state, action: PayloadAction<string>) => {
       state.category.name = action.payload;
+    },
+    setSalesQuantity: (
+      state,
+      action: PayloadAction<{ min?: number; max?: number }>,
+    ) => {
+      state.sales.quantityMin = action.payload.min;
+      state.sales.quantityMax = action.payload.max;
+    },
+    setSalesPrice: (
+      state,
+      action: PayloadAction<{ min?: number; max?: number }>,
+    ) => {
+      state.sales.salePriceMin = action.payload.min;
+      state.sales.salePriceMax = action.payload.max;
+    },
+    setSalesProductsIds: (state, action: PayloadAction<string>) => {
+      if (!state.sales.productsIds) {
+        state.sales.productsIds = [];
+      }
+      state.sales.productsIds.push(action.payload);
     },
   },
 });

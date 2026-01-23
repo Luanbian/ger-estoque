@@ -1,17 +1,21 @@
-import { all, call, put, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import actions from "./slice";
 import { APIResponse, PaginationRequest } from "../common/types";
 import { apiService } from "../../services/api";
 import { CreateSalePayload, Sales } from "./types";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { Filters } from "../filters/types";
+import { AppState } from "../../store";
 
 function* getSales(payload: PayloadAction<PaginationRequest>) {
   yield put(actions.setLoading(true));
   try {
+    const filters: Filters = yield select((state: AppState) => state.filter);
+
     const response: APIResponse<Sales[]> = yield call(
       apiService.post,
       `/sales/list`,
-      {},
+      filters.sales || {},
       payload.payload,
     );
 

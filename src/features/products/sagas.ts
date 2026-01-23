@@ -7,12 +7,12 @@ import {
   Product,
   AddVariantPayload,
   UpdateVariantPayload,
-} from "./types.ts";
-import { APIResponse, PaginationRequest } from "../common/types.ts";
-import { API_BASE_URL } from "../../constants/api.ts";
-import { apiService } from "../../services/api.ts";
-import { Filters } from "../filters/types.ts";
-import { AppState } from "../../store/index.ts";
+} from "./types";
+import { APIResponse, PaginationRequest } from "../common/types";
+import { API_BASE_URL } from "../../constants/api";
+import { apiService } from "../../services/api";
+import { Filters } from "../filters/types";
+import { AppState } from "../../store/index";
 
 function* getProductTree(payload: PayloadAction<PaginationRequest>) {
   yield put(actions.setLoading(true));

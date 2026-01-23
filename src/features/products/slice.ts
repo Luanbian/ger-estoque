@@ -7,8 +7,8 @@ import {
   CreateProductWithVariantPayload,
   AddVariantPayload,
   UpdateVariantPayload,
-} from "./types.ts";
-import { PaginationRequest } from "../common/types.ts";
+} from "./types";
+import { PaginationRequest } from "../common/types";
 
 export const initialState: ProductState = {
   data: null,

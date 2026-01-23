@@ -4,6 +4,7 @@ import { StockStatusEnum } from "../common/stockStatusEnum";
 export interface Filters {
   product: FilterProduct;
   category: FilterCategory;
+  sales: SalesFilters;
 }
 
 export interface FilterProduct {
@@ -16,4 +17,12 @@ export interface FilterProduct {
 
 export interface FilterCategory {
   name?: string;
+}
+
+export interface SalesFilters {
+  quantityMin?: number;
+  quantityMax?: number;
+  salePriceMin?: number;
+  salePriceMax?: number;
+  productsIds?: string[];
 }
