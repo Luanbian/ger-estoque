@@ -18,6 +18,7 @@ function* getSales(payload: PayloadAction<PaginationRequest>) {
     const { data } = response;
 
     yield put(actions.setSales(data));
+    yield put(actions.setPagination(response.pagination || null));
   } catch (error) {
     yield put(
       actions.setError(

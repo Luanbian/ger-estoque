@@ -1,17 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CreateSalePayload, Sales, SalesState } from "./types";
+import { Pagination, PaginationRequest } from "../common/types";
 
 export const initialState: SalesState = {
   data: null,
   loading: false,
   error: null,
+  pagination: null,
 };
 
 export const salesSlice = createSlice({
   name: "sales",
   initialState,
   reducers: {
-    salesRequest: () => {},
+    salesRequest: (_state, _action: PayloadAction<PaginationRequest>) => {},
     createSaleRequest: (
       _state,
       _action: PayloadAction<CreateSalePayload>,
@@ -24,6 +26,9 @@ export const salesSlice = createSlice({
     },
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
+    },
+    setPagination: (state, action: PayloadAction<Pagination | null>) => {
+      state.pagination = action.payload;
     },
     addSale: (state, action: PayloadAction<Sales>) => {
       if (state.data) {
