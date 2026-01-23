@@ -15,6 +15,7 @@ import { financeSlice } from "../features/finance/slice";
 import { paymentSlice } from "../features/payment/slice";
 import { salesSlice } from "../features/sales/slice";
 import { filterSlice } from "../features/filters/slice";
+import { customerSlice } from "../features/customers/slice";
 
 // Sagas
 import { healthSagas } from "../features/healthcheck";
@@ -27,6 +28,7 @@ import { planTypeSagas } from "../features/plans";
 import { financeSagas } from "../features/finance";
 import { paymentSagas } from "../features/payment";
 import { salesSagas } from "../features/sales";
+import { customerSagas } from "../features/customers";
 
 const sagaMiddleware = createSagaMiddleware({
   onError: (error, errorInfo) => {
@@ -48,6 +50,7 @@ const rootReducer = combineReducers({
   payment: paymentSlice.reducer,
   sales: salesSlice.reducer,
   filter: filterSlice.reducer,
+  customer: customerSlice.reducer,
 });
 
 export const store = configureStore({
@@ -72,6 +75,7 @@ function* rootSaga() {
     spawn(financeSagas),
     spawn(paymentSagas),
     spawn(salesSagas),
+    spawn(customerSagas),
   ]);
 }
 

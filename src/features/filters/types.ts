@@ -5,6 +5,7 @@ export interface Filters {
   product: FilterProduct;
   category: FilterCategory;
   sales: SalesFilters;
+  customer: CustomerFilters;
 }
 
 export interface FilterProduct {
@@ -24,4 +25,11 @@ export interface SalesFilters {
   quantityMax?: number;
   salePriceMin?: number;
   salePriceMax?: number;
+}
+
+export interface CustomerFilters {
+  name?: string;
+  phone?: string;
+  invoicingMin?: number;
+  invoicingMax?: number;
 }

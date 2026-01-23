@@ -7,6 +7,7 @@ const initialState: Filters = {
   product: {},
   category: {},
   sales: {},
+  customer: {},
 };
 
 export const filterSlice = createSlice({
@@ -44,6 +45,19 @@ export const filterSlice = createSlice({
     ) => {
       state.sales.salePriceMin = action.payload.min;
       state.sales.salePriceMax = action.payload.max;
+    },
+    setCustomerName: (state, action: PayloadAction<string>) => {
+      state.customer.name = action.payload;
+    },
+    setCustomerPhone: (state, action: PayloadAction<string>) => {
+      state.customer.phone = action.payload;
+    },
+    setCustomerInvoicing: (
+      state,
+      action: PayloadAction<{ min?: number; max?: number }>,
+    ) => {
+      state.customer.invoicingMin = action.payload.min;
+      state.customer.invoicingMax = action.payload.max;
     },
   },
 });
