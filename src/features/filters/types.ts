@@ -24,5 +24,4 @@ export interface SalesFilters {
   quantityMax?: number;
   salePriceMin?: number;
   salePriceMax?: number;
-  productsIds?: string[];
 }

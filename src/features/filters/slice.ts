@@ -45,12 +45,6 @@ export const filterSlice = createSlice({
       state.sales.salePriceMin = action.payload.min;
       state.sales.salePriceMax = action.payload.max;
     },
-    setSalesProductsIds: (state, action: PayloadAction<string>) => {
-      if (!state.sales.productsIds) {
-        state.sales.productsIds = [];
-      }
-      state.sales.productsIds.push(action.payload);
-    },
   },
 });
 

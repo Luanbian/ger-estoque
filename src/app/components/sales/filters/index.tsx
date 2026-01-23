@@ -3,7 +3,6 @@ import { SliderComponent } from "../../slider";
 import { useDispatch } from "../../../../store/hooks";
 import { actions as filterActions } from "../../../../features/filters";
 import { actions } from "../../../../features/sales";
-import { AsyncSelect, Option } from "../../asyncSelect";
 
 interface Props {
   data: {
@@ -19,13 +18,12 @@ interface Props {
   actions: {
     changeQuantity: (min: number, max: number) => void;
     changeSalePrice: (min: number, max: number) => void;
-    changeProductId: (options: Option[]) => void;
   };
 }
 
 const SalesFiltersComponent = ({ data, actions }: Props) => {
   const { quantity, salePrice } = data;
-  const { changeQuantity, changeSalePrice, changeProductId } = actions;
+  const { changeQuantity, changeSalePrice } = actions;
 
   return (
     <Box>
@@ -36,14 +34,6 @@ const SalesFiltersComponent = ({ data, actions }: Props) => {
       <SliderComponent
         data={salePrice}
         actions={{ afterChange: changeSalePrice }}
-      />
-      <AsyncSelect
-        data={{
-          endpoint: "/sale",
-        }}
-        actions={{
-          onChange: (value) => changeProductId(value as Option[]),
-        }}
       />
     </Box>
   );
@@ -65,12 +55,6 @@ export const SalesFilters = () => {
     dispatch(actions.salesRequest());
   };
 
-  const changeProductId = (options: Option[]) => {
-    const productId = options.length > 0 ? (options[0].value as string) : "";
-    dispatch(filterActions.setSalesProductsIds(productId));
-    dispatch(actions.salesRequest());
-  };
-
   return (
     <SalesFiltersComponent
       data={{
@@ -80,7 +64,6 @@ export const SalesFilters = () => {
       actions={{
         changeQuantity,
         changeSalePrice,
-        changeProductId,
       }}
     />
   );
