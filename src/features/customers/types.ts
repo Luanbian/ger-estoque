@@ -5,6 +5,7 @@ export interface Customer {
   tenantId: string;
   name: string;
   phone: string;
+  salesIds?: string[];
   invoicing: number;
 }
 
@@ -13,4 +14,10 @@ export interface CustomerState {
   loading: boolean;
   error: string | null;
   pagination: Pagination | null;
+}
+
+export interface CreateCustomerPayload {
+  name: string;
+  phone: string;
+  lastSaleId?: string;
 }

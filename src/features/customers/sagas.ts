@@ -6,11 +6,9 @@ import { apiService } from "../../services/api";
 import { Filters } from "../filters/types";
 import { AppState } from "../../store";
 import { generateParams } from "../../utils/generateParams";
-import { Customer } from "./types";
+import { CreateCustomerPayload, Customer } from "./types";
 
-function* getCustomersSaga(
-  payload: PayloadAction<PaginationRequest | undefined>,
-) {
+function* getCustomers(payload: PayloadAction<PaginationRequest | undefined>) {
   yield put(actions.setLoading(true));
   try {
     const filters: Filters = yield select((state: AppState) => state.filter);
@@ -37,6 +35,32 @@ function* getCustomersSaga(
   }
 }
 
+function* createCustomer(payload: PayloadAction<CreateCustomerPayload>) {
+  yield put(actions.setLoading(true));
+  try {
+    const response: APIResponse<Customer> = yield call(
+      apiService.post,
+      `/customer`,
+      payload.payload,
+    );
+
+    const { data } = response;
+
+    yield put(actions.addCustomer(data));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 export function* customerSagas() {
-  yield all([takeEvery(actions.customersRequest.type, getCustomersSaga)]);
+  yield all([
+    takeEvery(actions.customersRequest.type, getCustomers),
+    takeEvery(actions.createCustomerRequest.type, createCustomer),
+  ]);
 }

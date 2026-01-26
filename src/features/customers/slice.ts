@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CustomerState } from "./types";
+import { CreateCustomerPayload, Customer, CustomerState } from "./types";
 import { PaginationRequest } from "../common/types";
 
 const initialState: CustomerState = {
@@ -17,6 +17,10 @@ export const customerSlice = createSlice({
       _state,
       _action: PayloadAction<PaginationRequest | undefined>,
     ) => {},
+    createCustomerRequest: (
+      _state,
+      _action: PayloadAction<CreateCustomerPayload>,
+    ) => {},
     setCustomers: (state, action) => {
       state.data = action.payload;
     },
@@ -28,6 +32,13 @@ export const customerSlice = createSlice({
     },
     setPagination: (state, action) => {
       state.pagination = action.payload;
+    },
+    addCustomer: (state, action: PayloadAction<Customer>) => {
+      if (state.data) {
+        state.data.push(action.payload);
+      } else {
+        state.data = [action.payload];
+      }
     },
   },
 });

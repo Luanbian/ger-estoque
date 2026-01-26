@@ -5,11 +5,16 @@ import {
   Typography,
   Pagination as MUIPagination,
   CircularProgress,
+  Button,
 } from "@mui/material";
 import { Pagination } from "../../../features/common/types";
 import { Customer } from "../../../features/customers/types";
 import { CustomerGridList } from "../../components/customers/table/list";
 import { CustomerFilter } from "../../components/customers/filters";
+import { ModalComponent } from "../../components/modal";
+import { useState } from "react";
+import { CreateOrUPdateCustomer } from "../../components/customers/createOrUpdate/customer";
+import { IconPlus } from "@tabler/icons-react";
 
 interface Props {
   data: {
@@ -25,6 +30,15 @@ interface Props {
 export const CustomerPage = ({ data, actions }: Props) => {
   const { customers, loading, pagination } = data;
   const { onChangePage } = actions;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <Container maxWidth="lg">
@@ -43,6 +57,14 @@ export const CustomerPage = ({ data, actions }: Props) => {
               Resumo dos seus clientes do sistema
             </Typography>
           </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenModal}
+            startIcon={<IconPlus size={20} />}
+          >
+            Novo Cliente
+          </Button>
         </Stack>
 
         <Box display={"flex"} flexDirection="column" gap={4} paddingInline={2}>
@@ -66,6 +88,14 @@ export const CustomerPage = ({ data, actions }: Props) => {
           )}
         </Box>
       </Box>
+
+      <ModalComponent
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        content={
+          <CreateOrUPdateCustomer actions={{ onClose: handleCloseModal }} />
+        }
+      />
     </Container>
   );
 };
