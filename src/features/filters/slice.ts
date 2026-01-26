@@ -32,13 +32,6 @@ export const filterSlice = createSlice({
     setCategoryName: (state, action: PayloadAction<string>) => {
       state.category.name = action.payload;
     },
-    setSalesQuantity: (
-      state,
-      action: PayloadAction<{ min?: number; max?: number }>,
-    ) => {
-      state.sales.quantityMin = action.payload.min;
-      state.sales.quantityMax = action.payload.max;
-    },
     setSalesPrice: (
       state,
       action: PayloadAction<{ min?: number; max?: number }>,

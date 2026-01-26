@@ -1,8 +1,5 @@
-import { CreateSalePayload, Sales } from "../../../../features/sales/types";
-import { actions as salesActions } from "../../../../features/sales";
-import { actions as productsActions } from "../../../../features/products";
-import { useDispatch } from "../../../../store/hooks";
 import { useForm } from "react-hook-form";
+import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
 import {
   Alert,
   Box,
@@ -11,7 +8,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
+import { CreateSalePayload, Sales } from "../../../../features/sales/types";
+import { actions as salesActions } from "../../../../features/sales";
+import { actions as productsActions } from "../../../../features/products";
+import { useDispatch } from "../../../../store/hooks";
 import { AsyncSelect, Option } from "../../asyncSelect";
 import { useState } from "react";
 
@@ -29,17 +29,28 @@ const CreateOrUpdateCategoryComponent = ({ data, actions }: Props) => {
   const { sale } = data;
   const { createSale, onClose } = actions;
 
-  const [selected, setSelected] = useState<Option[] | null>(null);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateSalePayload>();
+  } = useForm<{ name: string; items: { quantity: string }[] }>();
 
-  const onSubmit = (data: CreateSalePayload) => {
-    createSale(data);
+  const [selected, setSelected] = useState<Option[] | null>(null);
+
+  const onSubmit = (data: { name: string; items: { quantity: string }[] }) => {
+    const buildItems = selected?.map((item, index) => ({
+      productId: item.value,
+      name: item.label,
+      quantity: Number(data.items[index]?.quantity || "0"),
+    })) as CreateSalePayload["items"];
+
+    const payload: CreateSalePayload = {
+      name: data.name,
+      items: buildItems,
+    };
+
+    createSale(payload);
 
     reset();
     if (onClose) {
@@ -73,8 +84,16 @@ const CreateOrUpdateCategoryComponent = ({ data, actions }: Props) => {
       </Typography>
 
       <Stack spacing={3}>
+        <TextField
+          {...register("name")}
+          label="Titulo da venda"
+          placeholder="Digite o titulo da venda"
+          fullWidth
+          helperText={errors.name?.message}
+        />
+
         <AsyncSelect
-          data={{ endpoint: "/product", defaultValue: selected ?? undefined }}
+          data={{ endpoint: "/product" }}
           actions={{ onChange: (value) => setSelected(value as Option[]) }}
         />
 
@@ -83,16 +102,16 @@ const CreateOrUpdateCategoryComponent = ({ data, actions }: Props) => {
           selected.map((item, index) => (
             <TextField
               key={index}
-              {...register(`${item.value}`, {
+              {...register(`items.${index}.quantity`, {
                 required: "A quantidade é obrigatória",
               })}
               label={`Quantidade do produto ${item.label}`}
               placeholder={`Digite a quantidade de ${item.label}`}
               fullWidth
               required
-              error={!!errors.quantity}
-              helperText={errors.quantity?.message}
-              defaultValue={sale?.quantity || "0"}
+              error={!!errors.items && !!errors.items[index]?.quantity}
+              helperText={errors.items?.[index]?.quantity?.message}
+              defaultValue={sale?.items?.[index]?.quantity || "0"}
             />
           ))}
 

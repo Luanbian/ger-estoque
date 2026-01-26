@@ -22,8 +22,7 @@ export const SaleGridList = ({ data }: Props) => {
       <TableHead>
         <TableRow>
           <TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
-          <TableCell sx={{ fontWeight: 600 }}>Produtos</TableCell>
-          <TableCell sx={{ fontWeight: 600 }}>Quantidade</TableCell>
+          <TableCell sx={{ fontWeight: 600 }}>Nome</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Preço venda</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Custo</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Data</TableCell>

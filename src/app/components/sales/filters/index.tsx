@@ -6,31 +6,22 @@ import { actions } from "../../../../features/sales";
 
 interface Props {
   data: {
-    quantity: {
-      min: number;
-      max: number;
-    };
     salePrice: {
       min: number;
       max: number;
     };
   };
   actions: {
-    changeQuantity: (min: number, max: number) => void;
     changeSalePrice: (min: number, max: number) => void;
   };
 }
 
 const SalesFiltersComponent = ({ data, actions }: Props) => {
-  const { quantity, salePrice } = data;
-  const { changeQuantity, changeSalePrice } = actions;
+  const { salePrice } = data;
+  const { changeSalePrice } = actions;
 
   return (
     <Box>
-      <SliderComponent
-        data={quantity}
-        actions={{ afterChange: changeQuantity }}
-      />
       <SliderComponent
         data={salePrice}
         actions={{ afterChange: changeSalePrice }}
@@ -42,13 +33,7 @@ const SalesFiltersComponent = ({ data, actions }: Props) => {
 export const SalesFilters = () => {
   const dispatch = useDispatch();
 
-  const maxQuantity = 1_000;
   const maxSalePrice = 100_000;
-
-  const changeQuantity = (min: number, max: number) => {
-    dispatch(filterActions.setSalesQuantity({ min, max }));
-    dispatch(actions.salesRequest());
-  };
 
   const changeSalePrice = (min: number, max: number) => {
     dispatch(filterActions.setSalesPrice({ min, max }));
@@ -57,14 +42,8 @@ export const SalesFilters = () => {
 
   return (
     <SalesFiltersComponent
-      data={{
-        quantity: { min: 0, max: maxQuantity },
-        salePrice: { min: 0, max: maxSalePrice },
-      }}
-      actions={{
-        changeQuantity,
-        changeSalePrice,
-      }}
+      data={{ salePrice: { min: 0, max: maxSalePrice } }}
+      actions={{ changeSalePrice }}
     />
   );
 };

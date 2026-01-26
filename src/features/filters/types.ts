@@ -21,8 +21,6 @@ export interface CategoryFilters {
 }
 
 export interface SalesFilters {
-  quantityMin?: number;
-  quantityMax?: number;
   salePriceMin?: number;
   salePriceMax?: number;
 }

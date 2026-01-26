@@ -3,11 +3,26 @@ import { Pagination } from "../common/types";
 export interface Sales {
   _id: string;
   tenantId: string;
-  products: Record<
-    string,
-    { quantity: number; costPrice: number; salePrice: number }
-  >;
+  name: string;
+  items: SaleItem[];
+  totals: TotalsSale;
   createdAt: string;
+}
+
+export interface SaleItem {
+  productId: string;
+  name: string;
+  quantity: number;
+  unitCost: number;
+  unitSale: number;
+  totalCost: number;
+  totalSale: number;
+  _id: string;
+}
+
+export interface TotalsSale {
+  costPrice: number;
+  salePrice: number;
 }
 
 export interface SalesState {
@@ -18,5 +33,10 @@ export interface SalesState {
 }
 
 export interface CreateSalePayload {
-  [key: string]: string | number;
+  name?: string;
+  items: {
+    productId: string;
+    name: string;
+    quantity: number;
+  }[];
 }
