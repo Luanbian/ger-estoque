@@ -5,11 +5,11 @@ import {
   Typography,
   Pagination as MUIPagination,
   CircularProgress,
-  Paper,
 } from "@mui/material";
 import { Pagination } from "../../../features/common/types";
 import { Customer } from "../../../features/customers/types";
 import { CustomerGridList } from "../../components/customers/table/list";
+import { CustomerFilter } from "../../components/customers/filters";
 
 interface Props {
   data: {
@@ -46,17 +46,14 @@ export const CustomerPage = ({ data, actions }: Props) => {
         </Stack>
 
         <Box display={"flex"} flexDirection="column" gap={4} paddingInline={2}>
-          <Paper elevation={2} sx={{ overflow: "hidden" }}>
-            {loading ? (
-              <CircularProgress />
-            ) : !customers || customers.length === 0 ? (
-              <Typography variant="body1">
-                Nenhum cliente encontrado.
-              </Typography>
-            ) : (
-              <CustomerGridList data={{ customers }} />
-            )}
-          </Paper>
+          <CustomerFilter />
+          {loading ? (
+            <CircularProgress />
+          ) : !customers || customers.length === 0 ? (
+            <Typography variant="body1">Nenhum cliente encontrado.</Typography>
+          ) : (
+            <CustomerGridList data={{ customers }} />
+          )}
         </Box>
 
         <Box mt={4} display="flex" justifyContent="center">

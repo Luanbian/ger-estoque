@@ -12,7 +12,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { ModalComponent } from "../../components/modal";
 import { CreateOrUpdateProduct } from "../../components/products/createOrUpdate/product";
 import { Category } from "../../../features/categories/types";
-import { ProductFilters } from "../../components/products/filters";
+import { ProductFilter } from "../../components/products/filters";
 import { Pagination } from "../../../features/common/types";
 
 interface Props {
@@ -66,7 +66,7 @@ export const StockPage = ({ data, actions }: Props) => {
         </Box>
 
         <Box display={"flex"} flexDirection="column" gap={4} paddingInline={2}>
-          <ProductFilters />
+          <ProductFilter />
           {loading ? (
             <CircularProgress />
           ) : !products || products.length === 0 ? (

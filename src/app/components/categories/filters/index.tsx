@@ -1,13 +1,13 @@
 import { InputAdornment, OutlinedInput, Paper } from "@mui/material";
 import { IconSearch } from "@tabler/icons-react";
-import { FilterCategory } from "../../../../features/filters/types";
+import { CategoryFilters } from "../../../../features/filters/types";
 import { useDispatch, useSelector } from "../../../../store/hooks";
 import { actions as categoryActions } from "../../../../features/categories";
 import actions from "../../../../features/filters/slice";
 
 interface Props {
   data: {
-    category: FilterCategory;
+    category: CategoryFilters;
   };
   actions: {
     onChangeName: (name: string) => void;
@@ -41,7 +41,7 @@ const CategoryFiltersComponent = ({ data, actions }: Props) => {
   );
 };
 
-export const CategoryFilters = () => {
+export const CategoryFilter = () => {
   const dispatch = useDispatch();
   const { category } = useSelector((state) => state.filter);
 

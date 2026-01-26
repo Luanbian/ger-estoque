@@ -11,7 +11,7 @@ import { Category } from "../../../features/categories/types";
 import { CategoryGridList } from "../../components/categories/table/list";
 import { ModalComponent } from "../../components/modal";
 import { CreateOrUpdateCategory } from "../../components/categories/createOrUpdate/category";
-import { CategoryFilters } from "../../components/categories/filters";
+import { CategoryFilter } from "../../components/categories/filters";
 import { Pagination } from "../../../features/common/types";
 
 interface Props {
@@ -62,7 +62,7 @@ export const CategoryPage = ({ data, actions }: Props) => {
         </Box>
 
         <Box display={"flex"} flexDirection="column" gap={4} paddingInline={2}>
-          <CategoryFilters />
+          <CategoryFilter />
           {loading ? (
             <CircularProgress />
           ) : !categories || categories.length === 0 ? (

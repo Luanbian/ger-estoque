@@ -2,13 +2,13 @@ import { ProductType } from "../common/productTypeEnum";
 import { StockStatusEnum } from "../common/stockStatusEnum";
 
 export interface Filters {
-  product: FilterProduct;
-  category: FilterCategory;
+  product: ProductFilters;
+  category: CategoryFilters;
   sales: SalesFilters;
   customer: CustomerFilters;
 }
 
-export interface FilterProduct {
+export interface ProductFilters {
   name?: string;
   categoryId?: string;
   unitOfMeasureId?: string;
@@ -16,7 +16,7 @@ export interface FilterProduct {
   stockStatus?: StockStatusEnum;
 }
 
-export interface FilterCategory {
+export interface CategoryFilters {
   name?: string;
 }
 
