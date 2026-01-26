@@ -125,7 +125,14 @@ export const CustomerFilter = () => {
 
   return (
     <CustomerFiltersComponent
-      data={{ customer }}
+      data={{
+        customer: {
+          name: customer.name,
+          phone: customer.phone,
+          invoicingMin: 0,
+          invoicingMax: 100_000,
+        },
+      }}
       actions={{
         onChangeName,
         onChangePhone,
