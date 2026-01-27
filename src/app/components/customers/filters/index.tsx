@@ -109,6 +109,7 @@ const CustomerFiltersComponent = ({ data, actions }: Props) => {
 export const CustomerFilter = () => {
   const dispatch = useDispatch();
   const { customer } = useSelector((state) => state.filter);
+  const { maxSpent } = useSelector((state) => state.customer);
 
   const onChangeName = (name: string) => {
     dispatch(actions.setCustomerName(name));
@@ -130,7 +131,7 @@ export const CustomerFilter = () => {
           name: customer.name,
           phone: customer.phone,
           invoicingMin: 0,
-          invoicingMax: 100_000,
+          invoicingMax: maxSpent || 0,
         },
       }}
       actions={{

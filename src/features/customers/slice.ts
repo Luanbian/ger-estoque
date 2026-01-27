@@ -7,6 +7,7 @@ const initialState: CustomerState = {
   loading: false,
   error: null,
   pagination: null,
+  maxSpent: null,
 };
 
 export const customerSlice = createSlice({
@@ -21,6 +22,7 @@ export const customerSlice = createSlice({
       _state,
       _action: PayloadAction<CreateCustomerPayload>,
     ) => {},
+    getCustomerMaxSpentRequest: () => {},
     setCustomers: (state, action) => {
       state.data = action.payload;
     },
@@ -32,6 +34,9 @@ export const customerSlice = createSlice({
     },
     setPagination: (state, action) => {
       state.pagination = action.payload;
+    },
+    setMaxSpent: (state, action) => {
+      state.maxSpent = action.payload;
     },
     addCustomer: (state, action: PayloadAction<Customer>) => {
       if (state.data) {

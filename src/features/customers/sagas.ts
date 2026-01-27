@@ -58,9 +58,29 @@ function* createCustomer(payload: PayloadAction<CreateCustomerPayload>) {
   }
 }
 
+function* getCustomerMaxSpent() {
+  try {
+    const response: APIResponse<number> = yield call(
+      apiService.get,
+      "/customer/max-spent",
+    );
+
+    const { data } = response;
+
+    yield put(actions.setMaxSpent(data));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
+    );
+  }
+}
+
 export function* customerSagas() {
   yield all([
     takeEvery(actions.customersRequest.type, getCustomers),
     takeEvery(actions.createCustomerRequest.type, createCustomer),
+    takeEvery(actions.getCustomerMaxSpentRequest.type, getCustomerMaxSpent),
   ]);
 }

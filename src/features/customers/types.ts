@@ -14,6 +14,7 @@ export interface CustomerState {
   loading: boolean;
   error: string | null;
   pagination: Pagination | null;
+  maxSpent: number | null;
 }
 
 export interface CreateCustomerPayload {

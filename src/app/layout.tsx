@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "../store/hooks";
 import { actions as categoryActions } from "../features/categories";
 import { actions as unitOfMeasureActions } from "../features/unitOfMeasure";
 import { actions as salesActions } from "../features/sales";
+import { actions as customerActions } from "../features/customers";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { UnpaidWarning } from "./components/billingWarn/unpaid";
 import { FeaturesProvider } from "./featuresProvider";
@@ -39,6 +40,7 @@ export const MainLayout = () => {
     dispatch(categoryActions.categoryRequest());
     dispatch(unitOfMeasureActions.unitOfMeasureRequest());
     dispatch(salesActions.getMaxSalesInvoicingRequest());
+    dispatch(customerActions.getCustomerMaxSpentRequest());
   }, []);
 
   return (

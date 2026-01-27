@@ -143,6 +143,7 @@ export const CreateOrUPdateCustomer = ({
 
   const createCustomer = (value: CreateCustomerPayload) => {
     dispatch(customerActions.createCustomerRequest(value));
+    dispatch(customerActions.getCustomerMaxSpentRequest());
   };
 
   return (

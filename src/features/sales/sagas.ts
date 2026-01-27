@@ -62,7 +62,7 @@ function* getMaxSalesInvoicing() {
   try {
     const response: APIResponse<number> = yield call(
       apiService.get,
-      `/sale/max-invoicing`,
+      "/sale/max-invoicing",
     );
 
     const { data } = response;
