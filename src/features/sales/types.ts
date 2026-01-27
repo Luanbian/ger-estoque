@@ -40,4 +40,5 @@ export interface CreateSalePayload {
     name: string;
     quantity: number;
   }[];
+  customerId: string;
 }

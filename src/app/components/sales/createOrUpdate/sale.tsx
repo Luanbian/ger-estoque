@@ -7,6 +7,7 @@ import {
   Stack,
   TextField,
   Typography,
+  Checkbox,
 } from "@mui/material";
 import { CreateSalePayload, Sales } from "../../../../features/sales/types";
 import { actions as salesActions } from "../../../../features/sales";
@@ -37,6 +38,10 @@ const CreateOrUpdateCategoryComponent = ({ data, actions }: Props) => {
   } = useForm<{ name: string; items: { quantity: string }[] }>();
 
   const [selected, setSelected] = useState<Option[] | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Option[] | null>(
+    null,
+  );
+  const [isDefaultCustomer, setIsDefaultCustomer] = useState(false);
 
   const onSubmit = (data: { name: string; items: { quantity: string }[] }) => {
     const buildItems = selected?.map((item, index) => ({
@@ -48,6 +53,11 @@ const CreateOrUpdateCategoryComponent = ({ data, actions }: Props) => {
     const payload: CreateSalePayload = {
       name: data.name,
       items: buildItems,
+      customerId: isDefaultCustomer
+        ? "default_customer"
+        : selectedCustomer && selectedCustomer.length > 0
+          ? String(selectedCustomer[0].value)
+          : "",
     };
 
     createSale(payload);
@@ -114,6 +124,27 @@ const CreateOrUpdateCategoryComponent = ({ data, actions }: Props) => {
               defaultValue={sale?.items?.[index]?.quantity || "0"}
             />
           ))}
+
+        <Box display={"flex"} flexDirection={"column"} gap={2}>
+          <Typography variant="body2" color="text.secondary">
+            Para quem esta venda será destinada?
+          </Typography>
+          <AsyncSelect
+            data={{ endpoint: "/customer", disabled: isDefaultCustomer }}
+            actions={{
+              onChange: (value) => setSelectedCustomer(value as Option[]),
+            }}
+          />
+          <Box display={"flex"} alignItems={"center"} gap={1}>
+            <Checkbox
+              checked={isDefaultCustomer}
+              onChange={(e) => setIsDefaultCustomer(e.target.checked)}
+            />
+            <Typography variant="caption" color="text.secondary">
+              Cliente padrão do sistema
+            </Typography>
+          </Box>
+        </Box>
 
         {Object.keys(errors).length > 0 && (
           <Alert severity="error">

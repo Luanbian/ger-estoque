@@ -18,6 +18,7 @@ interface Props {
   data: {
     endpoint?: string;
     defaultValue?: Option[];
+    disabled?: boolean;
   };
   actions: {
     onChange: (
@@ -28,7 +29,7 @@ interface Props {
 }
 
 export const AsyncSelect = ({ data, actions }: Props) => {
-  const { endpoint, defaultValue } = data;
+  const { endpoint, defaultValue, disabled = false } = data;
   const { onChange } = actions;
 
   const theme = useTheme();
@@ -85,6 +86,7 @@ export const AsyncSelect = ({ data, actions }: Props) => {
       isClearable
       cacheOptions={false}
       defaultOptions={false}
+      isDisabled={disabled}
       styles={{
         control: (base, state) => ({
           ...base,
