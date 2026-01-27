@@ -7,6 +7,7 @@ export const initialState: SalesState = {
   loading: false,
   error: null,
   pagination: null,
+  maxSalesInvoicing: null,
 };
 
 export const salesSlice = createSlice({
@@ -21,6 +22,7 @@ export const salesSlice = createSlice({
       _state,
       _action: PayloadAction<CreateSalePayload>,
     ) => {},
+    getMaxSalesInvoicingRequest: () => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -32,6 +34,9 @@ export const salesSlice = createSlice({
     },
     setPagination: (state, action: PayloadAction<Pagination | null>) => {
       state.pagination = action.payload;
+    },
+    setMaxSalesInvoicing: (state, action: PayloadAction<number | null>) => {
+      state.maxSalesInvoicing = action.payload;
     },
     addSale: (state, action: PayloadAction<Sales>) => {
       if (state.data) {

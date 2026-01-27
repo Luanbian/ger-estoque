@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { SliderComponent } from "../../slider";
-import { useDispatch } from "../../../../store/hooks";
+import { useDispatch, useSelector } from "../../../../store/hooks";
 import { actions as filterActions } from "../../../../features/filters";
 import { actions } from "../../../../features/sales";
 
@@ -32,8 +32,7 @@ const SalesFiltersComponent = ({ data, actions }: Props) => {
 
 export const SalesFilters = () => {
   const dispatch = useDispatch();
-
-  const maxSalePrice = 100_000;
+  const { maxSalesInvoicing } = useSelector((state) => state.sales);
 
   const changeSalePrice = (min: number, max: number) => {
     dispatch(filterActions.setSalesPrice({ min, max }));
@@ -42,7 +41,7 @@ export const SalesFilters = () => {
 
   return (
     <SalesFiltersComponent
-      data={{ salePrice: { min: 0, max: maxSalePrice } }}
+      data={{ salePrice: { min: 0, max: maxSalesInvoicing || 0 } }}
       actions={{ changeSalePrice }}
     />
   );

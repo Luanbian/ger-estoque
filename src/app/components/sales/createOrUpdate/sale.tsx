@@ -165,6 +165,7 @@ export const CreateOrUpdateSale = ({
   const createSale = (data: CreateSalePayload) => {
     dispatch(salesActions.createSaleRequest(data));
     dispatch(productsActions.productTreeRequest());
+    dispatch(salesActions.getMaxSalesInvoicingRequest());
   };
 
   return (

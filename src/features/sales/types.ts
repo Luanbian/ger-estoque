@@ -30,6 +30,7 @@ export interface SalesState {
   loading: boolean;
   error: string | null;
   pagination: Pagination | null;
+  maxSalesInvoicing: number | null;
 }
 
 export interface CreateSalePayload {

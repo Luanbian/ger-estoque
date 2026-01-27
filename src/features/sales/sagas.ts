@@ -1,12 +1,12 @@
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
-import actions from "./slice";
+import { PayloadAction } from "@reduxjs/toolkit";
 import { APIResponse, PaginationRequest } from "../common/types";
 import { apiService } from "../../services/api";
 import { CreateSalePayload, Sales } from "./types";
-import { PayloadAction } from "@reduxjs/toolkit";
 import { Filters } from "../filters/types";
 import { AppState } from "../../store";
 import { generateParams } from "../../utils/generateParams";
+import actions from "./slice";
 
 function* getSales(payload: PayloadAction<PaginationRequest | undefined>) {
   yield put(actions.setLoading(true));
@@ -58,9 +58,29 @@ function* createSales(payload: PayloadAction<CreateSalePayload>) {
   }
 }
 
+function* getMaxSalesInvoicing() {
+  try {
+    const response: APIResponse<number> = yield call(
+      apiService.get,
+      `/sale/max-invoicing`,
+    );
+
+    const { data } = response;
+
+    yield put(actions.setMaxSalesInvoicing(data));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
+    );
+  }
+}
+
 export function* salesSagas() {
   yield all([
     takeEvery(actions.salesRequest.type, getSales),
     takeEvery(actions.createSaleRequest.type, createSales),
+    takeEvery(actions.getMaxSalesInvoicingRequest.type, getMaxSalesInvoicing),
   ]);
 }
