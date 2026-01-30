@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ProductType } from "../common/productTypeEnum";
 import { StockStatusEnum } from "../common/stockStatusEnum";
 import { Filters } from "./types";
+import { CustomerStatusEnum } from "../common/customerStatusEnum";
 
 const initialState: Filters = {
   product: {},
@@ -51,6 +52,9 @@ export const filterSlice = createSlice({
     ) => {
       state.customer.invoicingMin = action.payload.min;
       state.customer.invoicingMax = action.payload.max;
+    },
+    setCustomerStatus: (state, action: PayloadAction<CustomerStatusEnum>) => {
+      state.customer.status = action.payload;
     },
   },
 });

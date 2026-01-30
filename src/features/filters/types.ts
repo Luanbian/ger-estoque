@@ -1,3 +1,4 @@
+import { CustomerStatusEnum } from "../common/customerStatusEnum";
 import { ProductType } from "../common/productTypeEnum";
 import { StockStatusEnum } from "../common/stockStatusEnum";
 
@@ -30,4 +31,5 @@ export interface CustomerFilters {
   phone?: string;
   invoicingMin?: number;
   invoicingMax?: number;
+  status?: CustomerStatusEnum;
 }

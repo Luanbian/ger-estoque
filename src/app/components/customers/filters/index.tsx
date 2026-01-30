@@ -1,4 +1,10 @@
-import { InputAdornment, OutlinedInput } from "@mui/material";
+import {
+  Grid,
+  InputAdornment,
+  OutlinedInput,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import { CustomerFilters } from "../../../../features/filters/types";
 import { IconPhone, IconSearch } from "@tabler/icons-react";
 import { SliderComponent } from "../../slider";
@@ -14,14 +20,22 @@ interface Props {
     onChangeName: (name: string) => void;
     onChangePhone: (phone: string) => void;
     onChangeInvoicing: (min: number, max: number) => void;
+    onChangeStatus: (status: CustomerStatusEnum) => void;
   };
 }
 
 import { Box, Typography, Stack, Divider } from "@mui/material";
+import { customerMapper } from "../../../../utils/customerMapper";
+import { CustomerStatusEnum } from "../../../../features/common/customerStatusEnum";
 
 const CustomerFiltersComponent = ({ data, actions }: Props) => {
   const { customer } = data;
-  const { onChangeName, onChangePhone, onChangeInvoicing } = actions;
+  const { onChangeName, onChangePhone, onChangeInvoicing, onChangeStatus } =
+    actions;
+
+  const handleCustomerStatusChange = (_: any, newValue: string | null) => {
+    onChangeStatus((newValue || "") as CustomerStatusEnum);
+  };
 
   return (
     <Stack spacing={3}>
@@ -102,6 +116,24 @@ const CustomerFiltersComponent = ({ data, actions }: Props) => {
           actions={{ afterChange: onChangeInvoicing }}
         />
       </Box>
+      <Grid size={{ xs: 12, md: 4 }}>
+        <Typography variant="caption" sx={{ mb: 0.5, display: "block" }}>
+          Status do Cliente
+        </Typography>
+        <ToggleButtonGroup
+          value={customer.status || ""}
+          exclusive
+          onChange={handleCustomerStatusChange}
+          sx={{ flexWrap: "wrap", gap: 1 }}
+          size="small"
+        >
+          {Object.entries(customerMapper).map(([key, value]) => (
+            <ToggleButton key={key} value={key}>
+              {value}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      </Grid>
     </Stack>
   );
 };
@@ -123,6 +155,10 @@ export const CustomerFilter = () => {
     dispatch(actions.setCustomerInvoicing({ min, max }));
     dispatch(customerActions.customersRequest());
   };
+  const onChangeStatus = (status: CustomerStatusEnum) => {
+    dispatch(actions.setCustomerStatus(status));
+    dispatch(customerActions.customersRequest());
+  };
 
   return (
     <CustomerFiltersComponent
@@ -138,6 +174,7 @@ export const CustomerFilter = () => {
         onChangeName,
         onChangePhone,
         onChangeInvoicing,
+        onChangeStatus,
       }}
     />
   );
