@@ -1,9 +1,16 @@
 import { useState } from "react";
-import { IconButton, TableCell, TableRow, Typography } from "@mui/material";
+import {
+  Chip,
+  IconButton,
+  TableCell,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { IconStar, IconStarFilled } from "@tabler/icons-react";
 import { Customer } from "../../../../features/customers/types";
 import { useDispatch } from "../../../../store/hooks";
 import { actions as customerActions } from "../../../../features/customers";
+import { getStatusChip } from "../../../../utils/getStockStatus";
 
 interface Props {
   data: {
@@ -16,6 +23,7 @@ interface Props {
 const CustomerRowComponent = ({ data, actions }: Props) => {
   const { customer } = data;
   const { updateIsFavorite } = actions;
+  const { label, color } = getStatusChip(customer.status);
 
   const [isFavorite, setIsFavorite] = useState(customer.isFavorite || false);
 
@@ -36,6 +44,9 @@ const CustomerRowComponent = ({ data, actions }: Props) => {
       </TableCell>
       <TableCell>
         <Typography variant="body2">{customer.phone}</Typography>
+      </TableCell>
+      <TableCell>
+        <Chip label={label} color={color} size="small" />
       </TableCell>
       <TableCell>
         <Typography variant="body2">{customer.invoicing}</Typography>

@@ -1,3 +1,4 @@
+import { CustomerStatusEnum } from "../common/customerStatusEnum";
 import { Pagination } from "../common/types";
 
 export interface Customer {
@@ -7,6 +8,7 @@ export interface Customer {
   phone: string;
   salesIds?: string[];
   invoicing: number;
+  status: CustomerStatusEnum;
   isFavorite?: boolean;
 }
 

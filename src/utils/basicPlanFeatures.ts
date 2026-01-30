@@ -8,5 +8,6 @@ export const generateBasicPlanFeatures = (): Record<
     FINANCIAL_DASHBOARD: false,
     SALES_REPORTS: false,
     UPLOAD_PRODUCTS_EXCEL: false,
+    CUSTOMER_MANAGEMENT: false,
   };
 };

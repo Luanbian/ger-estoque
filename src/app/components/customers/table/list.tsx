@@ -24,6 +24,7 @@ export const CustomerGridList = ({ data }: Props) => {
           <TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Nome</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Telefone</TableCell>
+          <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Faturamento</TableCell>
           <TableCell sx={{ fontWeight: 600 }}>Favorito</TableCell>
         </TableRow>
