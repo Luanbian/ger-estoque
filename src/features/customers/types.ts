@@ -7,6 +7,7 @@ export interface Customer {
   phone: string;
   salesIds?: string[];
   invoicing: number;
+  isFavorite?: boolean;
 }
 
 export interface CustomerState {

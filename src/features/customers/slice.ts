@@ -22,6 +22,7 @@ export const customerSlice = createSlice({
       _state,
       _action: PayloadAction<CreateCustomerPayload>,
     ) => {},
+    updateIsFavoriteRequest: (_state, _action: PayloadAction<string>) => {},
     getCustomerMaxSpentRequest: () => {},
     setCustomers: (state, action) => {
       state.data = action.payload;

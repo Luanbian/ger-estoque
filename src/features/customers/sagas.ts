@@ -77,10 +77,23 @@ function* getCustomerMaxSpent() {
   }
 }
 
+function* updateIsFavorite(payload: PayloadAction<string>) {
+  try {
+    yield call(apiService.patch, `/customer/favorite/${payload.payload}`, {});
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
+    );
+  }
+}
+
 export function* customerSagas() {
   yield all([
     takeEvery(actions.customersRequest.type, getCustomers),
     takeEvery(actions.createCustomerRequest.type, createCustomer),
     takeEvery(actions.getCustomerMaxSpentRequest.type, getCustomerMaxSpent),
+    takeEvery(actions.updateIsFavoriteRequest.type, updateIsFavorite),
   ]);
 }
