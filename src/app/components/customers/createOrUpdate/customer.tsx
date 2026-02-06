@@ -115,7 +115,7 @@ const CreateOrUpdateCustomerComponent = ({ actions, data }: Props) => {
             color="primary"
             startIcon={<IconDeviceFloppy size={18} />}
           >
-            Salvar Categoria
+            Salvar Cliente
           </Button>
         </Stack>
       </Stack>

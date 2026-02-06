@@ -77,6 +77,7 @@ export const CustomerRow = ({ data }: CustomerRowProps) => {
 
   const updateIsFavorite = (customerId: string) => {
     dispatch(customerActions.updateIsFavoriteRequest(customerId));
+    dispatch(customerActions.getFavoriteMaxSpentRequest());
   };
 
   return (

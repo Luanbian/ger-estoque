@@ -9,6 +9,7 @@ const initialState: Filters = {
   category: {},
   sales: {},
   customer: {},
+  favorites: {},
 };
 
 export const filterSlice = createSlice({
@@ -55,6 +56,25 @@ export const filterSlice = createSlice({
     },
     setCustomerStatus: (state, action: PayloadAction<CustomerStatusEnum>) => {
       state.customer.status = action.payload;
+    },
+    setFavoriteCustomerName: (state, action: PayloadAction<string>) => {
+      state.favorites.name = action.payload;
+    },
+    setFavoriteCustomerPhone: (state, action: PayloadAction<string>) => {
+      state.favorites.phone = action.payload;
+    },
+    setFavoriteCustomerInvoicing: (
+      state,
+      action: PayloadAction<{ min?: number; max?: number }>,
+    ) => {
+      state.favorites.invoicingMin = action.payload.min;
+      state.favorites.invoicingMax = action.payload.max;
+    },
+    setFavoriteCustomerStatus: (
+      state,
+      action: PayloadAction<CustomerStatusEnum>,
+    ) => {
+      state.favorites.status = action.payload;
     },
   },
 });

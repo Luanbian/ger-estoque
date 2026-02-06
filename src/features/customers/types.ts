@@ -14,10 +14,14 @@ export interface Customer {
 
 export interface CustomerState {
   data: Customer[] | null;
+  favorites: Customer[] | null;
   loading: boolean;
+  loadingFavorites: boolean;
   error: string | null;
   pagination: Pagination | null;
+  paginationFavorites: Pagination | null;
   maxSpent: number | null;
+  maxSpentFavorites: number | null;
 }
 
 export interface CreateCustomerPayload {

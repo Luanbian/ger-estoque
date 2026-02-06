@@ -7,6 +7,7 @@ export interface Filters {
   category: CategoryFilters;
   sales: SalesFilters;
   customer: CustomerFilters;
+  favorites: CustomerFilters;
 }
 
 export interface ProductFilters {

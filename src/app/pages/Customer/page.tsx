@@ -15,21 +15,34 @@ import { ModalComponent } from "../../components/modal";
 import { useState } from "react";
 import { CreateOrUPdateCustomer } from "../../components/customers/createOrUpdate/customer";
 import { IconPlus } from "@tabler/icons-react";
+import { Tabs } from "../../components/tabs";
+import { FavoriteCustomerFilter } from "../../components/customers/filters/favorites";
 
 interface Props {
   data: {
     customers: Customer[] | null;
+    favorites: Customer[] | null;
     loading: boolean;
+    loadingFavorites: boolean;
     pagination: Pagination | null;
+    paginationFavorites: Pagination | null;
   };
   actions: {
     onChangePage: (page: number) => void;
+    onChangePageFavorites: (page: number) => void;
   };
 }
 
 export const CustomerPage = ({ data, actions }: Props) => {
-  const { customers, loading, pagination } = data;
-  const { onChangePage } = actions;
+  const {
+    customers,
+    favorites,
+    loading,
+    loadingFavorites,
+    pagination,
+    paginationFavorites,
+  } = data;
+  const { onChangePage, onChangePageFavorites } = actions;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -67,26 +80,78 @@ export const CustomerPage = ({ data, actions }: Props) => {
           </Button>
         </Stack>
 
-        <Box display={"flex"} flexDirection="column" gap={4} paddingInline={2}>
-          <CustomerFilter />
-          {loading ? (
-            <CircularProgress />
-          ) : !customers || customers.length === 0 ? (
-            <Typography variant="body1">Nenhum cliente encontrado.</Typography>
-          ) : (
-            <CustomerGridList data={{ customers }} />
-          )}
-        </Box>
-
-        <Box mt={4} display="flex" justifyContent="center">
-          {pagination && (
-            <MUIPagination
-              count={pagination.totalPages}
-              page={pagination.page}
-              onChange={(_, page) => onChangePage(page)}
-            />
-          )}
-        </Box>
+        <Tabs
+          data={{
+            tabs: [
+              {
+                label: "Clientes",
+                content: (
+                  <>
+                    <Box
+                      display={"flex"}
+                      flexDirection="column"
+                      gap={4}
+                      paddingInline={2}
+                    >
+                      <CustomerFilter />
+                      {loading ? (
+                        <CircularProgress />
+                      ) : !customers || customers.length === 0 ? (
+                        <Typography variant="body1">
+                          Nenhum cliente encontrado.
+                        </Typography>
+                      ) : (
+                        <CustomerGridList data={{ customers }} />
+                      )}
+                    </Box>
+                    <Box mt={4} display="flex" justifyContent="center">
+                      {pagination && (
+                        <MUIPagination
+                          count={pagination.totalPages}
+                          page={pagination.page}
+                          onChange={(_, page) => onChangePage(page)}
+                        />
+                      )}
+                    </Box>
+                  </>
+                ),
+              },
+              {
+                label: "Favoritos",
+                content: (
+                  <>
+                    <Box
+                      display={"flex"}
+                      flexDirection="column"
+                      gap={4}
+                      paddingInline={2}
+                    >
+                      <FavoriteCustomerFilter />
+                      {loadingFavorites ? (
+                        <CircularProgress />
+                      ) : !favorites || favorites.length === 0 ? (
+                        <Typography variant="body1">
+                          Nenhum cliente favorito encontrado.
+                        </Typography>
+                      ) : (
+                        <CustomerGridList data={{ customers: favorites }} />
+                      )}
+                    </Box>
+                    <Box mt={4} display="flex" justifyContent="center">
+                      {paginationFavorites && (
+                        <MUIPagination
+                          count={paginationFavorites.totalPages}
+                          page={paginationFavorites.page}
+                          onChange={(_, page) => onChangePageFavorites(page)}
+                        />
+                      )}
+                    </Box>
+                  </>
+                ),
+              },
+            ],
+          }}
+        />
       </Box>
 
       <ModalComponent

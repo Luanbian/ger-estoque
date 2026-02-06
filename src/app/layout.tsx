@@ -41,6 +41,7 @@ export const MainLayout = () => {
     dispatch(unitOfMeasureActions.unitOfMeasureRequest());
     dispatch(salesActions.getMaxSalesInvoicingRequest());
     dispatch(customerActions.getCustomerMaxSpentRequest());
+    dispatch(customerActions.getFavoriteMaxSpentRequest());
   }, []);
 
   return (

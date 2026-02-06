@@ -5,7 +5,14 @@ import { CustomerPage } from "./page";
 
 export const Customer = () => {
   const dispatch = useDispatch();
-  const { data, loading, pagination } = useSelector((state) => state.customer);
+  const {
+    data,
+    loading,
+    pagination,
+    favorites,
+    loadingFavorites,
+    paginationFavorites,
+  } = useSelector((state) => state.customer);
 
   const onChangePage = (page: number) => {
     dispatch(
@@ -17,16 +24,36 @@ export const Customer = () => {
     );
   };
 
+  const onChangePageFavorites = (page: number) => {
+    dispatch(
+      actions.favoritesRequest({
+        page: page.toString(),
+        limit: "25",
+        sort: "asc",
+      }),
+    );
+  };
+
   useEffect(() => {
     if (data === null) {
       dispatch(actions.customersRequest());
     }
-  }, [data]);
+    if (favorites === null) {
+      dispatch(actions.favoritesRequest());
+    }
+  }, [data, favorites]);
 
   return (
     <CustomerPage
-      data={{ customers: data, loading, pagination }}
-      actions={{ onChangePage }}
+      data={{
+        customers: data,
+        loading,
+        pagination,
+        favorites,
+        loadingFavorites,
+        paginationFavorites,
+      }}
+      actions={{ onChangePage, onChangePageFavorites }}
     />
   );
 };

@@ -89,11 +89,59 @@ function* updateIsFavorite(payload: PayloadAction<string>) {
   }
 }
 
+function* getFavorites(payload: PayloadAction<PaginationRequest | undefined>) {
+  yield put(actions.setLoadingFavorites(true));
+  try {
+    const filters: Filters = yield select((state: AppState) => state.filter);
+
+    const response: APIResponse<Customer[]> = yield call(
+      apiService.post,
+      `/customer/favorite/list`,
+      filters?.favorites || {},
+      generateParams(payload.payload),
+    );
+
+    const { data } = response;
+
+    yield put(actions.setFavorites(data));
+    yield put(actions.setPaginationFavorites(response.pagination || null));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
+    );
+  } finally {
+    yield put(actions.setLoadingFavorites(false));
+  }
+}
+
+function* getFavoriteMaxSpent() {
+  try {
+    const response: APIResponse<number> = yield call(
+      apiService.get,
+      "/customer/favorite/max-spent",
+    );
+
+    const { data } = response;
+
+    yield put(actions.setMaxSpentFavorites(data));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
+    );
+  }
+}
+
 export function* customerSagas() {
   yield all([
     takeEvery(actions.customersRequest.type, getCustomers),
     takeEvery(actions.createCustomerRequest.type, createCustomer),
     takeEvery(actions.getCustomerMaxSpentRequest.type, getCustomerMaxSpent),
     takeEvery(actions.updateIsFavoriteRequest.type, updateIsFavorite),
+    takeEvery(actions.favoritesRequest.type, getFavorites),
+    takeEvery(actions.getFavoriteMaxSpentRequest.type, getFavoriteMaxSpent),
   ]);
 }
