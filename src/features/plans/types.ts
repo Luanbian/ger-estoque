@@ -1,6 +1,7 @@
 export interface PlanType {
   _id?: string;
   planId: string;
+  slug: string;
   name: string;
   description?: string;
   price: number;
