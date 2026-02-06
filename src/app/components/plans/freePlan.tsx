@@ -81,11 +81,9 @@ export const FreePlan = ({ data }: Props) => {
             {Object.entries(features).map(([key, value]) => (
               <Box
                 key={key}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  p: 0.5,
-                }}
+                display={"flex"}
+                justifyContent={"space-between"}
+                p={0.5}
               >
                 <Typography
                   variant="body1"
