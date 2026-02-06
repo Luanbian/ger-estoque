@@ -8,6 +8,7 @@ export interface AccountShopkeeper {
   accountShopkeeper: {
     name: string;
     cnpj: string;
+    avatar?: string;
   };
   subscription: {
     planTypeId: string;

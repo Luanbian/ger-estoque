@@ -17,9 +17,13 @@ export const accountShopkeeperSlice = createSlice({
   reducers: {
     registerAccountRequest: (
       _state,
-      _action: PayloadAction<CreateAccountShopkeeperPayload>
+      _action: PayloadAction<CreateAccountShopkeeperPayload>,
     ) => {},
     getAccountShopkeeperRequest: () => {},
+    updateAccountShopkeeperAvatarRequest: (
+      _state,
+      _action: PayloadAction<{ avatar: File }>,
+    ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },

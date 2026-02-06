@@ -9,6 +9,10 @@ export const Profile = () => {
   const { data, loading } = useSelector((state) => state.accountShopkeeper);
   const { data: planTypes } = useSelector((state) => state.planType);
 
+  const updateAvatar = (avatar: File) => {
+    dispatch(actions.updateAccountShopkeeperAvatarRequest({ avatar }));
+  };
+
   useEffect(() => {
     if (!data) {
       dispatch(actions.getAccountShopkeeperRequest());
@@ -31,6 +35,7 @@ export const Profile = () => {
             (plan) => plan.planId === data.subscription?.planTypeId,
           )?.name || "-",
       }}
+      actions={{ updateAvatar }}
     />
   );
 };

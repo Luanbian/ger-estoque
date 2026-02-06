@@ -1,21 +1,20 @@
 import { Box, Button, IconButton } from "@mui/material";
 import { HealthCheck } from "./healthCheck/container";
 import { IconBurger, IconLogout, IconUser } from "@tabler/icons-react";
-import { useDispatch } from "../../../store/hooks";
-import { actions as authActions } from "../../../features/auth";
-import { useNavigate } from "react-router-dom";
+import { ASSETS_BASE_URL } from "../../../constants/assets";
 
-export const HeaderComponent = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const handleLogout = () => {
-    dispatch(authActions.logout());
+interface Props {
+  data: {
+    avatar?: string;
   };
-
-  const handleProfile = () => {
-    navigate("/profile");
+  actions: {
+    logout: () => void;
+    navigateToProfile: () => void;
   };
+}
+export const HeaderComponent = ({ data, actions }: Props) => {
+  const { avatar } = data;
+  const { logout, navigateToProfile } = actions;
 
   return (
     <Box
@@ -27,14 +26,28 @@ export const HeaderComponent = () => {
     >
       <IconBurger size={32} />
       <HealthCheck />
-      <IconButton color="primary" size="large" onClick={handleProfile}>
-        <IconUser />
+      <IconButton color="primary" size="large" onClick={navigateToProfile}>
+        {avatar ? (
+          <img
+            src={`${ASSETS_BASE_URL}${avatar}`}
+            alt="Avatar"
+            width={32}
+            height={32}
+            style={{
+              borderRadius: "50%",
+              border: "1px solid white",
+              padding: 1,
+            }}
+          />
+        ) : (
+          <IconUser />
+        )}
       </IconButton>
       <Button
         variant="outlined"
         color="error"
         startIcon={<IconLogout />}
-        onClick={handleLogout}
+        onClick={logout}
       >
         Sair
       </Button>

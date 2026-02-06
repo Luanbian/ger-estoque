@@ -1,3 +1,5 @@
+import React, { useState, useRef } from "react";
+import { IconUser, IconPencil } from "@tabler/icons-react";
 import { AccountShopkeeper } from "../../../features/accountShopkeeper/types";
 import {
   Box,
@@ -9,16 +11,39 @@ import {
   Typography,
   Chip,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { ASSETS_BASE_URL } from "../../../constants/assets";
 
 interface Props {
   data: {
     account: AccountShopkeeper;
     planName: string;
   };
+  actions: {
+    updateAvatar: (avatar: File) => void;
+  };
 }
 
-export const ProfilePage = ({ data }: Props) => {
+export const ProfilePage = ({ data, actions }: Props) => {
   const { account, planName } = data;
+  const { updateAvatar } = actions;
+  const theme = useTheme();
+
+  const [avatarHovered, setAvatarHovered] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePencilClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      updateAvatar(file);
+    }
+  };
 
   const name = account?.accountShopkeeper?.name ?? "-";
   const email = account?.auth?.email ?? "-";
@@ -29,6 +54,7 @@ export const ProfilePage = ({ data }: Props) => {
   const expiresAt = account?.subscription?.expiresAt
     ? new Date(account.subscription.expiresAt).toLocaleDateString()
     : "-";
+  const avatar = account?.accountShopkeeper?.avatar;
 
   return (
     <Box sx={{ p: 3 }}>
@@ -44,13 +70,51 @@ export const ProfilePage = ({ data }: Props) => {
           <Card elevation={3} sx={{ height: "100%" }}>
             <CardHeader
               avatar={
-                <img
-                  src="/masc_profile.png"
-                  alt="Avatar"
-                  width={64}
-                  height={64}
-                  style={{ borderRadius: "50%" }}
-                />
+                <Box
+                  sx={{
+                    position: "relative",
+                    width: 40,
+                    height: 40,
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={() => setAvatarHovered(true)}
+                  onMouseLeave={() => setAvatarHovered(false)}
+                >
+                  <>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      style={{ display: "none" }}
+                      onChange={handleFileChange}
+                    />
+                    {avatarHovered ? (
+                      <Box onClick={handlePencilClick}>
+                        <IconPencil
+                          size={24}
+                          color={theme.palette.primary.main}
+                          style={{
+                            position: "absolute",
+                            top: 8,
+                            left: 8,
+                          }}
+                        />
+                      </Box>
+                    ) : avatar ? (
+                      <img
+                        src={`${ASSETS_BASE_URL}${avatar}`}
+                        alt="Avatar"
+                        width={40}
+                        height={40}
+                        style={{
+                          borderRadius: "50%",
+                        }}
+                      />
+                    ) : (
+                      <IconUser size={40} color={theme.palette.primary.main} />
+                    )}
+                  </>
+                </Box>
               }
               title={<Typography variant="h6">{name}</Typography>}
               subheader={<Typography variant="body2">{email}</Typography>}
