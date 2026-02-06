@@ -49,7 +49,7 @@ export const Plans = ({ data }: Props) => {
         >
           {planTypes &&
             planTypes.map((plan) => {
-              if (plan.slug.toLowerCase().includes("básico"))
+              if (plan.slug.toLowerCase().includes("basico"))
                 return <FreePlan key={plan._id} data={{ plan }} />;
               if (plan.slug.toLowerCase().includes("premium"))
                 return <StandardPlan key={plan._id} data={{ plan }} />;
