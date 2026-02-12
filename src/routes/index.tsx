@@ -36,7 +36,14 @@ export const AppRoutes = () => {
           <Route path="/stock" element={<Stock />} />
           <Route path="/category" element={<Category />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/showcase" element={<Showcase />} />
+          <Route
+            path="/showcase"
+            element={
+              <RequireFeature feature={Features.SHOWCASE}>
+                <Showcase />
+              </RequireFeature>
+            }
+          />
           <Route path="/sale" element={<Sale />} />
           <Route
             path="/finance"
