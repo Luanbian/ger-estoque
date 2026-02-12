@@ -15,7 +15,7 @@ function* getSales(payload: PayloadAction<PaginationRequest | undefined>) {
 
     const response: APIResponse<Sales[]> = yield call(
       apiService.post,
-      `/sale/list`,
+      "/sale/list",
       filters.sales || {},
       generateParams(payload.payload),
     );
