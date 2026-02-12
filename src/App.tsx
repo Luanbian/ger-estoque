@@ -9,7 +9,6 @@ import store from "./store";
 import { AppRoutes } from "./routes";
 import { useDispatch } from "./store/hooks";
 import { actions as planActions } from "./features/plans";
-import { DomainProvider } from "./app/context/domain";
 
 const LoadingFallback = () => {
   return (
@@ -70,9 +69,7 @@ function App() {
         pauseOnHover
       />
       <Provider store={store}>
-        <DomainProvider>
-          <ThemedApp />
-        </DomainProvider>
+        <ThemedApp />
       </Provider>
     </>
   );

@@ -9,5 +9,10 @@ export const generateBasicPlanFeatures = (): Record<
     SALES_REPORTS: false,
     UPLOAD_PRODUCTS_EXCEL: false,
     CUSTOMER_MANAGEMENT: false,
+    CATEGORY_MANAGEMENT: false,
+    SALES_MANAGEMENT: false,
+    SHOWCASE: false,
+    STOCK_ALERTS: false,
+    STOCK_MANAGEMENT: false,
   };
 };
