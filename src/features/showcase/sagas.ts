@@ -51,9 +51,32 @@ function* createShowcase(payload: PayloadAction<CreateShowcasePayload>) {
   }
 }
 
+function* getShowcaseByName(payload: PayloadAction<{ name: string }>) {
+  yield put(actions.setLoading(true));
+  try {
+    const response: APIResponse<Showcase> = yield call(
+      apiService.get,
+      `/showcase/${payload.payload.name}`,
+    );
+
+    const { data } = response;
+
+    yield put(actions.setShowcase(data));
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 export function* showcaseSagas() {
   yield all([
     takeEvery(actions.showcaseRequest.type, getShowcase),
     takeEvery(actions.createShowcaseRequest.type, createShowcase),
+    takeEvery(actions.getShowcaseByName.type, getShowcaseByName),
   ]);
 }
