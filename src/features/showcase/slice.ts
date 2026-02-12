@@ -11,7 +11,7 @@ export const showcaseSlice = createSlice({
   name: "showcase",
   initialState,
   reducers: {
-    showcaseRequest: (_state, _action: PayloadAction<string>) => {},
+    showcaseRequest: () => {},
     createShowcaseRequest: (
       _state,
       _action: PayloadAction<CreateShowcasePayload>,

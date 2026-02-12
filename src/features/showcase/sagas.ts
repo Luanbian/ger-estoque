@@ -5,12 +5,12 @@ import { APIResponse } from "../common/types";
 import { apiService } from "../../services/api";
 import { CreateShowcasePayload, Showcase } from "./types";
 
-function* getShowcase(payload: PayloadAction<string>) {
+function* getShowcase() {
   yield put(actions.setLoading(true));
   try {
     const response: APIResponse<Showcase> = yield call(
       apiService.get,
-      `/showcase/${payload.payload}`,
+      "/showcase",
     );
 
     const { data } = response;
@@ -30,7 +30,7 @@ function* getShowcase(payload: PayloadAction<string>) {
 function* createShowcase(payload: PayloadAction<CreateShowcasePayload>) {
   yield put(actions.setLoading(true));
   try {
-    const response: APIResponse<string> = yield call(
+    const response: APIResponse<Showcase> = yield call(
       apiService.post,
       "/showcase",
       payload.payload,
@@ -38,7 +38,8 @@ function* createShowcase(payload: PayloadAction<CreateShowcasePayload>) {
 
     const { data } = response;
 
-    yield put(actions.setMessage(data));
+    yield put(actions.setMessage("Showcase created successfully"));
+    yield put(actions.setShowcase(data));
   } catch (error) {
     yield put(
       actions.setError(

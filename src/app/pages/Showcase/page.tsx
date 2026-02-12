@@ -6,7 +6,7 @@ import {
 
 interface Props {
   data: {
-    showcase: Showcase;
+    showcase: Showcase | null;
     loading: boolean;
   };
   actions: {
@@ -34,9 +34,9 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
         Detalhes da Vitrine
       </Typography>
       <Typography color="text.secondary">
-        Nome: {showcase.name}
+        Nome: {showcase?.name}
         <br />
-        Descrição: {showcase.hash}
+        Descrição: {showcase?.hash}
       </Typography>
 
       <Button

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { actions } from "../../../features/showcase";
 import { CreateShowcasePayload } from "../../../features/showcase/types";
@@ -12,13 +13,15 @@ export const Showcase = () => {
     dispatch(actions.createShowcaseRequest(data));
   };
 
+  useEffect(() => {
+    if (!data) {
+      dispatch(actions.showcaseRequest());
+    }
+  }, []);
+
   if (message) {
     toast.success(message);
     dispatch(actions.setMessage(undefined));
-  }
-
-  if (!data) {
-    return <div>Vitrine não encontrada</div>;
   }
 
   return (
