@@ -14,6 +14,8 @@ import { RegisterAccount } from "../app/registerAccount/container";
 import { Profile } from "../app/pages/Profile/layout";
 import { Sales } from "../app/pages/Sales/layout";
 import { Customer } from "../app/pages/Customer/layout";
+import { Showcase } from "../app/pages/Showcase/layout";
+import { Sale } from "../app/pages/Sale/layout";
 
 export const AppRoutes = () => {
   return (
@@ -34,6 +36,8 @@ export const AppRoutes = () => {
           <Route path="/stock" element={<Stock />} />
           <Route path="/category" element={<Category />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/showcase" element={<Showcase />} />
+          <Route path="/sale" element={<Sale />} />
           <Route
             path="/finance"
             element={

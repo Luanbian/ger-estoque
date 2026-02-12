@@ -20,6 +20,8 @@ import {
   IconShoppingBag,
   IconGardenCart,
   IconUsers,
+  IconBrandCashapp,
+  IconWorldPin,
 } from "@tabler/icons-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -56,10 +58,20 @@ export const SidebarComponent = ({
       path: "/",
     },
     {
+      text: "Vitrine",
+      icon: <IconWorldPin />,
+      path: "/showcase",
+    },
+    {
       text: "PDV",
       icon: <IconGardenCart />,
       path: "/pdv",
       children: [
+        {
+          text: "Nova Venda",
+          icon: <IconBrandCashapp />,
+          path: "/sale",
+        },
         {
           text: "Produtos",
           icon: <IconStack3Filled />,
