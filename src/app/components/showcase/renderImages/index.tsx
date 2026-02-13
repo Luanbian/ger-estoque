@@ -9,6 +9,7 @@ interface Props {
     alt?: string;
     width?: number | string;
     height?: number | string;
+    mini?: boolean;
   };
   actions: {
     onClick?: () => void;
@@ -17,7 +18,7 @@ interface Props {
 }
 
 export const RenderImage = ({ data, actions }: Props) => {
-  const { src, ref, alt, width, height } = data;
+  const { src, ref, alt, width, height, mini } = data;
   const { onClick, onChange } = actions;
   const theme = useTheme();
 
@@ -40,7 +41,7 @@ export const RenderImage = ({ data, actions }: Props) => {
       ) : (
         <Box
           border={`2px dashed ${theme.palette.primary.main}`}
-          p={16}
+          p={mini ? 4 : 16}
           textAlign="center"
         >
           <IconLibraryPhoto color={theme.palette.primary.main} />

@@ -35,6 +35,10 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
   const { createShowcase } = actions;
 
   const [boxesQuantity, setBoxesQuantity] = useState<number[]>([0]);
+  const logofileInputRef = useRef<HTMLInputElement>(null);
+  const [logoPreview, setLogoPreview] = useState<string>(
+    showcase?.logo ? URL.createObjectURL(showcase.logo) : "",
+  );
   const bannerfileInputRef = useRef<HTMLInputElement>(null);
   const [bannerPreview, setBannerPreview] = useState<string>(
     showcase?.banner ? URL.createObjectURL(showcase.banner) : "",
@@ -73,6 +77,20 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
 
   const onSubmit = (data: CreateShowcasePayload) => {
     createShowcase(data);
+  };
+
+  const handleLogoClick = () => {
+    if (logofileInputRef.current) {
+      logofileInputRef.current.click();
+    }
+  };
+
+  const handleLogoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setValue("logo", file);
+      setLogoPreview(URL.createObjectURL(file));
+    }
   };
 
   const handleBannerClick = () => {
@@ -147,6 +165,25 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
             defaultValue={showcase?.name || ""}
           />
           <Typography>.anexu.com.br</Typography>
+        </Box>
+        <Box display={"flex"} gap={2} alignItems={"center"}>
+          <Typography variant="h6" gutterBottom fontWeight={600}>
+            Logo
+          </Typography>
+          <RenderImage
+            data={{
+              src: logoPreview,
+              ref: logofileInputRef,
+              alt: "Logo",
+              width: 90,
+              height: 90,
+              mini: true,
+            }}
+            actions={{
+              onClick: handleLogoClick,
+              onChange: handleLogoFileChange,
+            }}
+          />
         </Box>
         <Box display={"flex"} gap={2} alignItems={"center"}>
           <Typography variant="h6" gutterBottom fontWeight={600}>

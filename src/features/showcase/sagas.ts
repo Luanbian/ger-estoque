@@ -30,10 +30,47 @@ function* getShowcase() {
 function* createShowcase(payload: PayloadAction<CreateShowcasePayload>) {
   yield put(actions.setLoading(true));
   try {
+    const uploadFile = (file: File | null) => {
+      if (!file) return Promise.resolve({ data: null });
+
+      const formData = new FormData();
+      formData.append("file", file);
+      return apiService.post("/storage", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    };
+
+    const bannerUrl: APIResponse<string> = yield call(
+      uploadFile,
+      payload.payload.banner,
+    );
+    const logoUrl: APIResponse<string> = yield call(
+      uploadFile,
+      payload.payload.logo,
+    );
+    const presentationUrl: APIResponse<string> = yield call(
+      uploadFile,
+      payload.payload.presentation.image,
+    );
+    const bodyUrl: APIResponse<string> = yield call(
+      uploadFile,
+      payload.payload.body.image,
+    );
+
     const response: APIResponse<Showcase> = yield call(
       apiService.post,
       "/showcase",
-      payload.payload,
+      {
+        ...payload.payload,
+        banner: bannerUrl.data,
+        logo: logoUrl.data,
+        presentation: {
+          ...payload.payload.presentation,
+          image: presentationUrl.data,
+          sections: payload.payload.presentation.sections.filter(Boolean),
+        },
+        body: { ...payload.payload.body, image: bodyUrl.data },
+      },
     );
 
     const { data } = response;
