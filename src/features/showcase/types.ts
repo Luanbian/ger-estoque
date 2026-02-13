@@ -3,6 +3,24 @@ export interface Showcase {
   tenantId: string;
   name: string;
   hash: string;
+  banner: File | null;
+  logo: File | null;
+  presentation: {
+    title: string;
+    image: File | null;
+    sections: {
+      title: string;
+      description: string;
+    }[];
+  };
+  body: {
+    title: string;
+    image: File | null;
+    section: {
+      title: string;
+      description: string;
+    };
+  };
 }
 
 export interface ShowcaseState {
@@ -13,6 +31,23 @@ export interface ShowcaseState {
 }
 
 export interface CreateShowcasePayload {
-  title: string;
   name: string;
+  banner: File | null;
+  logo: File | null;
+  presentation: {
+    title: string;
+    image: File | null;
+    sections: {
+      title: string;
+      description: string;
+    }[];
+  };
+  body: {
+    title: string;
+    image: File | null;
+    section: {
+      title: string;
+      description: string;
+    };
+  };
 }

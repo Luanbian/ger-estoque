@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { ASSETS_BASE_URL } from "../../../../constants/assets";
 import { IconLibraryPhoto } from "@tabler/icons-react";
 
 interface Props {
@@ -8,6 +7,8 @@ interface Props {
     src: string;
     ref: React.RefObject<HTMLInputElement | null>;
     alt?: string;
+    width?: number | string;
+    height?: number | string;
   };
   actions: {
     onClick?: () => void;
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export const RenderImage = ({ data, actions }: Props) => {
-  const { src, ref, alt } = data;
+  const { src, ref, alt, width, height } = data;
   const { onClick, onChange } = actions;
   const theme = useTheme();
 
@@ -30,7 +31,12 @@ export const RenderImage = ({ data, actions }: Props) => {
         onChange={onChange}
       />
       {src ? (
-        <img src={`${ASSETS_BASE_URL}${src}`} alt={alt || "Image rendered"} />
+        <img
+          src={src}
+          alt={alt || "Image rendered"}
+          width={width}
+          height={height}
+        />
       ) : (
         <Box
           border={`2px dashed ${theme.palette.primary.main}`}

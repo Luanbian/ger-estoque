@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Box,
+  Button,
   CircularProgress,
   Grid,
+  Stack,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -23,38 +25,54 @@ interface Props {
   };
   actions: {
     createShowcase: (data: CreateShowcasePayload) => void;
-    updateBanner: (banner: File) => void;
-    updateBody: (body: File) => void;
   };
 }
 
-const banner = "";
-const bodyImg = "";
 const bodyBoxesQuantity = [0, 1, 2, 3, 4, 5];
 
 export const ShowcaseComponent = ({ data, actions }: Props) => {
   const { showcase, loading } = data;
-  const { createShowcase, updateBanner, updateBody } = actions;
+  const { createShowcase } = actions;
 
   const [boxesQuantity, setBoxesQuantity] = useState<number[]>([0]);
   const bannerfileInputRef = useRef<HTMLInputElement>(null);
+  const [bannerPreview, setBannerPreview] = useState<string>(
+    showcase?.banner ? URL.createObjectURL(showcase.banner) : "",
+  );
+  const presentationfileInputRef = useRef<HTMLInputElement>(null);
+  const [presentationPreview, setPresentationPreview] = useState<string>(
+    showcase?.presentation?.image
+      ? URL.createObjectURL(showcase.presentation.image)
+      : "",
+  );
   const bodyfileInputRef = useRef<HTMLInputElement>(null);
+  const [bodyPreview, setBodyPreview] = useState<string>(
+    showcase?.body?.image ? URL.createObjectURL(showcase.body.image) : "",
+  );
+
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<CreateShowcasePayload>();
+
+  const buildRegisterNames = (quantity: number) => {
+    const names = [];
+    for (let i = 1; i <= quantity; i++) {
+      names.push(`presentation.sections[${i}].title`);
+      names.push(`presentation.sections[${i}].description`);
+    }
+    return names;
+  };
 
   const handleBoxesQuantityClick = (clickedValue: number) => {
     setBoxesQuantity(Array.from({ length: clickedValue + 1 }, (_, i) => i));
   };
 
-  useEffect(() => {
-    console.log({ boxesQuantity });
-  }, [boxesQuantity]);
-
   const onSubmit = (data: CreateShowcasePayload) => {
-    console.log(data);
+    createShowcase(data);
   };
 
   const handleBannerClick = () => {
@@ -66,7 +84,24 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
   const handleBannerFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      updateBanner(file);
+      setValue("banner", file);
+      setBannerPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handlePresentationClick = () => {
+    if (presentationfileInputRef.current) {
+      presentationfileInputRef.current.click();
+    }
+  };
+
+  const handlePresentationFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setValue("presentation.image", file);
+      setPresentationPreview(URL.createObjectURL(file));
     }
   };
 
@@ -79,7 +114,8 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
   const handleBodyFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      updateBody(file);
+      setValue("body.image", file);
+      setBodyPreview(URL.createObjectURL(file));
     }
   };
 
@@ -89,7 +125,7 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
 
   return (
     <Box>
-      <Box m={2}>
+      <Box m={2} width={"80%"} mx="auto">
         <Typography
           variant="h4"
           gutterBottom
@@ -100,17 +136,20 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
         </Typography>
         <Box display={"flex"} alignItems={"center"}>
           <TextField
-            {...register("name", { required: "O nome do site é obrigatório" })}
+            {...register("name", {
+              required: "O nome do site é obrigatório",
+            })}
             label="Nome do seu site"
             required
             margin="normal"
             error={!!errors.name}
             helperText={errors.name?.message}
+            defaultValue={showcase?.name || ""}
           />
           <Typography>.anexu.com.br</Typography>
         </Box>
-        <Box display={"flex"} gap={1} alignItems={"center"}>
-          <Typography variant="h6" gutterBottom fontWeight={600} width="50%">
+        <Box display={"flex"} gap={2} alignItems={"center"}>
+          <Typography variant="h6" gutterBottom fontWeight={600}>
             Quantidade de caixas de informação
           </Typography>
           <ToggleButtonGroup value={boxesQuantity} exclusive={false}>
@@ -143,35 +182,106 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
           onSubmit={handleSubmit(onSubmit)}
         >
           <RenderImage
-            data={{ src: banner, ref: bannerfileInputRef, alt: "Banner" }}
+            data={{
+              src: bannerPreview,
+              ref: bannerfileInputRef,
+              alt: "Banner",
+              width: "100%",
+              height: "300px",
+            }}
             actions={{
               onClick: handleBannerClick,
               onChange: handleBannerFileChange,
             }}
           />
-          <Grid container spacing={2} mt={2}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                {...register("title", { required: "O título é obrigatório" })}
-                label="Título da Vitrine"
-                required
-                fullWidth
-                margin="normal"
-                error={!!errors.title}
-                helperText={errors.title?.message}
-              />
-              <BodyBoxes data={{ quantity: boxesQuantity.length - 1 }} />
+          <Stack width={"80%"} mx="auto">
+            <Grid container spacing={2} mt={2}>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <TextField
+                  {...register("presentation.title", {
+                    required: "O título de apresentação é obrigatório",
+                  })}
+                  label="Título da Vitrine"
+                  required
+                  fullWidth
+                  margin="normal"
+                  error={!!errors.presentation?.title}
+                  helperText={errors.presentation?.title?.message}
+                  defaultValue={showcase?.presentation?.title || ""}
+                />
+                <BodyBoxes
+                  data={{
+                    quantity: boxesQuantity.length - 1,
+                    registerNames: buildRegisterNames(boxesQuantity.length - 1),
+                    register,
+                    control,
+                  }}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <RenderImage
+                  data={{
+                    src: presentationPreview,
+                    ref: presentationfileInputRef,
+                    alt: "Body",
+                  }}
+                  actions={{
+                    onClick: handlePresentationClick,
+                    onChange: handlePresentationFileChange,
+                  }}
+                />
+              </Grid>
             </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <RenderImage
-                data={{ src: bodyImg, ref: bodyfileInputRef, alt: "Body" }}
-                actions={{
-                  onClick: handleBodyClick,
-                  onChange: handleBodyFileChange,
-                }}
-              />
-            </Grid>
-          </Grid>
+            <Box>
+              <Grid container spacing={2} mt={2}>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    {...register("body.title", {
+                      required: "O título da seção é obrigatório",
+                    })}
+                    label="Título desta seção"
+                    required
+                    fullWidth
+                    margin="normal"
+                    error={!!errors.body?.title}
+                    helperText={errors.body?.title?.message}
+                    defaultValue={showcase?.body?.title || ""}
+                  />
+                  <BodyBoxes
+                    data={{
+                      quantity: 1,
+                      registerNames: [
+                        "body.section.title",
+                        "body.section.description",
+                      ],
+                      register,
+                      control,
+                    }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <RenderImage
+                    data={{
+                      src: bodyPreview,
+                      ref: bodyfileInputRef,
+                      alt: "Body",
+                    }}
+                    actions={{
+                      onClick: handleBodyClick,
+                      onChange: handleBodyFileChange,
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          </Stack>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit(onSubmit)}
+          >
+            Publicar
+          </Button>
         </Box>
       </Box>
     </Box>
