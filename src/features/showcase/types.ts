@@ -13,5 +13,6 @@ export interface ShowcaseState {
 }
 
 export interface CreateShowcasePayload {
+  title: string;
   name: string;
 }
