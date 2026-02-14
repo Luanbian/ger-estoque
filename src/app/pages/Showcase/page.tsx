@@ -3,8 +3,10 @@ import {
   Box,
   Button,
   CircularProgress,
+  Divider,
   Grid,
   Stack,
+  Switch,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -17,6 +19,8 @@ import {
 import { useForm } from "react-hook-form";
 import { RenderImage } from "../../components/showcase/renderImages";
 import { BodyBoxes } from "../../components/showcase/bodyBoxes";
+import { StoriesComponent } from "../../components/showcase/stories";
+import { TestimonialsComponent } from "../../components/showcase/testimonials";
 
 interface Props {
   data: {
@@ -41,6 +45,8 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
   const [presentationPreview, setPresentationPreview] = useState<string>("");
   const bodyfileInputRef = useRef<HTMLInputElement>(null);
   const [bodyPreview, setBodyPreview] = useState<string>("");
+  const [showName, setShowName] = useState<boolean>(false);
+  const [showStories, setShowStories] = useState<boolean>(false);
 
   useEffect(() => {
     setLogoPreview(showcase?.logo || "");
@@ -55,12 +61,16 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
           )
         : [0],
     );
+    setShowName(showcase?.showName || false);
+    setShowStories(showcase?.showStories || false);
   }, [
     showcase?.logo,
     showcase?.banner,
     showcase?.presentation?.image,
     showcase?.body?.image,
     showcase?.presentation?.sections,
+    showcase?.showName,
+    showcase?.showStories,
   ]);
 
   const {
@@ -71,11 +81,11 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
     setValue,
   } = useForm<CreateShowcasePayload>();
 
-  const buildRegisterNames = (quantity: number) => {
+  const buildRegisterNames = (quantity: number, prefix: string) => {
     const names = [];
     for (let i = 0; i <= quantity; i++) {
-      names.push(`presentation.sections[${i}].title`);
-      names.push(`presentation.sections[${i}].description`);
+      names.push(`${prefix}.sections[${i}].title`);
+      names.push(`${prefix}.sections[${i}].description`);
     }
     return names;
   };
@@ -161,19 +171,46 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
         >
           Configurações da Vitrine
         </Typography>
-        <Box display={"flex"} alignItems={"center"}>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+        >
+          <Box display={"flex"} alignItems={"center"}>
+            <TextField
+              {...register("domain", {
+                required: "O domínio é obrigatório",
+              })}
+              label="Domínio do seu site"
+              required
+              margin="normal"
+              error={!!errors.domain}
+              helperText={errors.domain?.message}
+              defaultValue={showcase?.domain || ""}
+            />
+            <Typography>.anexu.com.br</Typography>
+          </Box>
           <TextField
             {...register("name", {
-              required: "O nome do site é obrigatório",
+              required: "O nome é obrigatório",
             })}
-            label="Nome do seu site"
+            label="Nome da Vitrine"
             required
             margin="normal"
             error={!!errors.name}
             helperText={errors.name?.message}
             defaultValue={showcase?.name || ""}
           />
-          <Typography>.anexu.com.br</Typography>
+        </Box>
+        <Box display={"flex"} gap={2} alignItems={"center"}>
+          <Typography variant="h6" gutterBottom fontWeight={600}>
+            Mostrar nome da loja?
+          </Typography>
+          <Switch
+            {...register("showName")}
+            checked={showName}
+            onChange={(e) => setShowName(e.target.checked)}
+          />
         </Box>
         <Box display={"flex"} gap={2} alignItems={"center"}>
           <Typography variant="h6" gutterBottom fontWeight={600}>
@@ -193,6 +230,11 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
               onChange: handleLogoFileChange,
             }}
           />
+          {showName && (
+            <Typography variant="h6" gutterBottom fontWeight={600}>
+              {showcase?.name || "Nome da loja"}
+            </Typography>
+          )}
         </Box>
         <Box display={"flex"} gap={2} alignItems={"center"}>
           <Typography variant="h6" gutterBottom fontWeight={600}>
@@ -210,6 +252,16 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
+        </Box>
+        <Box display={"flex"} gap={2} alignItems={"center"}>
+          <Typography variant="h6" gutterBottom fontWeight={600}>
+            Mostrar stories?
+          </Typography>
+          <Switch
+            {...register("showStories")}
+            checked={showStories}
+            onChange={(e) => setShowStories(e.target.checked)}
+          />
         </Box>
       </Box>
 
@@ -234,13 +286,14 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
               ref: bannerfileInputRef,
               alt: "Banner",
               width: "100%",
-              height: "300px",
+              height: "350px",
             }}
             actions={{
               onClick: handleBannerClick,
               onChange: handleBannerFileChange,
             }}
           />
+          {showStories && <StoriesComponent />}
           <Stack width={"80%"} mx="auto">
             <Grid container spacing={2} mt={2}>
               <Grid size={{ xs: 12, md: 6 }}>
@@ -259,7 +312,10 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
                 <BodyBoxes
                   data={{
                     quantity: boxesQuantity.length - 1,
-                    registerNames: buildRegisterNames(boxesQuantity.length - 1),
+                    registerNames: buildRegisterNames(
+                      boxesQuantity.length - 1,
+                      "presentation",
+                    ),
                     register,
                     control,
                     showcase,
@@ -322,6 +378,29 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
                   />
                 </Grid>
               </Grid>
+            </Box>
+            <Divider sx={{ my: 4 }} />
+            <Box>
+              <TextField
+                {...register("testimonials.title", {
+                  required: "O título da seção é obrigatório",
+                })}
+                label="Título dessa seção"
+                required
+                fullWidth
+                margin="normal"
+                error={!!errors.testimonials?.title}
+                helperText={errors.testimonials?.title?.message}
+                defaultValue={showcase?.testimonials?.title || ""}
+              />
+              <TestimonialsComponent
+                data={{
+                  control,
+                  register,
+                  showcase,
+                  registerNames: buildRegisterNames(3, "testimonials"),
+                }}
+              />
             </Box>
           </Stack>
           <Button

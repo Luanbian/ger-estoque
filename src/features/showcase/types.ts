@@ -1,10 +1,13 @@
 export interface Showcase {
   _id: string;
   tenantId: string;
+  domain: string;
   name: string;
   hash: string;
   banner: string | null;
   logo: string | null;
+  showName: boolean;
+  showStories: boolean;
   presentation: {
     title: string;
     image: string | null;
@@ -20,6 +23,13 @@ export interface Showcase {
       title: string;
       description: string;
     };
+  };
+  testimonials: {
+    title: string;
+    sections: {
+      title: string;
+      description: string;
+    }[];
   };
 }
 
@@ -31,9 +41,12 @@ export interface ShowcaseState {
 }
 
 export interface CreateShowcasePayload {
+  domain: string;
   name: string;
   banner: File | null;
   logo: File | null;
+  showName: boolean;
+  showStories: boolean;
   presentation: {
     title: string;
     image: File | null;
@@ -49,5 +62,12 @@ export interface CreateShowcasePayload {
       title: string;
       description: string;
     };
+  };
+  testimonials: {
+    title: string;
+    sections: {
+      title: string;
+      description: string;
+    }[];
   };
 }

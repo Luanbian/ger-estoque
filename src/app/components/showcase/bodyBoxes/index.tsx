@@ -218,7 +218,7 @@ interface BodyBoxProps {
   };
 }
 
-const BodyBox = ({ data }: BodyBoxProps) => {
+export const BodyBox = ({ data }: BodyBoxProps) => {
   const { registerNames, control, register, showcase } = data;
   const theme = useTheme();
 
