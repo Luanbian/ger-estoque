@@ -32,14 +32,7 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
   const { showcase, loading } = data;
   const { createShowcase } = actions;
 
-  const [boxesQuantity, setBoxesQuantity] = useState<number[]>(
-    showcase?.presentation?.sections
-      ? Array.from(
-          { length: showcase.presentation.sections.length + 1 },
-          (_, i) => i,
-        )
-      : [0],
-  );
+  const [boxesQuantity, setBoxesQuantity] = useState<number[]>([0]);
   const logofileInputRef = useRef<HTMLInputElement>(null);
   const [logoPreview, setLogoPreview] = useState<string>("");
   const bannerfileInputRef = useRef<HTMLInputElement>(null);
@@ -54,11 +47,20 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
     setBannerPreview(showcase?.banner || "");
     setPresentationPreview(showcase?.presentation?.image || "");
     setBodyPreview(showcase?.body?.image || "");
+    setBoxesQuantity(
+      showcase?.presentation?.sections
+        ? Array.from(
+            { length: showcase.presentation.sections.length + 1 },
+            (_, i) => i,
+          )
+        : [0],
+    );
   }, [
     showcase?.logo,
     showcase?.banner,
     showcase?.presentation?.image,
     showcase?.body?.image,
+    showcase?.presentation?.sections,
   ]);
 
   const {
@@ -144,7 +146,7 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
     }
   };
 
-  if (loading) {
+  if (loading || !showcase) {
     return <CircularProgress />;
   }
 

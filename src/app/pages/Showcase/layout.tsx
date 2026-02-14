@@ -14,7 +14,7 @@ export const Showcase = () => {
   };
 
   useEffect(() => {
-    if (!data) {
+    if (data === null) {
       dispatch(actions.showcaseRequest());
     }
   }, []);
