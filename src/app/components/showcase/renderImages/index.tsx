@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { IconLibraryPhoto } from "@tabler/icons-react";
+import { ASSETS_BASE_URL } from "../../../../constants/assets";
 
 interface Props {
   data: {
@@ -33,7 +34,7 @@ export const RenderImage = ({ data, actions }: Props) => {
       />
       {src ? (
         <img
-          src={src}
+          src={`${ASSETS_BASE_URL}${src}`}
           alt={alt || "Image rendered"}
           width={width}
           height={height}

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -28,31 +28,38 @@ interface Props {
   };
 }
 
-const bodyBoxesQuantity = [0, 1, 2, 3, 4, 5];
-
 export const ShowcaseComponent = ({ data, actions }: Props) => {
   const { showcase, loading } = data;
   const { createShowcase } = actions;
 
-  const [boxesQuantity, setBoxesQuantity] = useState<number[]>([0]);
+  const [boxesQuantity, setBoxesQuantity] = useState<number[]>(
+    showcase?.presentation?.sections
+      ? Array.from(
+          { length: showcase.presentation.sections.length + 1 },
+          (_, i) => i,
+        )
+      : [0],
+  );
   const logofileInputRef = useRef<HTMLInputElement>(null);
-  const [logoPreview, setLogoPreview] = useState<string>(
-    showcase?.logo ? URL.createObjectURL(showcase.logo) : "",
-  );
+  const [logoPreview, setLogoPreview] = useState<string>("");
   const bannerfileInputRef = useRef<HTMLInputElement>(null);
-  const [bannerPreview, setBannerPreview] = useState<string>(
-    showcase?.banner ? URL.createObjectURL(showcase.banner) : "",
-  );
+  const [bannerPreview, setBannerPreview] = useState<string>("");
   const presentationfileInputRef = useRef<HTMLInputElement>(null);
-  const [presentationPreview, setPresentationPreview] = useState<string>(
-    showcase?.presentation?.image
-      ? URL.createObjectURL(showcase.presentation.image)
-      : "",
-  );
+  const [presentationPreview, setPresentationPreview] = useState<string>("");
   const bodyfileInputRef = useRef<HTMLInputElement>(null);
-  const [bodyPreview, setBodyPreview] = useState<string>(
-    showcase?.body?.image ? URL.createObjectURL(showcase.body.image) : "",
-  );
+  const [bodyPreview, setBodyPreview] = useState<string>("");
+
+  useEffect(() => {
+    setLogoPreview(showcase?.logo || "");
+    setBannerPreview(showcase?.banner || "");
+    setPresentationPreview(showcase?.presentation?.image || "");
+    setBodyPreview(showcase?.body?.image || "");
+  }, [
+    showcase?.logo,
+    showcase?.banner,
+    showcase?.presentation?.image,
+    showcase?.body?.image,
+  ]);
 
   const {
     control,
@@ -64,7 +71,7 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
 
   const buildRegisterNames = (quantity: number) => {
     const names = [];
-    for (let i = 1; i <= quantity; i++) {
+    for (let i = 0; i <= quantity; i++) {
       names.push(`presentation.sections[${i}].title`);
       names.push(`presentation.sections[${i}].description`);
     }
@@ -190,10 +197,11 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
             Quantidade de caixas de informação
           </Typography>
           <ToggleButtonGroup value={boxesQuantity} exclusive={false}>
-            {bodyBoxesQuantity.map((value, key) => (
+            {[0, 1, 2, 3, 4, 5].map((value, key) => (
               <ToggleButton
                 key={key}
                 value={key}
+                defaultValue={showcase?.presentation?.sections?.length || 0}
                 onClick={() => handleBoxesQuantityClick(value)}
               >
                 {value}
@@ -252,6 +260,7 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
                     registerNames: buildRegisterNames(boxesQuantity.length - 1),
                     register,
                     control,
+                    showcase,
                   }}
                 />
               </Grid>
@@ -293,6 +302,7 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
                       ],
                       register,
                       control,
+                      showcase,
                     }}
                   />
                 </Grid>

@@ -3,11 +3,11 @@ export interface Showcase {
   tenantId: string;
   name: string;
   hash: string;
-  banner: File | null;
-  logo: File | null;
+  banner: string | null;
+  logo: string | null;
   presentation: {
     title: string;
-    image: File | null;
+    image: string | null;
     sections: {
       title: string;
       description: string;
@@ -15,7 +15,7 @@ export interface Showcase {
   };
   body: {
     title: string;
-    image: File | null;
+    image: string | null;
     section: {
       title: string;
       description: string;

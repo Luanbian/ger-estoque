@@ -1,6 +1,8 @@
 import { Controller } from "react-hook-form";
 import { Box, Grid, TextareaAutosize, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { getValueByPath } from "../../../../utils/getValueByPath";
+import { Showcase } from "../../../../features/showcase/types";
 
 interface Props {
   data: {
@@ -8,6 +10,7 @@ interface Props {
     registerNames: string[];
     register: any;
     control: any;
+    showcase: Showcase | null;
   };
 }
 
@@ -15,14 +18,19 @@ const MAX_LINES = 10;
 const MAX_CHARS = 300;
 
 export const BodyBoxes = ({ data }: Props) => {
-  const { quantity, registerNames, control, register } = data;
+  const { quantity, registerNames, control, register, showcase } = data;
 
   if (quantity === 0) return;
 
   if (quantity === 1)
     return (
       <BodyBox
-        data={{ registerNames: registerNames.slice(0, 2), control, register }}
+        data={{
+          registerNames: registerNames.slice(0, 2),
+          control,
+          register,
+          showcase,
+        }}
       />
     );
 
@@ -30,7 +38,12 @@ export const BodyBoxes = ({ data }: Props) => {
     return (
       <Box>
         <BodyBox
-          data={{ registerNames: registerNames.slice(0, 2), control, register }}
+          data={{
+            registerNames: registerNames.slice(0, 2),
+            control,
+            register,
+            showcase,
+          }}
         />
         <Grid container spacing={2} mt={1}>
           <Grid size={{ xs: 6 }}>
@@ -38,6 +51,7 @@ export const BodyBoxes = ({ data }: Props) => {
               data={{
                 registerNames: registerNames.slice(2, 4),
                 control,
+                showcase,
                 register,
               }}
             />
@@ -51,7 +65,12 @@ export const BodyBoxes = ({ data }: Props) => {
     return (
       <Box>
         <BodyBox
-          data={{ registerNames: registerNames.slice(0, 2), control, register }}
+          data={{
+            registerNames: registerNames.slice(0, 2),
+            control,
+            register,
+            showcase,
+          }}
         />
         <Grid container spacing={2} mt={1}>
           <Grid size={{ xs: 6 }}>
@@ -60,6 +79,7 @@ export const BodyBoxes = ({ data }: Props) => {
                 registerNames: registerNames.slice(2, 4),
                 control,
                 register,
+                showcase,
               }}
             />
           </Grid>
@@ -69,6 +89,7 @@ export const BodyBoxes = ({ data }: Props) => {
                 registerNames: registerNames.slice(4, 6),
                 control,
                 register,
+                showcase,
               }}
             />
           </Grid>
@@ -81,7 +102,12 @@ export const BodyBoxes = ({ data }: Props) => {
     return (
       <Box>
         <BodyBox
-          data={{ registerNames: registerNames.slice(0, 2), control, register }}
+          data={{
+            registerNames: registerNames.slice(0, 2),
+            control,
+            register,
+            showcase,
+          }}
         />
         <Grid container spacing={2} mt={1}>
           <Grid size={{ xs: 6 }}>
@@ -90,6 +116,7 @@ export const BodyBoxes = ({ data }: Props) => {
                 registerNames: registerNames.slice(2, 4),
                 control,
                 register,
+                showcase,
               }}
             />
           </Grid>
@@ -99,6 +126,7 @@ export const BodyBoxes = ({ data }: Props) => {
                 registerNames: registerNames.slice(4, 6),
                 control,
                 register,
+                showcase,
               }}
             />
           </Grid>
@@ -110,6 +138,7 @@ export const BodyBoxes = ({ data }: Props) => {
                 registerNames: registerNames.slice(6, 8),
                 control,
                 register,
+                showcase,
               }}
             />
           </Grid>
@@ -122,7 +151,12 @@ export const BodyBoxes = ({ data }: Props) => {
     return (
       <Box>
         <BodyBox
-          data={{ registerNames: registerNames.slice(0, 2), control, register }}
+          data={{
+            registerNames: registerNames.slice(0, 2),
+            control,
+            register,
+            showcase,
+          }}
         />
         <Grid container spacing={2} mt={1}>
           <Grid size={{ xs: 6 }}>
@@ -131,6 +165,7 @@ export const BodyBoxes = ({ data }: Props) => {
                 registerNames: registerNames.slice(2, 4),
                 control,
                 register,
+                showcase,
               }}
             />
           </Grid>
@@ -140,6 +175,7 @@ export const BodyBoxes = ({ data }: Props) => {
                 registerNames: registerNames.slice(4, 6),
                 control,
                 register,
+                showcase,
               }}
             />
           </Grid>
@@ -151,6 +187,7 @@ export const BodyBoxes = ({ data }: Props) => {
                 registerNames: registerNames.slice(6, 8),
                 control,
                 register,
+                showcase,
               }}
             />
           </Grid>
@@ -160,6 +197,7 @@ export const BodyBoxes = ({ data }: Props) => {
                 registerNames: registerNames.slice(8, 10),
                 control,
                 register,
+                showcase,
               }}
             />
           </Grid>
@@ -176,11 +214,12 @@ interface BodyBoxProps {
     registerNames: string[];
     register: any;
     control: any;
+    showcase: Showcase | null;
   };
 }
 
 const BodyBox = ({ data }: BodyBoxProps) => {
-  const { registerNames, control, register } = data;
+  const { registerNames, control, register, showcase } = data;
   const theme = useTheme();
 
   return (
@@ -194,11 +233,11 @@ const BodyBox = ({ data }: BodyBoxProps) => {
         label="Titulo desta caixa"
         fullWidth
         {...register(registerNames[0] as any)}
+        defaultValue={getValueByPath(showcase, registerNames[0])}
       />
       <Controller
         name={registerNames[1] as any}
         control={control}
-        defaultValue=""
         render={({ field }) => (
           <Box position="relative" width="100%">
             <TextareaAutosize
@@ -229,6 +268,7 @@ const BodyBox = ({ data }: BodyBoxProps) => {
                 field.onChange(text);
               }}
               value={field.value}
+              defaultValue={getValueByPath(showcase, registerNames[1])}
             />
             <Box
               position="absolute"
@@ -238,7 +278,7 @@ const BodyBox = ({ data }: BodyBoxProps) => {
               color={theme.palette.text.secondary}
               zIndex={1}
             >
-              {field.value.length}/{MAX_CHARS}
+              10/{MAX_CHARS}
             </Box>
           </Box>
         )}
