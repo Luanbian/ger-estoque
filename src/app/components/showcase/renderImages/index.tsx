@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { IconLibraryPhoto } from "@tabler/icons-react";
 import { ASSETS_BASE_URL } from "../../../../constants/assets";
+import { useState } from "react";
 
 interface Props {
   data: {
@@ -23,6 +24,10 @@ export const RenderImage = ({ data, actions }: Props) => {
   const { onClick, onChange } = actions;
   const theme = useTheme();
 
+  const [imageValid, setImageValid] = useState(true);
+
+  const imageUrl = `${ASSETS_BASE_URL}${src}`;
+
   return (
     <Box onClick={onClick} sx={{ cursor: "pointer" }}>
       <input
@@ -32,12 +37,13 @@ export const RenderImage = ({ data, actions }: Props) => {
         style={{ display: "none" }}
         onChange={onChange}
       />
-      {src ? (
+      {src && imageValid ? (
         <img
-          src={`${ASSETS_BASE_URL}${src}`}
+          src={imageUrl}
           alt={alt || "Image rendered"}
           width={width}
           height={height}
+          onError={() => setImageValid(false)}
         />
       ) : (
         <Box
