@@ -156,7 +156,7 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
     }
   };
 
-  if (loading || !showcase) {
+  if (loading) {
     return <CircularProgress />;
   }
 
@@ -293,7 +293,12 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
               onChange: handleBannerFileChange,
             }}
           />
-          {showStories && <StoriesComponent />}
+          {showStories && (
+            <StoriesComponent
+              data={{ register, stories: showcase?.stories }}
+              actions={{ setValue }}
+            />
+          )}
           <Stack width={"80%"} mx="auto">
             <Grid container spacing={2} mt={2}>
               <Grid size={{ xs: 12, md: 6 }}>

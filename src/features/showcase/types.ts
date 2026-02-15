@@ -31,6 +31,16 @@ export interface Showcase {
       description: string;
     }[];
   };
+  stories?: {
+    title: string;
+    thumbnail: string;
+    items: {
+      title: string;
+      subtitle: string;
+      profileImage: string;
+      image: string;
+    }[];
+  }[];
 }
 
 export interface ShowcaseState {
@@ -70,4 +80,14 @@ export interface CreateShowcasePayload {
       description: string;
     }[];
   };
+  stories?: {
+    title: string;
+    thumbnail: File | null;
+    items: {
+      title: string;
+      subtitle: string;
+      profileImage: string;
+      image: File | null;
+    }[];
+  }[];
 }
