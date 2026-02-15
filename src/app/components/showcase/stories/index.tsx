@@ -42,8 +42,7 @@ export const StoriesComponent = ({ data, actions }: Props) => {
     setIsModalOpen(false);
   };
 
-  const handleSaveStory = (data: any) => {
-    console.log({ data });
+  const handleSaveStory = () => {
     handleCloseModal();
   };
 
@@ -99,7 +98,7 @@ interface RegisterStoryProps {
     register: any;
   };
   actions: {
-    handleSaveStory: (data: any) => void;
+    handleSaveStory: () => void;
     handleCancelStory: () => void;
     setValue: any;
   };
@@ -320,7 +319,7 @@ const RegisterStory = ({ data, actions }: RegisterStoryProps) => {
           Cancelar
         </Button>
         <Button
-          onClick={() => handleSaveStory({ index, thumbnailPreview })}
+          onClick={handleSaveStory}
           variant="contained"
           size="large"
           sx={{ minWidth: 120 }}
