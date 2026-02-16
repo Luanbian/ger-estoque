@@ -120,7 +120,7 @@ function* createShowcase(payload: PayloadAction<CreateShowcasePayload>) {
 
     const { data } = response;
 
-    yield put(actions.setMessage("Showcase created successfully"));
+    yield put(actions.setMessage("Seu site foi criado com sucesso!"));
     yield put(actions.setShowcase(data));
   } catch (error) {
     yield put(
