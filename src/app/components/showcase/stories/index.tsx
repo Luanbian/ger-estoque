@@ -281,13 +281,13 @@ const RegisterStory = ({ data, actions }: RegisterStoryProps) => {
         >
           Titulo do Story
         </Typography>
-
         <TextField
           label="Titulo do Story"
           fullWidth
           {...register(`stories[${index}].title`)}
           variant="outlined"
           sx={{ mb: 2 }}
+          defaultValue={story?.title || ""}
         />
         <Typography
           variant="h4"
@@ -331,6 +331,7 @@ const RegisterStory = ({ data, actions }: RegisterStoryProps) => {
             label="Titulo do Item"
             fullWidth
             {...register(`stories[${index}].items[${i}].title`)}
+            defaultValue={story?.items?.[i]?.title || ""}
             variant="outlined"
             sx={{ mb: 1 }}
           />
@@ -338,6 +339,7 @@ const RegisterStory = ({ data, actions }: RegisterStoryProps) => {
             label="Subtitulo do Item"
             fullWidth
             {...register(`stories[${index}].items[${i}].subtitle`)}
+            defaultValue={story?.items?.[i]?.subtitle || ""}
             variant="outlined"
           />
           <RenderImage {...buildRenderImageProps(i as 0 | 1 | 2)} />
