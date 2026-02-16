@@ -248,6 +248,7 @@ export const BodyBox = ({ data }: BodyBoxProps) => {
               placeholder="Digite o conteúdo desta caixa de informação"
               style={{
                 backgroundColor: theme.palette.background.default,
+                color: theme.palette.text.primary,
                 border: `2px solid ${theme.palette.primary.main}`,
                 resize: "none",
                 width: "100%",

@@ -79,7 +79,10 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<CreateShowcasePayload>();
+
+  const showcaseName = watch("name");
 
   const buildRegisterNames = (quantity: number, prefix: string) => {
     const names = [];
@@ -232,7 +235,7 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
           />
           {showName && (
             <Typography variant="h6" gutterBottom fontWeight={600}>
-              {showcase?.name || "Nome da loja"}
+              {showcaseName}
             </Typography>
           )}
         </Box>
@@ -295,7 +298,7 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
           />
           {showStories && (
             <StoriesComponent
-              data={{ register, stories: showcase?.stories }}
+              data={{ register, stories: showcase?.stories, watch }}
               actions={{ setValue }}
             />
           )}

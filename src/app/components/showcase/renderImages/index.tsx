@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { IconLibraryPhoto } from "@tabler/icons-react";
 import { ASSETS_BASE_URL } from "../../../../constants/assets";
-import { useState } from "react";
 
 interface Props {
   data: {
@@ -20,13 +20,13 @@ interface Props {
 }
 
 export const RenderImage = ({ data, actions }: Props) => {
-  const { src, ref, alt, width, height, mini } = data;
+  const { src, ref, alt, width = "100%", height = "100%", mini } = data;
   const { onClick, onChange } = actions;
   const theme = useTheme();
 
   const [imageValid, setImageValid] = useState(true);
 
-  const imageUrl = `${ASSETS_BASE_URL}${src}`;
+  const imageUrl = src.includes("blob") ? src : `${ASSETS_BASE_URL}${src}`;
 
   return (
     <Box onClick={onClick} sx={{ cursor: "pointer" }}>

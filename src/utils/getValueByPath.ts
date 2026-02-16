@@ -1,6 +1,5 @@
 export const getValueByPath = (obj: any, path: string): string => {
-  if (!path) return "";
-  if (!obj) return path;
+  if (!path || !obj) return "";
 
   return path.split(".").reduce((acc, key) => {
     const arrayMatch = key.match(/^(\w+)\[(\d+)\]$/);

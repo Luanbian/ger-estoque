@@ -11,6 +11,8 @@ import { ModalComponent } from "../../modal";
 import { useEffect, useRef, useState } from "react";
 import { RenderImage } from "../renderImages";
 import { Showcase } from "../../../../features/showcase/types";
+import { IconPencil } from "@tabler/icons-react";
+import { ASSETS_BASE_URL } from "../../../../constants/assets";
 
 export const STORIES_QUANTITY = 2;
 export const STORY_ITEMS_QUANTITY = 3;
@@ -18,6 +20,7 @@ export const STORY_ITEMS_QUANTITY = 3;
 interface Props {
   data: {
     register: any;
+    watch: any;
     stories: Showcase["stories"];
   };
   actions: {
@@ -26,12 +29,27 @@ interface Props {
 }
 
 export const StoriesComponent = ({ data, actions }: Props) => {
-  const { register, stories } = data;
+  const { register, stories, watch } = data;
   const { setValue } = actions;
 
   const theme = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStoryId, setSelectedStoryId] = useState<number>(0);
+
+  const titles: string[] = Array.from(
+    { length: STORIES_QUANTITY },
+    (_, i) => watch(`stories[${i}].title`) || stories?.[i]?.title || "",
+  );
+
+  const thumbnailPreviews: string[] = Array.from(
+    { length: STORIES_QUANTITY },
+    (_, i) => {
+      const file = watch(`stories[${i}].thumbnail`);
+      return file
+        ? URL.createObjectURL(file)
+        : `${ASSETS_BASE_URL}${stories?.[i]?.thumbnail}` || "";
+    },
+  );
 
   const handleOpenModal = (id: number) => {
     setSelectedStoryId(id);
@@ -59,22 +77,41 @@ export const StoriesComponent = ({ data, actions }: Props) => {
       marginBlock={2}
     >
       {Array.from({ length: STORIES_QUANTITY }).map((_, i) => (
-        <Paper
-          onClick={() => handleOpenModal(i)}
-          key={i}
-          elevation={2}
-          sx={{
-            width: 56,
-            height: 56,
-            borderRadius: "50%",
-            backgroundColor: theme.palette.primary.main,
-            border: `4px solid ${theme.palette.secondary.main}`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-          }}
-        />
+        <Box key={i}>
+          <Paper
+            onClick={() => handleOpenModal(i)}
+            elevation={2}
+            sx={{
+              width: 56,
+              height: 56,
+              borderRadius: "50%",
+              backgroundColor: theme.palette.primary.main,
+              border: `4px solid ${theme.palette.secondary.main}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
+          >
+            {thumbnailPreviews[i] ? (
+              <img
+                src={thumbnailPreviews[i]}
+                alt="Thumbnail Preview"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+              />
+            ) : (
+              <IconPencil />
+            )}
+          </Paper>
+          <Typography variant="caption" display="block" textAlign={"center"}>
+            {titles[i] || `Story ${i + 1}`}
+          </Typography>
+        </Box>
       ))}
 
       <ModalComponent
