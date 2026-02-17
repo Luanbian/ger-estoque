@@ -44,6 +44,7 @@ export const MainLayout = () => {
     dispatch(customerActions.getCustomerMaxSpentRequest());
     dispatch(customerActions.getFavoriteMaxSpentRequest());
     dispatch(wsActions.connect());
+    dispatch(wsActions.watchEvents());
   }, []);
 
   return (

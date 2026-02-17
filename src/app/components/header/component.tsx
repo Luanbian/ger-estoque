@@ -2,6 +2,7 @@ import { Box, Button, IconButton } from "@mui/material";
 import { HealthCheck } from "./healthCheck/container";
 import { IconBurger, IconLogout, IconUser } from "@tabler/icons-react";
 import { ASSETS_BASE_URL } from "../../../constants/assets";
+import { NotificationHeader } from "./notification/container";
 
 interface Props {
   data: {
@@ -43,6 +44,7 @@ export const HeaderComponent = ({ data, actions }: Props) => {
           <IconUser />
         )}
       </IconButton>
+      <NotificationHeader />
       <Button
         variant="outlined"
         color="error"
