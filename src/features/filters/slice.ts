@@ -3,6 +3,7 @@ import { ProductType } from "../common/productTypeEnum";
 import { StockStatusEnum } from "../common/stockStatusEnum";
 import { Filters } from "./types";
 import { CustomerStatusEnum } from "../common/customerStatusEnum";
+import { OrderStatus } from "../common/orderStatusEnum";
 
 const initialState: Filters = {
   product: {},
@@ -10,6 +11,7 @@ const initialState: Filters = {
   sales: {},
   customer: {},
   favorites: {},
+  sale: {},
 };
 
 export const filterSlice = createSlice({
@@ -75,6 +77,9 @@ export const filterSlice = createSlice({
       action: PayloadAction<CustomerStatusEnum>,
     ) => {
       state.favorites.status = action.payload;
+    },
+    setSaleStatus: (state, action: PayloadAction<OrderStatus>) => {
+      state.sale.status = action.payload;
     },
   },
 });

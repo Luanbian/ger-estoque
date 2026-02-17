@@ -1,4 +1,5 @@
 import { CustomerStatusEnum } from "../common/customerStatusEnum";
+import { OrderStatus } from "../common/orderStatusEnum";
 import { ProductType } from "../common/productTypeEnum";
 import { StockStatusEnum } from "../common/stockStatusEnum";
 
@@ -6,6 +7,7 @@ export interface Filters {
   product: ProductFilters;
   category: CategoryFilters;
   sales: SalesFilters;
+  sale: SaleFilters;
   customer: CustomerFilters;
   favorites: CustomerFilters;
 }
@@ -33,4 +35,8 @@ export interface CustomerFilters {
   invoicingMin?: number;
   invoicingMax?: number;
   status?: CustomerStatusEnum;
+}
+
+export interface SaleFilters {
+  status?: OrderStatus;
 }

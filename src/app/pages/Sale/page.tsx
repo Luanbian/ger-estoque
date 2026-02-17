@@ -1,47 +1,57 @@
-import { Box, Typography } from "@mui/material";
-import { WebSocketEvent } from "../../../features/ws/types";
+import {
+  Box,
+  CircularProgress,
+  Pagination as MuiPagination,
+  Typography,
+} from "@mui/material";
+import { Order } from "../../../features/order/types";
+import { Pagination } from "../../../features/common/types";
+import { OrderFilter } from "../../components/order/filters";
+import { OrderListComponent } from "../../components/order/list/list";
 
 interface Props {
   data: {
-    notifications: WebSocketEvent[];
+    orders: Order[] | null;
+    loading: boolean;
+    pagination: Pagination | null;
+  };
+  actions: {
+    onChangePage: (page: number) => void;
   };
 }
 
-export const SaleComponent = ({ data }: Props) => {
-  const { notifications } = data;
+export const SaleComponent = ({ data, actions }: Props) => {
+  const { orders, loading, pagination } = data;
+  const { onChangePage } = actions;
 
   return (
     <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Página de Vendas
+      <Typography variant="h4" component="h1" gutterBottom mb={2}>
+        Página de Pedidos
       </Typography>
-      <Typography color="text.secondary">
-        Esta é a página de vendas do sistema.
-      </Typography>
+      <OrderFilter />
       <Box mt={4}>
-        <Typography variant="h6" component="h2" gutterBottom>
-          Notificações Recebidas:
-        </Typography>
-        {notifications.length === 0 ? (
-          <Typography color="text.secondary">
-            Nenhuma notificação recebida.
-          </Typography>
+        {loading ? (
+          <CircularProgress />
         ) : (
-          notifications.map((notification, index) => (
-            <Box
-              key={index}
-              mb={2}
-              p={2}
-              border={1}
-              borderColor="grey.300"
-              borderRadius={2}
-            >
-              <Typography variant="subtitle1">{notification.type}</Typography>
+          <>
+            {!orders || orders.length === 0 ? (
               <Typography color="text.secondary">
-                {notification.orderId}
+                Nenhum pedido encontrado.
               </Typography>
-            </Box>
-          ))
+            ) : (
+              <OrderListComponent data={{ orders }} />
+            )}
+          </>
+        )}
+      </Box>
+      <Box mt={4} display="flex" justifyContent="center">
+        {pagination && (
+          <MuiPagination
+            count={pagination.totalPages}
+            page={pagination.page}
+            onChange={(_, page) => onChangePage(page)}
+          />
         )}
       </Box>
     </Box>
