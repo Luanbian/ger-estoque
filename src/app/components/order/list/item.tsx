@@ -10,6 +10,9 @@ import { Order } from "../../../../features/order/types";
 import { useDispatch } from "../../../../store/hooks";
 import { actions } from "../../../../features/order";
 import { OrderStatus } from "../../../../features/common/orderStatusEnum";
+import { strSlice } from "../../../../utils/strSlice";
+import { IconCircleCheck, IconClock, IconXboxX } from "@tabler/icons-react";
+import { convertFromCents } from "../../../../utils/convertTocents";
 
 interface Props {
   data: {
@@ -28,47 +31,101 @@ const OrderItemComponent = ({ data, actions }: Props) => {
   return (
     <Card
       sx={{
-        borderRadius: 3,
+        borderRadius: "2%",
         boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        cursor: "pointer",
       }}
     >
-      <CardContent sx={{ pb: 1, flexGrow: 1 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Pedido #{order._id}
-        </Typography>
-        <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
-          Cliente: {order.customer.name}
+      <CardContent
+        sx={{
+          pb: 1,
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 1,
+        }}
+      >
+        {order.status === OrderStatus.PENDING ? (
+          <IconClock size={25} color="orange" />
+        ) : order.status === OrderStatus.ACCEPTED ? (
+          <IconCircleCheck size={25} color="green" />
+        ) : (
+          <IconXboxX size={25} color="red" />
+        )}
+        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+          Pedido #{strSlice(order._id)}
         </Typography>
       </CardContent>
       <Divider />
-      <Box sx={{ p: 2 }}>
+      <CardContent
+        sx={{
+          pb: 1,
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 1,
+        }}
+      >
+        {order.items.slice(0, 3).map((item, index) => (
+          <Box key={index}>
+            {item.nameSnapshot} x{item.quantity} - R$
+            {convertFromCents(item.priceSnapshot)}
+            {order.items.length > 3 && (
+              <Typography variant="caption" color="textSecondary">
+                +{order.items.length - 3} produtos
+              </Typography>
+            )}
+          </Box>
+        ))}
+      </CardContent>
+      <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 1 }}>
+          Total:
+        </Typography>
+        <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 1 }}>
+          R${convertFromCents(order.totalAmount)}
+        </Typography>
+      </Box>
+      <Divider />
+      <Box marginBlock={2}>
+        <Typography variant="subtitle2" color="textSecondary">
+          Nome: {order.customer.name}
+        </Typography>
+        {order.customer.email && (
+          <Typography variant="subtitle2" color="textSecondary">
+            Email: {order.customer.email}
+          </Typography>
+        )}
+        <Typography variant="subtitle2" color="textSecondary">
+          Telefone: {order.customer.phone}
+        </Typography>
+      </Box>
+      <Divider />
+      <Box sx={{ p: 2 }} display={"flex"} gap={2}>
         <Button
           fullWidth
-          variant="contained"
+          variant="outlined"
           sx={{
-            mb: 1,
-            bgcolor:
-              order.status === OrderStatus.ACCEPTED ? "#4caf50ff" : "#222",
             borderRadius: 2,
           }}
-          onClick={handleAccept}
+          onClick={handleReject}
         >
-          Aceitar
+          Rejeitar
         </Button>
         <Button
           fullWidth
           variant="contained"
           sx={{
             borderRadius: 2,
-            bgcolor:
-              order.status === OrderStatus.REJECTED ? "#ff4d4dff" : "#222",
           }}
-          onClick={handleReject}
+          onClick={handleAccept}
         >
-          Rejeitar
+          Aceitar
         </Button>
       </Box>
     </Card>
