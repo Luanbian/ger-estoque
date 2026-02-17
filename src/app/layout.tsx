@@ -8,6 +8,7 @@ import { actions as categoryActions } from "../features/categories";
 import { actions as unitOfMeasureActions } from "../features/unitOfMeasure";
 import { actions as salesActions } from "../features/sales";
 import { actions as customerActions } from "../features/customers";
+import { actions as wsActions } from "../features/ws";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { UnpaidWarning } from "./components/billingWarn/unpaid";
 import { FeaturesProvider } from "./featuresProvider";
@@ -42,6 +43,7 @@ export const MainLayout = () => {
     dispatch(salesActions.getMaxSalesInvoicingRequest());
     dispatch(customerActions.getCustomerMaxSpentRequest());
     dispatch(customerActions.getFavoriteMaxSpentRequest());
+    dispatch(wsActions.connect());
   }, []);
 
   return (
