@@ -1,18 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "../../../store/hooks";
 import { SaleComponent } from "./page";
-import { actions as wsActions } from "../../../features/ws";
 import { actions } from "../../../features/order";
 
 export const Sale = () => {
   const dispatch = useDispatch();
-  const { notifications, isConnected } = useSelector((state) => state.ws);
+  const { isConnected } = useSelector((state) => state.ws);
   const { data, loading, pagination } = useSelector((state) => state.order);
 
   useEffect(() => {
-    if (notifications.length > 0) {
-      dispatch(wsActions.clearNotifications());
-    }
     dispatch(actions.getOrdersRequest());
   }, []);
 

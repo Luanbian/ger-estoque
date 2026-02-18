@@ -16,12 +16,13 @@ interface Props {
   };
   actions: {
     navigateToSale: () => void;
+    clearNotifications: () => void;
   };
 }
 
 export const NotificationHeaderComponent = ({ data, actions }: Props) => {
   const { notifications } = data;
-  const { navigateToSale } = actions;
+  const { navigateToSale, clearNotifications } = actions;
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -30,6 +31,7 @@ export const NotificationHeaderComponent = ({ data, actions }: Props) => {
   };
 
   const handleClose = () => {
+    clearNotifications();
     setAnchorEl(null);
   };
 

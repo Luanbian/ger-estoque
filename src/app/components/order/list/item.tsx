@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -13,6 +14,8 @@ import { OrderStatus } from "../../../../features/common/orderStatusEnum";
 import { strSlice } from "../../../../utils/strSlice";
 import { IconCircleCheck, IconClock, IconXboxX } from "@tabler/icons-react";
 import { convertFromCents } from "../../../../utils/convertTocents";
+import { ModalComponent } from "../../modal";
+import { OrderDetails } from "../details";
 
 interface Props {
   data: {
@@ -28,6 +31,16 @@ const OrderItemComponent = ({ data, actions }: Props) => {
   const { order } = data;
   const { handleAccept, handleReject } = actions;
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Card
       sx={{
@@ -39,78 +52,75 @@ const OrderItemComponent = ({ data, actions }: Props) => {
         cursor: "pointer",
       }}
     >
-      <CardContent
-        sx={{
-          pb: 1,
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 1,
-        }}
-      >
-        {order.status === OrderStatus.PENDING ? (
-          <IconClock size={25} color="orange" />
-        ) : order.status === OrderStatus.ACCEPTED ? (
-          <IconCircleCheck size={25} color="green" />
-        ) : (
-          <IconXboxX size={25} color="red" />
-        )}
-        <Typography variant="body2" sx={{ fontWeight: 600 }}>
-          Pedido #{strSlice(order._id)}
-        </Typography>
-      </CardContent>
-      <Divider />
-      <CardContent
-        sx={{
-          pb: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 1,
-        }}
-      >
-        {order.items.slice(0, 3).map((item, index) => (
-          <Box
-            key={index}
-            justifyContent={"space-between"}
-            display={"flex"}
-            gap={1}
-            width={"100%"}
-          >
-            <Typography>
-              {item.nameSnapshot} x{item.quantity}
-            </Typography>
-            <Typography>R$ {convertFromCents(item.priceSnapshot)}</Typography>
-          </Box>
-        ))}
-        {order.items.length > 3 && (
-          <Typography variant="caption" color="textSecondary">
-            ... mais {order.items.length - 3} produtos
+      <Box onClick={handleOpenModal}>
+        <CardContent
+          sx={{
+            pb: 1,
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          {order.status === OrderStatus.PENDING ? (
+            <IconClock size={25} color="orange" />
+          ) : order.status === OrderStatus.ACCEPTED ? (
+            <IconCircleCheck size={25} color="green" />
+          ) : (
+            <IconXboxX size={25} color="red" />
+          )}
+          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+            Pedido #{strSlice(order._id)}
           </Typography>
-        )}
-      </CardContent>
-      <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 1 }}>
-          Total:
-        </Typography>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 1 }}>
-          R$ {convertFromCents(order.totalAmount)}
-        </Typography>
+        </CardContent>
+        <Divider />
+        <CardContent
+          sx={{
+            pb: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 1,
+            minHeight: 140,
+          }}
+        >
+          {order.items.slice(0, 3).map((item, index) => (
+            <Box
+              key={index}
+              justifyContent={"space-between"}
+              display={"flex"}
+              gap={1}
+              width={"100%"}
+            >
+              <Typography>
+                {item.nameSnapshot} x{item.quantity}
+              </Typography>
+              <Typography>R$ {convertFromCents(item.priceSnapshot)}</Typography>
+            </Box>
+          ))}
+          {order.items.length > 3 && (
+            <Typography variant="caption" color="textSecondary">
+              ... mais {order.items.length - 3} produtos
+            </Typography>
+          )}
+        </CardContent>
+        <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 1 }}>
+            Total:
+          </Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 1 }}>
+            R$ {convertFromCents(order.totalAmount)}
+          </Typography>
+        </Box>
+        <Divider />
+        <Box marginBlock={2}>
+          <Typography variant="subtitle2" color="textSecondary">
+            {order.customer.name}
+          </Typography>
+        </Box>
+        <Divider />
       </Box>
-      <Divider />
-      <Box marginBlock={2}>
-        <Typography variant="subtitle2" color="textSecondary">
-          Nome: {order.customer.name}
-        </Typography>
-        <Typography variant="subtitle2" color="textSecondary">
-          Email: {order.customer.email || "Não informado"}
-        </Typography>
-        <Typography variant="subtitle2" color="textSecondary">
-          Telefone: {order.customer.phone}
-        </Typography>
-      </Box>
-      <Divider />
       <Box sx={{ p: 2 }} display={"flex"} gap={2}>
         <Button
           fullWidth
@@ -133,6 +143,12 @@ const OrderItemComponent = ({ data, actions }: Props) => {
           Aceitar
         </Button>
       </Box>
+
+      <ModalComponent
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        content={<OrderDetails data={{ order }} />}
+      />
     </Card>
   );
 };
