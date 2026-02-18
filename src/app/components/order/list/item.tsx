@@ -64,7 +64,6 @@ const OrderItemComponent = ({ data, actions }: Props) => {
       <CardContent
         sx={{
           pb: 1,
-          flexGrow: 1,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -72,23 +71,31 @@ const OrderItemComponent = ({ data, actions }: Props) => {
         }}
       >
         {order.items.slice(0, 3).map((item, index) => (
-          <Box key={index}>
-            {item.nameSnapshot} x{item.quantity} - R$
-            {convertFromCents(item.priceSnapshot)}
-            {order.items.length > 3 && (
-              <Typography variant="caption" color="textSecondary">
-                +{order.items.length - 3} produtos
-              </Typography>
-            )}
+          <Box
+            key={index}
+            justifyContent={"space-between"}
+            display={"flex"}
+            gap={1}
+            width={"100%"}
+          >
+            <Typography>
+              {item.nameSnapshot} x{item.quantity}
+            </Typography>
+            <Typography>R$ {convertFromCents(item.priceSnapshot)}</Typography>
           </Box>
         ))}
+        {order.items.length > 3 && (
+          <Typography variant="caption" color="textSecondary">
+            ... mais {order.items.length - 3} produtos
+          </Typography>
+        )}
       </CardContent>
       <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
         <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 1 }}>
           Total:
         </Typography>
         <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 1 }}>
-          R${convertFromCents(order.totalAmount)}
+          R$ {convertFromCents(order.totalAmount)}
         </Typography>
       </Box>
       <Divider />
@@ -96,11 +103,9 @@ const OrderItemComponent = ({ data, actions }: Props) => {
         <Typography variant="subtitle2" color="textSecondary">
           Nome: {order.customer.name}
         </Typography>
-        {order.customer.email && (
-          <Typography variant="subtitle2" color="textSecondary">
-            Email: {order.customer.email}
-          </Typography>
-        )}
+        <Typography variant="subtitle2" color="textSecondary">
+          Email: {order.customer.email || "Não informado"}
+        </Typography>
         <Typography variant="subtitle2" color="textSecondary">
           Telefone: {order.customer.phone}
         </Typography>
