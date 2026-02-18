@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "../../../../store/hooks";
 import { NotificationHeaderComponent } from "./component";
 import { actions as wsActions } from "../../../../features/ws";
+import { actions as orderActions } from "../../../../features/order";
 
 export const NotificationHeader = () => {
   const navigate = useNavigate();
@@ -17,6 +20,13 @@ export const NotificationHeader = () => {
       dispatch(wsActions.clearNotifications());
     }
   };
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      toast.success("Você tem um novo pedido!");
+      dispatch(orderActions.getOrdersRequest());
+    }
+  }, [notifications]);
 
   return (
     <NotificationHeaderComponent
