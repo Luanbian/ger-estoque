@@ -16,6 +16,7 @@ import { Sales } from "../app/pages/Sales/layout";
 import { Customer } from "../app/pages/Customer/layout";
 import { Showcase } from "../app/pages/Showcase/layout";
 import { Sale } from "../app/pages/Sale/layout";
+import { Catalog } from "../app/pages/Catalog/layout";
 
 export const AppRoutes = () => {
   return (
@@ -66,6 +67,14 @@ export const AppRoutes = () => {
             element={
               <RequireFeature feature={Features.CUSTOMER_MANAGEMENT}>
                 <Customer />
+              </RequireFeature>
+            }
+          />
+          <Route
+            path="/catalog"
+            element={
+              <RequireFeature feature={Features.SHOWCASE}>
+                <Catalog />
               </RequireFeature>
             }
           />

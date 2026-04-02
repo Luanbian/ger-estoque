@@ -22,6 +22,8 @@ import {
   IconUsers,
   IconBrandCashapp,
   IconWorldPin,
+  IconDeviceLaptop,
+  IconLibrary,
 } from "@tabler/icons-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -60,12 +62,24 @@ export const SidebarComponent = ({
     {
       text: "Vitrine",
       icon: <IconWorldPin />,
-      path: "/showcase",
+      path: "/",
+      children: [
+        {
+          text: "Visualização",
+          icon: <IconDeviceLaptop />,
+          path: "/showcase",
+        },
+        {
+          text: "Catalogo",
+          icon: <IconLibrary />,
+          path: "/catalog",
+        },
+      ],
     },
     {
       text: "PDV",
       icon: <IconGardenCart />,
-      path: "/pdv",
+      path: "/",
       children: [
         {
           text: "Nova Venda",
