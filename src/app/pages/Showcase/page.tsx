@@ -19,7 +19,6 @@ import {
 import { useForm } from "react-hook-form";
 import { RenderImage } from "../../components/showcase/renderImages";
 import { BodyBoxes } from "../../components/showcase/bodyBoxes";
-import { StoriesComponent } from "../../components/showcase/stories";
 import { TestimonialsComponent } from "../../components/showcase/testimonials";
 
 interface Props {
@@ -46,7 +45,6 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
   const bodyfileInputRef = useRef<HTMLInputElement>(null);
   const [bodyPreview, setBodyPreview] = useState<string>("");
   const [showName, setShowName] = useState<boolean>(false);
-  const [showStories, setShowStories] = useState<boolean>(false);
 
   useEffect(() => {
     setLogoPreview(showcase?.logo || "");
@@ -62,7 +60,6 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
         : [0],
     );
     setShowName(showcase?.showName || false);
-    setShowStories(showcase?.showStories || false);
   }, [
     showcase?.logo,
     showcase?.banner,
@@ -70,7 +67,6 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
     showcase?.body?.image,
     showcase?.presentation?.sections,
     showcase?.showName,
-    showcase?.showStories,
   ]);
 
   const {
@@ -256,16 +252,6 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
             ))}
           </ToggleButtonGroup>
         </Box>
-        <Box display={"flex"} gap={2} alignItems={"center"}>
-          <Typography variant="h6" gutterBottom fontWeight={600}>
-            Mostrar stories?
-          </Typography>
-          <Switch
-            {...register("showStories")}
-            checked={showStories}
-            onChange={(e) => setShowStories(e.target.checked)}
-          />
-        </Box>
       </Box>
 
       <Box>
@@ -296,12 +282,6 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
               onChange: handleBannerFileChange,
             }}
           />
-          {showStories && (
-            <StoriesComponent
-              data={{ register, stories: showcase?.stories, watch }}
-              actions={{ setValue }}
-            />
-          )}
           <Stack width={"80%"} mx="auto">
             <Grid container spacing={2} mt={2}>
               <Grid size={{ xs: 12, md: 6 }}>

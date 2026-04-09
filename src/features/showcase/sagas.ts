@@ -4,10 +4,6 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { APIResponse } from "../common/types";
 import { apiService } from "../../services/api";
 import { CreateShowcasePayload, Showcase } from "./types";
-import {
-  STORIES_QUANTITY,
-  STORY_ITEMS_QUANTITY,
-} from "../../app/components/showcase/stories";
 
 const uploadFile = (file: File | null) => {
   if (!file) return Promise.resolve({ data: null });
@@ -44,10 +40,6 @@ function* getShowcase() {
 function* createShowcase(payload: PayloadAction<CreateShowcasePayload>) {
   yield put(actions.setLoading(true));
   try {
-    if (!payload.payload.showStories) {
-      delete payload.payload.stories;
-    }
-
     const bannerUrl: APIResponse<string> = yield call(
       uploadFile,
       payload.payload.banner,
@@ -65,34 +57,6 @@ function* createShowcase(payload: PayloadAction<CreateShowcasePayload>) {
       payload.payload.body.image,
     );
 
-    const storiesUrlsArr: { thumbnail: string; items: string[] }[] = Array.from(
-      { length: STORIES_QUANTITY },
-      () => ({
-        thumbnail: "",
-        items: Array(STORY_ITEMS_QUANTITY).fill(""),
-      }),
-    );
-
-    for (let i = 0; i < STORIES_QUANTITY; i++) {
-      const story = payload.payload.stories?.[i];
-
-      const thumbnailUrl: APIResponse<string> = yield call(
-        uploadFile,
-        story?.thumbnail || null,
-      );
-      storiesUrlsArr[i].thumbnail = thumbnailUrl.data || "";
-
-      for (let j = 0; j < STORY_ITEMS_QUANTITY; j++) {
-        const item = story?.items?.[j];
-
-        const itemImageUrl: APIResponse<string> = yield call(
-          uploadFile,
-          item?.image || null,
-        );
-        storiesUrlsArr[i].items[j] = itemImageUrl.data || "";
-      }
-    }
-
     const response: APIResponse<Showcase> = yield call(
       apiService.post,
       "/showcase",
@@ -106,15 +70,6 @@ function* createShowcase(payload: PayloadAction<CreateShowcasePayload>) {
           sections: payload.payload.presentation.sections.filter(Boolean),
         },
         body: { ...payload.payload.body, image: bodyUrl.data },
-        stories: payload.payload.stories?.map((story, i) => ({
-          ...story,
-          thumbnail: storiesUrlsArr[i].thumbnail,
-          items: story.items.map((item, j) => ({
-            ...item,
-            profileImage: storiesUrlsArr[i].thumbnail,
-            image: storiesUrlsArr[i].items[j],
-          })),
-        })),
       },
     );
 
