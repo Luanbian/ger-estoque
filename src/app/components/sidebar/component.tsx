@@ -62,7 +62,7 @@ export const SidebarComponent = ({
     {
       text: "Vitrine",
       icon: <IconWorldPin />,
-      path: "/",
+      path: "/showcase",
       children: [
         {
           text: "Visualização",
@@ -79,7 +79,7 @@ export const SidebarComponent = ({
     {
       text: "PDV",
       icon: <IconGardenCart />,
-      path: "/",
+      path: "/pdv",
       children: [
         {
           text: "Nova Venda",
