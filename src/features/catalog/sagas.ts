@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { actions } from "./slice.ts";
 import {
   CatalogCategory,
@@ -10,16 +10,24 @@ import { APIResponse } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { AppState } from "../../store/index.ts";
 
 function* getCatalog() {
   yield put(actions.setLoading(true));
   try {
+    const showcaseId: string = yield select(
+      (state: AppState) => state.showcase.data?._id,
+    );
     const [responseCategory, responseItem]: [
       APIResponse<CatalogCategory[]>,
       APIResponse<CatalogItem[]>,
     ] = yield all([
-      call(apiService.get, `${API_BASE_URL}/catalog/category`),
-      call(apiService.post, `${API_BASE_URL}/catalog/item/list`, {}),
+      call(apiService.get, `${API_BASE_URL}/catalog/category/${showcaseId}`),
+      call(
+        apiService.post,
+        `${API_BASE_URL}/catalog/item/list/${showcaseId}`,
+        {},
+      ),
     ]);
 
     yield put(
