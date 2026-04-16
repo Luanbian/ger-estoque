@@ -24,6 +24,7 @@ import {
   IconWorldPin,
   IconDeviceLaptop,
   IconLibrary,
+  IconBrandWhatsapp,
 } from "@tabler/icons-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -119,6 +120,14 @@ export const SidebarComponent = ({
       icon: <IconUsers />,
       path: "/customers",
       planIcon: !features[Features.CUSTOMER_MANAGEMENT] ? (
+        <IconLockFilled color="gray" />
+      ) : null,
+    },
+    {
+      text: "Whatsapp",
+      icon: <IconBrandWhatsapp />,
+      path: "/whatsapp",
+      planIcon: !features[Features.WHATSAPP] ? (
         <IconLockFilled color="gray" />
       ) : null,
     },

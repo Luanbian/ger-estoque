@@ -17,6 +17,7 @@ import { Customer } from "../app/pages/Customer/layout";
 import { Showcase } from "../app/pages/Showcase/layout";
 import { Sale } from "../app/pages/Sale/layout";
 import { Catalog } from "../app/pages/Catalog/layout";
+import { Whatsapp } from "../app/pages/Whatsapp/layout";
 
 export const AppRoutes = () => {
   return (
@@ -75,6 +76,14 @@ export const AppRoutes = () => {
             element={
               <RequireFeature feature={Features.SHOWCASE}>
                 <Catalog />
+              </RequireFeature>
+            }
+          />
+          <Route
+            path="/whatsapp"
+            element={
+              <RequireFeature feature={Features.WHATSAPP}>
+                <Whatsapp />
               </RequireFeature>
             }
           />
