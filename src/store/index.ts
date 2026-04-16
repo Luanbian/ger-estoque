@@ -20,6 +20,7 @@ import { showcaseSlice } from "../features/showcase/slice";
 import { wsSlice } from "../features/ws/slice";
 import { orderSlice } from "../features/order/slice";
 import { catalogSlice } from "../features/catalog/slice";
+import { whatsappSlice } from "../features/whatsapp/slice";
 
 // Sagas
 import { healthSagas } from "../features/healthcheck";
@@ -37,6 +38,7 @@ import { showcaseSagas } from "../features/showcase";
 import { wsSagas } from "../features/ws";
 import { orderSagas } from "../features/order";
 import { catalogSagas } from "../features/catalog";
+import { whatsappSagas } from "../features/whatsapp";
 
 const sagaMiddleware = createSagaMiddleware({
   onError: (error, errorInfo) => {
@@ -63,6 +65,7 @@ const rootReducer = combineReducers({
   ws: wsSlice.reducer,
   order: orderSlice.reducer,
   catalog: catalogSlice.reducer,
+  whatsapp: whatsappSlice.reducer,
 });
 
 export const store = configureStore({
@@ -92,6 +95,7 @@ function* rootSaga() {
     spawn(wsSagas),
     spawn(orderSagas),
     spawn(catalogSagas),
+    spawn(whatsappSagas),
   ]);
 }
 
