@@ -1,8 +1,9 @@
 import { Box, Button, IconButton } from "@mui/material";
 import { HealthCheck } from "./healthCheck/container";
-import { IconBurger, IconLogout, IconUser } from "@tabler/icons-react";
+import { IconLogout, IconUser } from "@tabler/icons-react";
 import { ASSETS_BASE_URL } from "../../../constants/assets";
 import { NotificationHeader } from "./notification/container";
+import logoComplete from "../../../../public/logo_animal.png";
 
 interface Props {
   data: {
@@ -25,7 +26,15 @@ export const HeaderComponent = ({ data, actions }: Props) => {
       justifyContent={"space-between"}
       padding={2}
     >
-      <IconBurger size={32} />
+      <img
+        src={logoComplete}
+        alt="Avatar"
+        width={40}
+        height={40}
+        style={{
+          borderRadius: "50%",
+        }}
+      />
       <HealthCheck />
       <IconButton color="primary" size="large" onClick={navigateToProfile}>
         {avatar ? (
