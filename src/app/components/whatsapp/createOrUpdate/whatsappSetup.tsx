@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   Box,
@@ -11,7 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { IconBrandWhatsapp, IconCheck, IconX } from "@tabler/icons-react";
-import { useDispatch, useSelector } from "../../../../store/hooks";
+import { useDispatch } from "../../../../store/hooks";
 import { Whatsapp } from "../../../../features/whatsapp/types";
 import { actions as wpActions } from "../../../../features/whatsapp";
 
@@ -272,17 +271,21 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
 };
 
 interface CreateOrUpdateWhatsappSetupProps {
+  data: {
+    whatsapp: Whatsapp | null;
+  };
   actions: {
     onClose: () => void;
   };
 }
 
 export const CreateOrUpdateWhatsappSetup = ({
+  data,
   actions,
 }: CreateOrUpdateWhatsappSetupProps) => {
+  const { whatsapp } = data;
   const { onClose } = actions;
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.whatsapp);
 
   const createWhatsappSetup = (value: Whatsapp) => {
     dispatch(wpActions.createWhatsappRequest(value));
@@ -292,15 +295,9 @@ export const CreateOrUpdateWhatsappSetup = ({
     dispatch(wpActions.updateWhatsappRequest(value));
   };
 
-  useEffect(() => {
-    if (data === null) {
-      dispatch(wpActions.whatsappRequest());
-    }
-  }, [data]);
-
   return (
     <CreateOrUpdateWhatsappSetupComponent
-      data={{ whatsapp: data }}
+      data={{ whatsapp }}
       actions={{
         createWhatsappSetup,
         updateWhatsappSetup,
