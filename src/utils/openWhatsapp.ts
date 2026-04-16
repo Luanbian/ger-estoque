@@ -4,7 +4,7 @@ import { ENV } from "../constants/env";
 export const openWhatsapp = async (phone: string, message?: string) => {
   const text = encodeURIComponent(message || "");
   if (ENV === "dev") {
-    window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
+    window.open(`https://wa.me/55${phone}?text=${text}`, "_blank");
     return;
   }
 
