@@ -15,7 +15,7 @@ import { Profile } from "../app/pages/Profile/layout";
 import { Sales } from "../app/pages/Sales/layout";
 import { Customer } from "../app/pages/Customer/layout";
 import { Showcase } from "../app/pages/Showcase/layout";
-import { Sale } from "../app/pages/Sale/layout";
+import { Sale } from "../app/pages/Order/layout";
 import { Catalog } from "../app/pages/Catalog/layout";
 import { Whatsapp } from "../app/pages/Whatsapp/layout";
 

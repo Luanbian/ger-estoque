@@ -16,6 +16,8 @@ import { IconCircleCheck, IconClock, IconXboxX } from "@tabler/icons-react";
 import { convertFromCents } from "../../../../utils/convertTocents";
 import { ModalComponent } from "../../modal";
 import { OrderDetails } from "../details";
+import { Whatsapp } from "../../../../features/whatsapp/types";
+import { openWhatsapp } from "../../../../utils/openWhatsapp";
 
 interface Props {
   data: {
@@ -156,29 +158,32 @@ const OrderItemComponent = ({ data, actions }: Props) => {
 interface OrderItemProps {
   data: {
     order: Order;
+    whatsapp: Whatsapp | null;
   };
 }
 
 export const OrderItem = ({ data }: OrderItemProps) => {
   const dispatch = useDispatch();
-  const { order } = data;
+  const { order, whatsapp } = data;
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     dispatch(
       actions.updateOrderStatusRequest({
         orderId: order._id,
         status: OrderStatus.ACCEPTED,
       }),
     );
+    await openWhatsapp(order.customer.phone, whatsapp?.acceptedMessage);
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     dispatch(
       actions.updateOrderStatusRequest({
         orderId: order._id,
         status: OrderStatus.REJECTED,
       }),
     );
+    await openWhatsapp(order.customer.phone, whatsapp?.rejectedMessage);
   };
 
   return (
