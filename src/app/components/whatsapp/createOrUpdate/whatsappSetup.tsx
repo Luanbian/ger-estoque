@@ -142,7 +142,7 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
                 rows={4}
                 fullWidth
                 placeholder="Olá {nome}! Seu pedido #{numero} foi aceito e está sendo preparado. 🎉"
-                helperText="Use {nome} e {numero} para personalizar a mensagem"
+                helperText="Use {nome} para personalizar a mensagem"
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: 2,
@@ -211,7 +211,7 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
                 rows={4}
                 fullWidth
                 placeholder="Olá {nome}! Infelizmente seu pedido #{numero} não pôde ser aceito. Entre em contato para mais informações."
-                helperText="Use {nome} e {numero} para personalizar a mensagem"
+                helperText="Use {nome} para personalizar a mensagem"
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: 2,

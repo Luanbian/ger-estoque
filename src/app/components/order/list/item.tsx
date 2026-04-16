@@ -173,7 +173,11 @@ export const OrderItem = ({ data }: OrderItemProps) => {
         status: OrderStatus.ACCEPTED,
       }),
     );
-    await openWhatsapp(order.customer.phone, whatsapp?.acceptedMessage);
+    await openWhatsapp(
+      order.customer.phone,
+      order.customer.name,
+      whatsapp?.acceptedMessage,
+    );
   };
 
   const handleReject = async () => {
@@ -183,7 +187,11 @@ export const OrderItem = ({ data }: OrderItemProps) => {
         status: OrderStatus.REJECTED,
       }),
     );
-    await openWhatsapp(order.customer.phone, whatsapp?.rejectedMessage);
+    await openWhatsapp(
+      order.customer.phone,
+      order.customer.name,
+      whatsapp?.rejectedMessage,
+    );
   };
 
   return (

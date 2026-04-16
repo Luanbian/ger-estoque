@@ -1,8 +1,15 @@
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { ENV } from "../constants/env";
 
-export const openWhatsapp = async (phone: string, message?: string) => {
-  const text = encodeURIComponent(message || "");
+export const openWhatsapp = async (
+  phone: string,
+  name: string,
+  message?: string,
+) => {
+  const resolvedMessage = message?.includes("{nome}")
+    ? message.replace("{nome}", name)
+    : message;
+  const text = encodeURIComponent(resolvedMessage || "");
   if (ENV === "dev") {
     window.open(`https://wa.me/55${phone}?text=${text}`, "_blank");
     return;
