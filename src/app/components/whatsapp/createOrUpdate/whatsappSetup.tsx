@@ -23,7 +23,6 @@ interface Props {
   actions: {
     createWhatsappSetup: (value: Whatsapp) => void;
     updateWhatsappSetup: (value: Whatsapp) => void;
-    cancelSetup: () => void;
   };
 }
 
@@ -32,7 +31,7 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
   actions,
 }: Props) => {
   const { whatsapp } = data;
-  const { createWhatsappSetup, updateWhatsappSetup, cancelSetup } = actions;
+  const { createWhatsappSetup, updateWhatsappSetup } = actions;
 
   const theme = useTheme();
   const whatsappGreen = "#25D366";
@@ -238,19 +237,6 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
           }}
         >
           <Button
-            variant="outlined"
-            color="inherit"
-            onClick={cancelSetup}
-            sx={{
-              borderRadius: 2,
-              textTransform: "none",
-              fontWeight: 500,
-              px: 3,
-            }}
-          >
-            Cancelar
-          </Button>
-          <Button
             type="submit"
             variant="contained"
             sx={{
@@ -274,17 +260,12 @@ interface CreateOrUpdateWhatsappSetupProps {
   data: {
     whatsapp: Whatsapp | null;
   };
-  actions: {
-    onClose: () => void;
-  };
 }
 
 export const CreateOrUpdateWhatsappSetup = ({
   data,
-  actions,
 }: CreateOrUpdateWhatsappSetupProps) => {
   const { whatsapp } = data;
-  const { onClose } = actions;
   const dispatch = useDispatch();
 
   const createWhatsappSetup = (value: Whatsapp) => {
@@ -301,7 +282,6 @@ export const CreateOrUpdateWhatsappSetup = ({
       actions={{
         createWhatsappSetup,
         updateWhatsappSetup,
-        cancelSetup: onClose,
       }}
     />
   );
