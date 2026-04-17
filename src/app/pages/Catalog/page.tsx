@@ -20,6 +20,7 @@ import { CatalogCategory, CatalogItem } from "../../../features/catalog/types";
 import { ModalComponent } from "../../components/modal";
 import { CreateCatalogCategory } from "../../components/catalog/createCategory";
 import { CreateCatalogItem } from "../../components/catalog/createItem";
+import { ASSETS_BASE_URL } from "../../../constants/assets";
 
 interface Props {
   data: {
@@ -132,6 +133,7 @@ export const CatalogPage = ({ data }: Props) => {
                       <Table>
                         <TableHead>
                           <TableRow>
+                            <TableCell>Imagem</TableCell>
                             <TableCell>Título</TableCell>
                             <TableCell>Categoria</TableCell>
                             <TableCell>Preço base</TableCell>
@@ -145,6 +147,23 @@ export const CatalogPage = ({ data }: Props) => {
                             );
                             return (
                               <TableRow key={item._id}>
+                                <TableCell>
+                                  {item?.image ? (
+                                    <img
+                                      src={`${ASSETS_BASE_URL}${item.image}`}
+                                      alt={`imagem do item: ${item.title}`}
+                                      width={60}
+                                      height={60}
+                                    />
+                                  ) : (
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                    >
+                                      Sem imagem
+                                    </Typography>
+                                  )}
+                                </TableCell>
                                 <TableCell>{item.title}</TableCell>
                                 <TableCell>
                                   {category ? (
