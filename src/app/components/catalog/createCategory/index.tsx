@@ -35,7 +35,7 @@ export const CreateCatalogCategory = ({
   const onSubmit = (data: CatalogCategoryPayload) => {
     createCatalogCategory(data);
     reset();
-    actions.onClose?.();
+    onClose?.();
   };
 
   const handleCancel = () => {
