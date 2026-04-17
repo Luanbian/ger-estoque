@@ -147,17 +147,27 @@ export const CreateCatalogItem = ({
             pricing: {
               basePriceInCents: Math.round(data.basePriceInReais * 100),
               finalPriceInCents: computedFinalPriceInReais,
-              discount: {
-                type: data.discountType,
-                value: data?.discountValue || 0,
-              },
-              installments: {
-                maxInstallments: data?.maxInstallments || 0,
-                installmentPriceInCents: Math.round(
-                  (data.installmentPriceInReais || 0) * 100,
-                ),
-                interestFree: data.interestFree,
-              },
+              ...(data?.discountType && data?.discountValue
+                ? {
+                    discount: {
+                      type: data.discountType,
+                      value: data?.discountValue || 0,
+                    },
+                  }
+                : {}),
+              ...(data?.maxInstallments &&
+              data?.installmentPriceInReais &&
+              data?.interestFree
+                ? {
+                    installments: {
+                      maxInstallments: data?.maxInstallments || 0,
+                      installmentPriceInCents: Math.round(
+                        (data.installmentPriceInReais || 0) * 100,
+                      ),
+                      interestFree: data.interestFree,
+                    },
+                  }
+                : {}),
             },
           }
         : {}),
