@@ -4,16 +4,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { APIResponse } from "../common/types";
 import { apiService } from "../../services/api";
 import { CreateShowcasePayload, Showcase } from "./types";
-
-const uploadFile = (file: File | null) => {
-  if (!file) return Promise.resolve({ data: null });
-
-  const formData = new FormData();
-  formData.append("file", file);
-  return apiService.post("/storage", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-};
+import { uploadFile } from "../../utils/uploadFile";
 
 function* getShowcase() {
   yield put(actions.setLoading(true));

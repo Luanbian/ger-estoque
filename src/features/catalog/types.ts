@@ -46,7 +46,7 @@ export interface CatalogItemPayload {
   showcaseId: string;
   title: string;
   description?: string;
-  image?: string;
+  image?: File;
   categoryId?: string;
   pricing?: {
     basePriceInCents: number;

@@ -11,6 +11,7 @@ import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { AppState } from "../../store/index.ts";
+import { uploadFile } from "../../utils/uploadFile.ts";
 
 function* getCatalog() {
   yield put(actions.setLoading(true));
@@ -75,10 +76,18 @@ function* createCatalogCategory(
 function* createCatalogItem(payload: PayloadAction<CatalogItemPayload>) {
   yield put(actions.setLoading(true));
   try {
+    let imageUrl: APIResponse<string> | null = null;
+    if (payload.payload?.image) {
+      imageUrl = yield call(uploadFile, payload.payload.image);
+    }
+
     const response: APIResponse<CatalogItem> = yield call(
       apiService.post,
       `${API_BASE_URL}/catalog/item`,
-      payload.payload,
+      {
+        ...payload.payload,
+        ...(imageUrl !== null && { image: imageUrl.data }),
+      },
     );
 
     const { data } = response;

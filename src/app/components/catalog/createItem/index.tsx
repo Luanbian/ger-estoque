@@ -28,14 +28,20 @@ import {
 } from "@tabler/icons-react";
 import {
   CatalogCategory,
+  CatalogItem,
   CatalogItemPayload,
 } from "../../../../features/catalog/types";
 import { useDispatch } from "../../../../store/hooks";
 import { actions as catalogActions } from "../../../../features/catalog";
+import { useEffect, useRef, useState } from "react";
+import { RenderImage } from "../../showcase/renderImages";
 
 interface CreateCatalogItemProps {
-  showcaseId: string;
-  categories: CatalogCategory[];
+  data: {
+    showcaseId: string;
+    categories: CatalogCategory[];
+    item?: CatalogItem;
+  };
   actions: {
     onClose?: () => void;
   };
@@ -45,6 +51,7 @@ interface FormData {
   title: string;
   description?: string;
   categoryId?: string;
+  image?: File;
   basePriceInReais?: number;
   hasDiscount: boolean;
   discountType: "percentage" | "fixed";
@@ -56,16 +63,19 @@ interface FormData {
 }
 
 export const CreateCatalogItem = ({
-  showcaseId,
-  categories,
-  actions: { onClose },
+  data,
+  actions,
 }: CreateCatalogItemProps) => {
+  const { categories, showcaseId, item } = data;
+  const { onClose } = actions;
+
   const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
     reset,
     watch,
   } = useForm<FormData>({
@@ -76,6 +86,12 @@ export const CreateCatalogItem = ({
       hasInstallments: false,
     },
   });
+  const imagefileInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+
+  useEffect(() => {
+    setImagePreview(item?.image || "");
+  }, [item?.image]);
 
   const [
     basePriceInReais,
@@ -105,10 +121,25 @@ export const CreateCatalogItem = ({
     return Math.max(0, basePriceInReais - discountValue);
   })();
 
+  const handleImageClick = () => {
+    if (imagefileInputRef.current) {
+      imagefileInputRef.current.click();
+    }
+  };
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setValue("image", file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
   const onSubmit = (data: FormData) => {
     const payload: CatalogItemPayload = {
       showcaseId,
       title: data.title,
+      image: data.image,
       ...(data.description ? { description: data.description } : {}),
       ...(data.categoryId ? { categoryId: data.categoryId } : {}),
       ...(data.basePriceInReais && data.basePriceInReais > 0
@@ -173,6 +204,19 @@ export const CreateCatalogItem = ({
       </Typography>
 
       <Stack spacing={3}>
+        <RenderImage
+          data={{
+            src: imagePreview,
+            ref: imagefileInputRef,
+            alt: "Catalog Item image",
+            width: 200,
+            height: 200,
+          }}
+          actions={{
+            onClick: handleImageClick,
+            onChange: handleImageFileChange,
+          }}
+        />
         <TextField
           {...register("title", {
             required: "O título do item é obrigatório",

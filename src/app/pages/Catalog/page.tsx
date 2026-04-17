@@ -207,8 +207,7 @@ export const CatalogPage = ({ data }: Props) => {
         onClose={() => setIsItemModalOpen(false)}
         content={
           <CreateCatalogItem
-            showcaseId={showcaseId}
-            categories={categories ?? []}
+            data={{ showcaseId, categories: categories ?? [] }}
             actions={{ onClose: () => setIsItemModalOpen(false) }}
           />
         }
