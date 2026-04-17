@@ -146,7 +146,7 @@ export const CreateCatalogItem = ({
         ? {
             pricing: {
               basePriceInCents: Math.round(data.basePriceInReais * 100),
-              finalPriceInCents: computedFinalPriceInReais,
+              finalPriceInCents: Math.round(computedFinalPriceInReais * 100),
               ...(data?.discountType && data?.discountValue
                 ? {
                     discount: {
