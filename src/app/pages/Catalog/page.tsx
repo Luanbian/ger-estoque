@@ -18,6 +18,7 @@ import {
 import { IconPackage, IconPlus, IconTag } from "@tabler/icons-react";
 import {
   CatalogCategory,
+  CatalogCategoryAssociate,
   CatalogCategoryPayload,
   CatalogItem,
 } from "../../../features/catalog/types";
@@ -34,7 +35,8 @@ interface Props {
     showcaseId: string;
   };
   actions: {
-    createCatalog: (data: CatalogCategoryPayload) => void;
+    createCatalogCategory: (data: CatalogCategoryPayload) => void;
+    associateCatalogCategory: (data: CatalogCategoryAssociate) => void;
   };
 }
 
@@ -45,7 +47,7 @@ const formatPrice = (cents: number) =>
 
 export const CatalogPage = ({ data, actions }: Props) => {
   const { categories, items, loading, showcaseId } = data;
-  const { createCatalog } = actions;
+  const { createCatalogCategory, associateCatalogCategory } = actions;
   const [tab, setTab] = useState(0);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
@@ -225,7 +227,8 @@ export const CatalogPage = ({ data, actions }: Props) => {
           <CreateCatalogCategory
             actions={{
               onClose: () => setIsCategoryModalOpen(false),
-              createCatalog,
+              createCatalogCategory,
+              associateCatalogCategory,
             }}
           />
         }

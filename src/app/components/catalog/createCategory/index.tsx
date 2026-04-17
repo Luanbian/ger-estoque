@@ -8,19 +8,23 @@ import {
   Alert,
 } from "@mui/material";
 import { IconDeviceFloppy, IconTag, IconX } from "@tabler/icons-react";
-import { CatalogCategoryPayload } from "../../../../features/catalog/types";
+import {
+  CatalogCategoryAssociate,
+  CatalogCategoryPayload,
+} from "../../../../features/catalog/types";
 
 interface CreateCatalogCategoryProps {
   actions: {
     onClose?: () => void;
-    createCatalog: (data: CatalogCategoryPayload) => void;
+    createCatalogCategory: (data: CatalogCategoryPayload) => void;
+    associateCatalogCategory: (data: CatalogCategoryAssociate) => void;
   };
 }
 
 export const CreateCatalogCategory = ({
   actions,
 }: CreateCatalogCategoryProps) => {
-  const { onClose, createCatalog } = actions;
+  const { onClose, createCatalogCategory, associateCatalogCategory } = actions;
   const {
     register,
     handleSubmit,
@@ -29,7 +33,7 @@ export const CreateCatalogCategory = ({
   } = useForm<CatalogCategoryPayload>();
 
   const onSubmit = (data: CatalogCategoryPayload) => {
-    createCatalog(data);
+    createCatalogCategory(data);
     reset();
     actions.onClose?.();
   };
