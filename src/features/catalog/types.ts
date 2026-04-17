@@ -2,6 +2,7 @@ export interface CatalogCategory {
   _id: string;
   tenantId: string;
   name: string;
+  fatherCategoryId?: string;
 }
 
 export interface CatalogItem {
@@ -61,4 +62,9 @@ export interface CatalogItemPayload {
       interestFree: boolean;
     };
   };
+}
+
+export interface CatalogCategoryAssociate {
+  categoryId: string;
+  fatherCategoryId: string;
 }

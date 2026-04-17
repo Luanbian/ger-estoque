@@ -2,6 +2,7 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { actions } from "./slice.ts";
 import {
   CatalogCategory,
+  CatalogCategoryAssociate,
   CatalogCategoryPayload,
   CatalogItem,
   CatalogItemPayload,
@@ -104,10 +105,37 @@ function* createCatalogItem(payload: PayloadAction<CatalogItemPayload>) {
   }
 }
 
+function* associateCatalogCategory(
+  payload: PayloadAction<CatalogCategoryAssociate>,
+) {
+  yield put(actions.setLoading(true));
+  try {
+    yield call(
+      apiService.patch,
+      `${API_BASE_URL}/catalog/category/${payload.payload.categoryId}/${payload.payload.fatherCategoryId}`,
+      {},
+    );
+
+    yield call(getCatalog);
+  } catch (error) {
+    yield put(
+      actions.setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ),
+    );
+  } finally {
+    yield put(actions.setLoading(false));
+  }
+}
+
 export function* catalogSagas() {
   yield all([
     takeEvery(actions.catalogRequest.type, getCatalog),
     takeEvery(actions.createCatalogCategoryRequest.type, createCatalogCategory),
     takeEvery(actions.createCatalogItemRequest.type, createCatalogItem),
+    takeEvery(
+      actions.associateCatalogCategoryRequest.type,
+      associateCatalogCategory,
+    ),
   ]);
 }

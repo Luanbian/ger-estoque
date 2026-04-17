@@ -5,6 +5,7 @@ import {
   CatalogItemPayload,
   CatalogCategory,
   CatalogItem,
+  CatalogCategoryAssociate,
 } from "./types.ts";
 
 export const initialState: CatalogCategoryState = {
@@ -28,6 +29,10 @@ export const catalogSlice = createSlice({
     createCatalogItemRequest: (
       _state,
       _action: PayloadAction<CatalogItemPayload>,
+    ) => {},
+    associateCatalogCategoryRequest: (
+      _state,
+      _action: PayloadAction<CatalogCategoryAssociate>,
     ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;

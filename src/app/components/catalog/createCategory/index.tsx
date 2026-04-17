@@ -9,19 +9,18 @@ import {
 } from "@mui/material";
 import { IconDeviceFloppy, IconTag, IconX } from "@tabler/icons-react";
 import { CatalogCategoryPayload } from "../../../../features/catalog/types";
-import { useDispatch } from "../../../../store/hooks";
-import { actions as catalogActions } from "../../../../features/catalog";
 
 interface CreateCatalogCategoryProps {
   actions: {
     onClose?: () => void;
+    createCatalog: (data: CatalogCategoryPayload) => void;
   };
 }
 
 export const CreateCatalogCategory = ({
   actions,
 }: CreateCatalogCategoryProps) => {
-  const dispatch = useDispatch();
+  const { onClose, createCatalog } = actions;
   const {
     register,
     handleSubmit,
@@ -30,14 +29,14 @@ export const CreateCatalogCategory = ({
   } = useForm<CatalogCategoryPayload>();
 
   const onSubmit = (data: CatalogCategoryPayload) => {
-    dispatch(catalogActions.createCatalogCategoryRequest(data));
+    createCatalog(data);
     reset();
     actions.onClose?.();
   };
 
   const handleCancel = () => {
     reset();
-    actions.onClose?.();
+    onClose?.();
   };
 
   return (

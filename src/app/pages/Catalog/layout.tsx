@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "../../../store/hooks";
 import { actions as catalogActions } from "../../../features/catalog";
 import { actions as showcaseActions } from "../../../features/showcase";
 import { CatalogPage } from "./page";
+import { CatalogCategoryPayload } from "../../../features/catalog/types";
 
 export const Catalog = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,10 @@ export const Catalog = () => {
     }
   }, [data.category, showcase]);
 
+  const createCatalog = (data: CatalogCategoryPayload) => {
+    dispatch(catalogActions.createCatalogCategoryRequest(data));
+  };
+
   return (
     <CatalogPage
       data={{
@@ -26,6 +31,9 @@ export const Catalog = () => {
         items: data.items,
         loading,
         showcaseId,
+      }}
+      actions={{
+        createCatalog,
       }}
     />
   );

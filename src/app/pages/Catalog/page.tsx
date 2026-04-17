@@ -16,7 +16,11 @@ import {
   Typography,
 } from "@mui/material";
 import { IconPackage, IconPlus, IconTag } from "@tabler/icons-react";
-import { CatalogCategory, CatalogItem } from "../../../features/catalog/types";
+import {
+  CatalogCategory,
+  CatalogCategoryPayload,
+  CatalogItem,
+} from "../../../features/catalog/types";
 import { ModalComponent } from "../../components/modal";
 import { CreateCatalogCategory } from "../../components/catalog/createCategory";
 import { CreateCatalogItem } from "../../components/catalog/createItem";
@@ -29,6 +33,9 @@ interface Props {
     loading: boolean;
     showcaseId: string;
   };
+  actions: {
+    createCatalog: (data: CatalogCategoryPayload) => void;
+  };
 }
 
 const formatPrice = (cents: number) =>
@@ -36,8 +43,9 @@ const formatPrice = (cents: number) =>
     cents / 100,
   );
 
-export const CatalogPage = ({ data }: Props) => {
+export const CatalogPage = ({ data, actions }: Props) => {
   const { categories, items, loading, showcaseId } = data;
+  const { createCatalog } = actions;
   const [tab, setTab] = useState(0);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
@@ -215,7 +223,10 @@ export const CatalogPage = ({ data }: Props) => {
         onClose={() => setIsCategoryModalOpen(false)}
         content={
           <CreateCatalogCategory
-            actions={{ onClose: () => setIsCategoryModalOpen(false) }}
+            actions={{
+              onClose: () => setIsCategoryModalOpen(false),
+              createCatalog,
+            }}
           />
         }
         maxWidth={500}
