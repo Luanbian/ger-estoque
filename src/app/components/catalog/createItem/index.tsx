@@ -152,7 +152,7 @@ export const CreateCatalogItem = ({
                 value: data?.discountValue || 0,
               },
               installments: {
-                maxInstallments: data.maxInstallments ?? 0,
+                maxInstallments: data?.maxInstallments || 0,
                 installmentPriceInCents: Math.round(
                   (data.installmentPriceInReais || 0) * 100,
                 ),
