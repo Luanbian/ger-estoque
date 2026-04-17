@@ -13,6 +13,10 @@ export const Showcase = () => {
     dispatch(actions.createShowcaseRequest(data));
   };
 
+  const updateShowcase = (data: CreateShowcasePayload) => {
+    dispatch(actions.updateShowcaseRequest(data));
+  };
+
   useEffect(() => {
     if (data === null) {
       dispatch(actions.showcaseRequest());
@@ -27,7 +31,7 @@ export const Showcase = () => {
   return (
     <ShowcaseComponent
       data={{ showcase: data, loading }}
-      actions={{ createShowcase }}
+      actions={{ createShowcase, updateShowcase }}
     />
   );
 };

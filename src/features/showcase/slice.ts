@@ -17,6 +17,10 @@ export const showcaseSlice = createSlice({
       _state,
       _action: PayloadAction<CreateShowcasePayload>,
     ) => {},
+    updateShowcaseRequest: (
+      _state,
+      _action: PayloadAction<CreateShowcasePayload>,
+    ) => {},
     setShowcase: (state, action: PayloadAction<ShowcaseState["data"]>) => {
       state.data = action.payload;
     },

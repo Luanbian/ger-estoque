@@ -28,12 +28,13 @@ interface Props {
   };
   actions: {
     createShowcase: (data: CreateShowcasePayload) => void;
+    updateShowcase: (data: CreateShowcasePayload) => void;
   };
 }
 
 export const ShowcaseComponent = ({ data, actions }: Props) => {
   const { showcase, loading } = data;
-  const { createShowcase } = actions;
+  const { createShowcase, updateShowcase } = actions;
 
   const [boxesQuantity, setBoxesQuantity] = useState<number[]>([0]);
   const logofileInputRef = useRef<HTMLInputElement>(null);
@@ -94,6 +95,10 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
   };
 
   const onSubmit = (data: CreateShowcasePayload) => {
+    if (showcase?._id) {
+      updateShowcase(data);
+      return;
+    }
     createShowcase(data);
   };
 
