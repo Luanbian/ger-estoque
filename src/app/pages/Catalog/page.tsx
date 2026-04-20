@@ -1,5 +1,8 @@
 import { useState } from "react";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Chip,
@@ -15,7 +18,12 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { IconPackage, IconPlus, IconTag } from "@tabler/icons-react";
+import {
+  IconChevronDown,
+  IconPackage,
+  IconPlus,
+  IconTag,
+} from "@tabler/icons-react";
 import {
   CatalogCategory,
   CatalogCategoryAssociate,
@@ -117,17 +125,107 @@ export const CatalogPage = ({ data, actions }: Props) => {
                       Nenhuma categoria encontrada.
                     </Typography>
                   ) : (
-                    <Box display="flex" flexWrap="wrap" gap={1}>
-                      {categories.map((category) => (
-                        <Chip
-                          key={category._id}
-                          label={category.name}
-                          icon={<IconTag size={16} />}
-                          variant="outlined"
-                          color="primary"
-                        />
-                      ))}
-                    </Box>
+                    <TableContainer component={Paper} variant="outlined">
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Nome</TableCell>
+                            <TableCell>Subcategoria</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {categories
+                            .filter((c) => !c.fatherCategoryId)
+                            .map((parent) => {
+                              const children = categories.filter(
+                                (c) => c.fatherCategoryId === parent._id,
+                              );
+                              return (
+                                <TableRow key={parent._id}>
+                                  <TableCell>
+                                    {children.length > 0 ? (
+                                      <Accordion
+                                        disableGutters
+                                        elevation={0}
+                                        sx={{ background: "transparent" }}
+                                      >
+                                        <AccordionSummary
+                                          expandIcon={
+                                            <IconChevronDown size={16} />
+                                          }
+                                          sx={{ p: 0, minHeight: 0 }}
+                                        >
+                                          <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            gap={1}
+                                          >
+                                            <IconTag size={16} />
+                                            <Typography variant="body2">
+                                              {parent.name}
+                                            </Typography>
+                                          </Box>
+                                        </AccordionSummary>
+                                        <AccordionDetails sx={{ p: 0, pl: 3 }}>
+                                          {children.map((child) => (
+                                            <Box
+                                              key={child._id}
+                                              display="flex"
+                                              alignItems="center"
+                                              gap={1}
+                                            >
+                                              <IconTag size={14} />
+                                              <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                              >
+                                                {child.name}
+                                              </Typography>
+                                            </Box>
+                                          ))}
+                                        </AccordionDetails>
+                                      </Accordion>
+                                    ) : (
+                                      <Box
+                                        display="flex"
+                                        alignItems="center"
+                                        gap={1}
+                                      >
+                                        <IconTag size={16} />
+                                        <Typography variant="body2">
+                                          {parent.name}
+                                        </Typography>
+                                      </Box>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {children.length > 0 ? (
+                                      <Box display="flex" gap={0.5} flexWrap="wrap">
+                                        {children.map((child) => (
+                                          <Chip
+                                            key={child._id}
+                                            label={child.name}
+                                            size="small"
+                                            variant="outlined"
+                                            color="primary"
+                                          />
+                                        ))}
+                                      </Box>
+                                    ) : (
+                                      <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                      >
+                                        —
+                                      </Typography>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
                   )}
                 </Box>
               )}

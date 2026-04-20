@@ -54,15 +54,32 @@ function* createCatalogCategory(
 ) {
   yield put(actions.setLoading(true));
   try {
-    const response: APIResponse<CatalogCategory> = yield call(
-      apiService.post,
-      `${API_BASE_URL}/catalog/category`,
-      payload.payload,
+    const showcaseId: string = yield select(
+      (state: AppState) => state.showcase.data?._id,
     );
 
-    const { data } = response;
+    const createdMain: APIResponse<CatalogCategory> = yield call(
+      apiService.post,
+      `${API_BASE_URL}/catalog/category`,
+      { name: payload.payload.name, showcaseId },
+    );
+    const { data } = createdMain;
+
+    if (
+      payload.payload?.subCategory &&
+      payload.payload.subCategory.length > 0
+    ) {
+      for (let i = 0; i < payload.payload.subCategory.length; i++) {
+        yield call(apiService.post, `${API_BASE_URL}/catalog/category`, {
+          name: payload.payload.subCategory[i],
+          fatherCategoryId: data._id,
+          showcaseId,
+        });
+      }
+    }
 
     yield put(actions.addCatalogCategory(data));
+    yield call(getCatalog);
   } catch (error) {
     yield put(
       actions.setError(

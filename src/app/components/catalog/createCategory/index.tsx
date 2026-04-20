@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Box,
@@ -6,8 +7,16 @@ import {
   Typography,
   Stack,
   Alert,
+  Divider,
+  IconButton,
 } from "@mui/material";
-import { IconDeviceFloppy, IconTag, IconX } from "@tabler/icons-react";
+import {
+  IconDeviceFloppy,
+  IconTag,
+  IconX,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 import {
   CatalogCategoryAssociate,
   CatalogCategoryPayload,
@@ -25,12 +34,18 @@ export const CreateCatalogCategory = ({
   actions,
 }: CreateCatalogCategoryProps) => {
   const { onClose, createCatalogCategory, associateCatalogCategory } = actions;
+  const [subCategories, setSubCategories] = useState<string[]>([]);
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<CatalogCategoryPayload>();
+
+  const addSubCategory = () => setSubCategories((prev) => [...prev, ""]);
+
+  const removeSubCategory = (index: number) =>
+    setSubCategories((prev) => prev.filter((_, i) => i !== index));
 
   const onSubmit = (data: CatalogCategoryPayload) => {
     createCatalogCategory(data);
@@ -91,6 +106,59 @@ export const CreateCatalogCategory = ({
           error={!!errors.name}
           helperText={errors.name?.message}
         />
+
+        <Box>
+          <Divider sx={{ mb: 2 }} />
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            mb={1.5}
+          >
+            <Typography variant="subtitle2" fontWeight={600}>
+              Criar Sub categorias
+            </Typography>
+            <IconButton size="small" color="primary" onClick={addSubCategory}>
+              <IconPlus size={18} />
+            </IconButton>
+          </Stack>
+
+          {subCategories.length === 0 && (
+            <Typography
+              variant="body2"
+              color="text.disabled"
+              sx={{ fontStyle: "italic" }}
+            >
+              Clique no + para adicionar subcategorias
+            </Typography>
+          )}
+
+          <Stack spacing={1.5}>
+            {subCategories.map((_, index) => (
+              <Stack
+                key={index}
+                direction="row"
+                spacing={1}
+                alignItems="center"
+              >
+                <TextField
+                  {...register(`subCategory.${index}`)}
+                  label={`Subcategoria ${index + 1}`}
+                  placeholder="Nome da subcategoria..."
+                  fullWidth
+                  size="small"
+                />
+                <IconButton
+                  size="small"
+                  color="error"
+                  onClick={() => removeSubCategory(index)}
+                >
+                  <IconTrash size={16} />
+                </IconButton>
+              </Stack>
+            ))}
+          </Stack>
+        </Box>
 
         {Object.keys(errors).length > 0 && (
           <Alert severity="error">

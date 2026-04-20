@@ -42,6 +42,7 @@ export interface CatalogCategoryState {
 export interface CatalogCategoryPayload {
   name: string;
   fatherCategoryId?: string;
+  subCategory?: string[];
 }
 
 export interface CatalogItemPayload {
