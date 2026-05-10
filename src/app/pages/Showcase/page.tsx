@@ -47,6 +47,16 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
   const [bodyPreview, setBodyPreview] = useState<string>("");
   const [showName, setShowName] = useState<boolean>(false);
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    reset,
+  } = useForm<CreateShowcasePayload>();
+
   useEffect(() => {
     setLogoPreview(showcase?.logo || "");
     setBannerPreview(showcase?.banner || "");
@@ -61,23 +71,27 @@ export const ShowcaseComponent = ({ data, actions }: Props) => {
         : [0],
     );
     setShowName(showcase?.showName || false);
-  }, [
-    showcase?.logo,
-    showcase?.banner,
-    showcase?.presentation?.image,
-    showcase?.body?.image,
-    showcase?.presentation?.sections,
-    showcase?.showName,
-  ]);
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    watch,
-  } = useForm<CreateShowcasePayload>();
+    if (showcase) {
+      reset({
+        domain: showcase.domain || "",
+        name: showcase.name || "",
+        showName: showcase.showName || false,
+        presentation: {
+          title: showcase.presentation?.title || "",
+          sections: showcase.presentation?.sections || [],
+        },
+        body: {
+          title: showcase.body?.title || "",
+          section: showcase.body?.section || { title: "", description: "" },
+        },
+        testimonials: {
+          title: showcase.testimonials?.title || "",
+          sections: showcase.testimonials?.sections || [],
+        },
+      });
+    }
+  }, [showcase, reset]);
 
   const showcaseName = watch("name");
 
