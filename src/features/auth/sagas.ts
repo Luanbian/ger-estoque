@@ -13,7 +13,7 @@ import {
 import { APIResponse } from "../common/types";
 import { API_BASE_URL } from "../../constants/api";
 import { apiService } from "../../services/api";
-import { setAccessTokenCookie } from "../../services/token";
+import { tokenManager } from "../../services/token";
 
 function* loginSaga(action: PayloadAction<LoginCredentials>) {
   yield put(actions.setLoading(true));
@@ -35,11 +35,7 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
       }),
     );
 
-    try {
-      yield call(setAccessTokenCookie, data.accessToken);
-    } catch (error) {
-      // ignore token storage errors
-    }
+    yield call([tokenManager, tokenManager.set], data.accessToken);
   } catch (error) {
     yield put(
       actions.setError(

@@ -1,66 +1,84 @@
 import { ENV } from "../constants/env";
 
-type StoreLike = {
-  get(key: string): Promise<any>;
-  set(key: string, value: any): Promise<void>;
-  save(): Promise<void>;
+type AppStoreSchema = {
+  accessToken: string | null;
 };
 
-let _store: StoreLike | null = null;
+const STORE_FILE = "storage.json";
+const DEFAULTS: AppStoreSchema = { accessToken: null };
+const SCHEMA_KEYS = Object.keys(DEFAULTS) as (keyof AppStoreSchema)[];
 
-export const getStore = async (): Promise<StoreLike> => {
-  if (_store) return _store;
+type TauriStore = {
+  get: <T>(key: string) => Promise<T | null | undefined>;
+  set: (key: string, value: unknown) => Promise<void>;
+};
 
-  const defaults = { accessToken: null };
+class AppStore {
+  private cache: AppStoreSchema = { ...DEFAULTS };
+  private backend: TauriStore | null = null;
+  private initialized = false;
 
-  // If we're not in dev mode, require Tauri runtime.
-  if (ENV !== "dev") {
-    const isTauri =
-      typeof window !== "undefined" && (window as any).__TAURI__ !== undefined;
-    if (!isTauri) {
+  async init(): Promise<void> {
+    if (this.initialized) return;
+
+    if (ENV !== "dev") {
+      const isTauri =
+        typeof window !== "undefined" && (window as any).__TAURI__ !== undefined;
+      if (!isTauri) {
+        throw new Error(
+          "Tauri runtime not found. Run the app with `npm run tauri dev`.",
+        );
+      }
+
+      const { load } = await import("@tauri-apps/plugin-store");
+      const store = await load(STORE_FILE, { defaults: DEFAULTS, autoSave: true });
+
+      // Hydrate in-memory cache from the persisted store on startup
+      for (const key of SCHEMA_KEYS) {
+        const value = await store.get<AppStoreSchema[typeof key]>(key);
+        if (value !== null && value !== undefined) {
+          (this.cache as Record<string, unknown>)[key] = value;
+        }
+      }
+
+      this.backend = {
+        get: (k) => store.get(k),
+        set: (k, v) => store.set(k, v),
+      };
+    }
+    // dev: pure in-memory — avoids exposing sensitive data in localStorage/WebView
+
+    this.initialized = true;
+  }
+
+  private assertReady(): void {
+    if (!this.initialized) {
       throw new Error(
-        "This build expects the Tauri runtime. Run with `npm run tauri dev`."
+        "[AppStore] Not initialized. Call appStore.init() at app bootstrap before any store access.",
       );
     }
-
-    const { load } = await import("@tauri-apps/plugin-store");
-    _store = await load("storage.json", { defaults, autoSave: true });
-    return _store;
   }
 
-  // dev/browser fallback using localStorage
-  const key = "storage.json";
-  let data: Record<string, any> = {};
-
-  if (typeof window !== "undefined" && window.localStorage) {
-    try {
-      const raw = localStorage.getItem(key);
-      data = raw ? JSON.parse(raw) : { ...defaults };
-    } catch (e) {
-      data = { ...defaults };
-    }
-  } else {
-    data = { ...defaults };
+  /** Synchronous after init — no IPC overhead on reads. */
+  get<K extends keyof AppStoreSchema>(key: K): AppStoreSchema[K] {
+    this.assertReady();
+    return this.cache[key];
   }
 
-  const save = async () => {
-    if (typeof window === "undefined" || !window.localStorage) return;
-    try {
-      localStorage.setItem(key, JSON.stringify(data));
-    } catch (e) {
-      // ignore write errors (e.g., private mode)
-    }
-  };
+  /** Updates cache immediately; persists to Tauri store asynchronously. */
+  async set<K extends keyof AppStoreSchema>(
+    key: K,
+    value: AppStoreSchema[K],
+  ): Promise<void> {
+    this.assertReady();
+    this.cache[key] = value;
+    await this.backend?.set(key, value);
+  }
 
-  _store = {
-    get: async (k: string) => (k in data ? data[k] : null),
-    set: async (k: string, v: any) => {
-      data[k] = v;
-    },
-    save: async () => {
-      await save();
-    },
-  };
+  /** Resets a key to its default value in both cache and persistent store. */
+  async clear<K extends keyof AppStoreSchema>(key: K): Promise<void> {
+    await this.set(key, DEFAULTS[key]);
+  }
+}
 
-  return _store;
-};
+export const appStore = new AppStore();

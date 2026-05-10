@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { API_BASE_URL } from "../constants/api";
 import { APIResponse } from "../features/common/types";
-import { getAccessTokenCookie, isTokenExpiringSoon } from "./token";
+import { tokenManager } from "./token";
 import {
   attachAuthHeader,
   ensureRefreshPromise,
@@ -10,58 +10,45 @@ import {
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 1_000 * 60 * 5, // 5 minutes
+  timeout: 1_000 * 60 * 5,
   withCredentials: true,
 });
 
 api.interceptors.request.use(
   async (config) => {
-    if (shouldSkipRefreshRequest(config.url)) {
-      return config;
-    }
+    if (shouldSkipRefreshRequest(config.url)) return config;
 
-    let token = await getAccessTokenCookie();
-    const isTokenExpiring = await isTokenExpiringSoon();
-
-    if (isTokenExpiring) {
+    // Synchronous checks — zero IPC overhead after bootstrap
+    if (tokenManager.isExpiringSoon()) {
       try {
         await ensureRefreshPromise();
       } catch {
-        // se refresh falhar, não faz nada
+        // refresh falhou — prossegue sem token e deixa o 401 response handler agir
       }
-
-      token = await getAccessTokenCookie();
     }
 
+    const token = tokenManager.get();
     if (token) {
       config.headers = attachAuthHeader(config.headers ?? {}, token);
     }
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error?.config as any;
-    if (!originalRequest) return Promise.reject(error);
-
-    // evita loop de retry
-    if (originalRequest._retry) return Promise.reject(error);
-
-    if (shouldSkipRefreshRequest(originalRequest.url)) {
-      return Promise.reject(error);
-    }
+    if (!originalRequest || originalRequest._retry) return Promise.reject(error);
+    if (shouldSkipRefreshRequest(originalRequest.url)) return Promise.reject(error);
 
     if (error.response?.status === 401) {
       originalRequest._retry = true;
       try {
         await ensureRefreshPromise();
-        const token = await getAccessTokenCookie();
+        const token = tokenManager.get();
         if (token) {
           originalRequest.headers = attachAuthHeader(
             originalRequest.headers ?? {},

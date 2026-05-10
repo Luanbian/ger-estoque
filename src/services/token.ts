@@ -1,36 +1,60 @@
-import { getStore } from "./storage";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { appStore } from "./storage";
 
-export const setAccessTokenCookie = async (token: string) => {
-  const store = await getStore();
-  await store.set("accessToken", token);
-  await store.save();
-};
+type CachedToken = {
+  raw: string;
+  payload: JwtPayload;
+} | null;
 
-export const getAccessTokenCookie = async (): Promise<string | null> => {
-  const store = await getStore();
+class TokenManager {
+  private cached: CachedToken = null;
 
-  const tokenData = await store.get("accessToken");
-  if (!tokenData) return null;
+  /** Hydrates in-memory cache from AppStore after appStore.init(). */
+  load(): void {
+    this.hydrate(appStore.get("accessToken"));
+  }
 
-  return tokenData as string;
-};
+  private hydrate(raw: string | null): void {
+    if (!raw) {
+      this.cached = null;
+      return;
+    }
+    try {
+      this.cached = { raw, payload: jwtDecode<JwtPayload>(raw) };
+    } catch {
+      this.cached = null;
+    }
+  }
 
-export const clearAccessTokenCookie = async () => {
-  const store = await getStore();
+  /** Synchronous — no IPC after init. */
+  get(): string | null {
+    return this.cached?.raw ?? null;
+  }
 
-  await store.set("accessToken", null);
-  await store.save();
-};
+  async set(raw: string): Promise<void> {
+    await appStore.set("accessToken", raw);
+    this.hydrate(raw);
+  }
 
-export const isTokenExpiringSoon = async (thresholdSeconds = 60 * 2) => {
-  const store = await getStore();
-  const token = await store.get("accessToken");
-  if (!token) return true;
+  async clear(): Promise<void> {
+    await appStore.clear("accessToken");
+    this.cached = null;
+  }
 
-  const payload = jwtDecode(token as string);
-  if (!payload || !payload.exp) return true;
+  /** Synchronous expiry check — no IPC calls. */
+  isExpiringSoon(thresholdSeconds = 120): boolean {
+    const exp = this.cached?.payload?.exp;
+    if (!exp) return true;
+    return exp - Math.floor(Date.now() / 1000) < thresholdSeconds;
+  }
+}
 
-  const now = Math.floor(Date.now() / 1000);
-  return payload.exp - now < thresholdSeconds;
-};
+export const tokenManager = new TokenManager();
+
+// Backward-compatible exports — mantém contrato dos consumidores existentes
+export const setAccessTokenCookie = (token: string) => tokenManager.set(token);
+export const getAccessTokenCookie = (): Promise<string | null> =>
+  Promise.resolve(tokenManager.get());
+export const clearAccessTokenCookie = () => tokenManager.clear();
+export const isTokenExpiringSoon = (thresholdSeconds?: number): Promise<boolean> =>
+  Promise.resolve(tokenManager.isExpiringSoon(thresholdSeconds));
