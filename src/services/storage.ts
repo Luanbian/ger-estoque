@@ -19,9 +19,8 @@ class AppStore {
   async init(): Promise<void> {
     if (this.initialized) return;
 
-    const isTauri =
-      typeof window !== "undefined" && (window as any).__TAURI__ !== undefined;
-    if (!isTauri) {
+    const { isTauri } = await import("@tauri-apps/api/core");
+    if (!isTauri()) {
       throw new Error(
         "Tauri runtime not found. Run the app with `npm run tauri dev`.",
       );
