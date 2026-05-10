@@ -1,6 +1,3 @@
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { ENV } from "../constants/env";
-
 export const openWhatsapp = async (
   phone: string,
   name: string,
@@ -10,22 +7,8 @@ export const openWhatsapp = async (
     ? message.replace("{nome}", name)
     : message;
   const text = encodeURIComponent(resolvedMessage || "");
-  if (ENV === "dev") {
-    window.open(`https://wa.me/55${phone}?text=${text}`, "_blank");
-    return;
-  }
+  const url = `https://wa.me/55${phone}?text=${text}`;
 
-  const existing = await WebviewWindow.getByLabel("whatsapp");
-  if (existing) {
-    await existing.setFocus();
-    return;
-  }
-
-  new WebviewWindow("whatsapp", {
-    url: "https://web.whatsapp.com",
-    title: "WhatsApp",
-    width: 1000,
-    height: 800,
-    resizable: true,
-  });
+  const { openUrl } = await import("@tauri-apps/plugin-opener");
+  await openUrl(url);
 };

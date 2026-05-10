@@ -8,7 +8,6 @@ import { RegisterAccountComponent } from "./component";
 import { CreatePaymentPayload } from "../../features/payment/types";
 import { CustomerType } from "../../features/common/customerTypeEnum";
 import { PlanType } from "../../features/plans/types";
-import { ENV } from "../../constants/env";
 
 export const RegisterAccount = () => {
   const navigate = useNavigate();
@@ -50,17 +49,13 @@ export const RegisterAccount = () => {
   };
 
   if (paymentData?.checkoutLink) {
-    if (ENV === "dev") {
-      window.open(paymentData.checkoutLink, "_blank");
-    } else {
-      const fetchImport = async () => {
-        const { open } = await import("@tauri-apps/plugin-shell");
-        await open(paymentData.checkoutLink!);
-      };
-      fetchImport().catch((error) => {
-        return toast.error(`Erro ao abrir link de pagamento: ${error.message}`);
-      });
-    }
+    const fetchImport = async () => {
+      const { open } = await import("@tauri-apps/plugin-shell");
+      await open(paymentData.checkoutLink!);
+    };
+    fetchImport().catch((error) => {
+      return toast.error(`Erro ao abrir link de pagamento: ${error.message}`);
+    });
   }
 
   if (responseMessage) {

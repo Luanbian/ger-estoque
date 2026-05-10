@@ -1,5 +1,3 @@
-import { ENV } from "../constants/env";
-
 type AppStoreSchema = {
   accessToken: string | null;
 };
@@ -21,32 +19,32 @@ class AppStore {
   async init(): Promise<void> {
     if (this.initialized) return;
 
-    if (ENV !== "dev") {
-      const isTauri =
-        typeof window !== "undefined" && (window as any).__TAURI__ !== undefined;
-      if (!isTauri) {
-        throw new Error(
-          "Tauri runtime not found. Run the app with `npm run tauri dev`.",
-        );
-      }
-
-      const { load } = await import("@tauri-apps/plugin-store");
-      const store = await load(STORE_FILE, { defaults: DEFAULTS, autoSave: true });
-
-      // Hydrate in-memory cache from the persisted store on startup
-      for (const key of SCHEMA_KEYS) {
-        const value = await store.get<AppStoreSchema[typeof key]>(key);
-        if (value !== null && value !== undefined) {
-          (this.cache as Record<string, unknown>)[key] = value;
-        }
-      }
-
-      this.backend = {
-        get: (k) => store.get(k),
-        set: (k, v) => store.set(k, v),
-      };
+    const isTauri =
+      typeof window !== "undefined" && (window as any).__TAURI__ !== undefined;
+    if (!isTauri) {
+      throw new Error(
+        "Tauri runtime not found. Run the app with `npm run tauri dev`.",
+      );
     }
-    // dev: pure in-memory — avoids exposing sensitive data in localStorage/WebView
+
+    const { load } = await import("@tauri-apps/plugin-store");
+    const store = await load(STORE_FILE, {
+      defaults: DEFAULTS,
+      autoSave: true,
+    });
+
+    // Hydrate in-memory cache from the persisted store on startup
+    for (const key of SCHEMA_KEYS) {
+      const value = await store.get<AppStoreSchema[typeof key]>(key);
+      if (value !== null && value !== undefined) {
+        (this.cache as Record<string, unknown>)[key] = value;
+      }
+    }
+
+    this.backend = {
+      get: (k) => store.get(k),
+      set: (k, v) => store.set(k, v),
+    };
 
     this.initialized = true;
   }
