@@ -9,14 +9,49 @@ import { EXCLUDED_REFRESH_PATHS } from "../constants/refreshToken";
 
 const refreshClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 1_000 * 60 * 5,
+  timeout: 15_000,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
 
-let refreshPromise: Promise<void> | null = null;
+// Pathname prefix do API_BASE_URL (ex.: "/api" em "http://localhost:3000/api")
+const API_BASE_PATH = (() => {
+  try {
+    return new URL(API_BASE_URL).pathname.replace(/\/$/, "");
+  } catch {
+    return "";
+  }
+})();
 
-async function doRefresh(): Promise<void> {
+/**
+ * Normaliza qualquer URL de request para o pathname relativo ao API base.
+ * Funciona para URLs completas ("http://host/api/auth/login") e relativas ("/auth/login").
+ */
+function toApiPath(url: string): string {
+  try {
+    const { pathname } = url.startsWith("http")
+      ? new URL(url)
+      : new URL(url, API_BASE_URL);
+    return API_BASE_PATH && pathname.startsWith(API_BASE_PATH)
+      ? pathname.slice(API_BASE_PATH.length) || "/"
+      : pathname;
+  } catch {
+    return url;
+  }
+}
+
+/** Retorna true para rotas que não devem disparar refresh de token. */
+export function shouldSkipRefreshRequest(url?: string): boolean {
+  if (!url) return false;
+  return EXCLUDED_REFRESH_PATHS.includes(toApiPath(url));
+}
+
+/**
+ * Faz a chamada HTTP de refresh de token.
+ * Em caso de falha: limpa o token e dispara logout no Redux.
+ * Chamada apenas pelo triggerRefresh() em api.ts — sem deduplicação aqui.
+ */
+export async function performRefresh(): Promise<void> {
   let succeeded = false;
   try {
     const resp = await refreshClient.post<APIResponse<LoginResponse>>(
@@ -24,7 +59,7 @@ async function doRefresh(): Promise<void> {
       {},
     );
     const newToken = resp.data?.data?.accessToken;
-    if (!newToken) throw new Error("no-token");
+    if (!newToken) throw new Error("refresh-no-token");
 
     await tokenManager.set(newToken);
     store.dispatch(
@@ -41,32 +76,3 @@ async function doRefresh(): Promise<void> {
     }
   }
 }
-
-export const shouldSkipRefreshRequest = (url?: string): boolean => {
-  if (!url) return false;
-  try {
-    const path = url.startsWith("http")
-      ? new URL(url).pathname
-      : new URL(url, API_BASE_URL).pathname;
-    return EXCLUDED_REFRESH_PATHS.includes(path);
-  } catch {
-    return false;
-  }
-};
-
-export const ensureRefreshPromise = (): Promise<void> => {
-  if (!refreshPromise) {
-    refreshPromise = doRefresh().finally(() => {
-      refreshPromise = null;
-    });
-  }
-  return refreshPromise;
-};
-
-export const attachAuthHeader = (
-  headers: Record<string, string>,
-  token?: string | null,
-): Record<string, string> => {
-  if (!token) return headers;
-  return { ...headers, Authorization: `Bearer ${token}` };
-};

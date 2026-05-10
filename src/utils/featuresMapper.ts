@@ -10,4 +10,5 @@ export const featureMapper: Record<Features, string> = {
   [Features.SALES_REPORTS]: "Relatório de Vendas",
   [Features.UPLOAD_PRODUCTS_EXCEL]: "Upload de Produtos via Excel",
   [Features.SHOWCASE]: "Vitrine de Produtos",
+  [Features.WHATSAPP]: "Envio de mensagens no whatsapp",
 };

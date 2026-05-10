@@ -14,5 +14,6 @@ export const generateBasicPlanFeatures = (): Record<
     SHOWCASE: false,
     STOCK_ALERTS: false,
     STOCK_MANAGEMENT: false,
+    WHATSAPP: false,
   };
 };

@@ -33,7 +33,7 @@ interface CreateCatalogCategoryProps {
 export const CreateCatalogCategory = ({
   actions,
 }: CreateCatalogCategoryProps) => {
-  const { onClose, createCatalogCategory, associateCatalogCategory } = actions;
+  const { onClose, createCatalogCategory } = actions;
   const [subCategories, setSubCategories] = useState<string[]>([]);
   const {
     register,
