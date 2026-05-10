@@ -12,7 +12,7 @@ export const socket: ISocket = {
 export const connectWebSocket = (tenantId: string) => {
   if (!socket.io) {
     socket.io = io(WS_BASE_URL, {
-      transports: ["polling"],
+      transports: ["websocket"],
       auth: { tenantId },
     });
     console.log("Attempting to connect to WebSocket...");
