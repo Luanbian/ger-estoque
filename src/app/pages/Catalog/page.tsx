@@ -200,7 +200,11 @@ export const CatalogPage = ({ data, actions }: Props) => {
                                   </TableCell>
                                   <TableCell>
                                     {children.length > 0 ? (
-                                      <Box display="flex" gap={0.5} flexWrap="wrap">
+                                      <Box
+                                        display="flex"
+                                        gap={0.5}
+                                        flexWrap="wrap"
+                                      >
                                         {children.map((child) => (
                                           <Chip
                                             key={child._id}

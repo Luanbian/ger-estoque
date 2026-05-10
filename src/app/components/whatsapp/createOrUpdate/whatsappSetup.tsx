@@ -36,12 +36,17 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
   const theme = useTheme();
   const whatsappGreen = "#25D366";
 
-  const { control, handleSubmit } = useForm<WhatsappFormValues>({
-    defaultValues: {
-      acceptedMessage: whatsapp?.acceptedMessage ?? "",
-      rejectedMessage: whatsapp?.rejectedMessage ?? "",
-    },
-  });
+  const { control, handleSubmit, setValue, getValues } =
+    useForm<WhatsappFormValues>({
+      defaultValues: {
+        acceptedMessage: whatsapp?.acceptedMessage ?? "",
+        rejectedMessage: whatsapp?.rejectedMessage ?? "",
+      },
+    });
+
+  const insertName = (field: keyof WhatsappFormValues) => {
+    setValue(field, `${getValues(field)}{nome}`);
+  };
 
   const onSubmit = (values: WhatsappFormValues) => {
     if (whatsapp?._id) {
@@ -90,7 +95,12 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
         </Stack>
       </Box>
 
-      <Stack spacing={3} component="form" onSubmit={handleSubmit(onSubmit)}>
+      <Stack
+        spacing={3}
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        sx={{ p: 4 }}
+      >
         <Box>
           <Stack
             direction="row"
@@ -156,6 +166,16 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
               />
             )}
           />
+          <Box display="flex" justifyContent="flex-end" mt={0.75}>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => insertName("acceptedMessage")}
+              sx={{ borderRadius: 2, textTransform: "none", fontWeight: 500 }}
+            >
+              Inserir Nome
+            </Button>
+          </Box>
         </Box>
 
         <Divider sx={{ borderStyle: "dashed" }} />
@@ -225,6 +245,16 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
               />
             )}
           />
+          <Box display="flex" justifyContent="flex-end" mt={0.75}>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => insertName("rejectedMessage")}
+              sx={{ borderRadius: 2, textTransform: "none", fontWeight: 500 }}
+            >
+              Inserir Nome
+            </Button>
+          </Box>
         </Box>
 
         <Box
