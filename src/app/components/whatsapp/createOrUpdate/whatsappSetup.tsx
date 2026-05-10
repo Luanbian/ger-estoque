@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   Box,
@@ -36,13 +37,22 @@ export const CreateOrUpdateWhatsappSetupComponent = ({
   const theme = useTheme();
   const whatsappGreen = "#25D366";
 
-  const { control, handleSubmit, setValue, getValues } =
+  const { control, handleSubmit, setValue, getValues, reset } =
     useForm<WhatsappFormValues>({
       defaultValues: {
         acceptedMessage: whatsapp?.acceptedMessage ?? "",
         rejectedMessage: whatsapp?.rejectedMessage ?? "",
       },
     });
+
+  useEffect(() => {
+    if (whatsapp) {
+      reset({
+        acceptedMessage: whatsapp.acceptedMessage ?? "",
+        rejectedMessage: whatsapp.rejectedMessage ?? "",
+      });
+    }
+  }, [whatsapp, reset]);
 
   const insertName = (field: keyof WhatsappFormValues) => {
     setValue(field, `${getValues(field)}{nome}`);
