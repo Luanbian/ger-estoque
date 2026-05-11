@@ -1,4 +1,14 @@
-export const API_BASE_URL =
+export var API_BASE_URL =
   import.meta.env.VITE_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
-export const WS_BASE_URL =
+export var WS_BASE_URL =
   import.meta.env.VITE_PUBLIC_WS_BASE_URL || "http://localhost:3000";
+
+import axios from "axios";
+
+export async function loadConfig(): Promise<void> {
+  const res = await axios.get(
+    "https://luanbian.github.io/ger-estoque-config/data.json",
+  );
+  API_BASE_URL = `${res.data.url}/api`;
+  WS_BASE_URL = res.data.url;
+}

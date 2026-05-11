@@ -60,7 +60,6 @@ async function triggerRefresh(): Promise<void> {
 // ─── Axios instance ───────────────────────────────────────────────────────────
 
 const api: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
   timeout: 30_000,
   withCredentials: true,
 });
@@ -73,6 +72,7 @@ const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    config.baseURL = API_BASE_URL;
     if (shouldSkipRefreshRequest(config.url)) return config;
 
     if (isRefreshing || tokenManager.isExpiringSoon()) {
