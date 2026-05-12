@@ -11,7 +11,10 @@ import { tokenManager } from "./token";
 import { performRefresh, shouldSkipRefreshRequest } from "./refreshToken";
 
 async function tauriFetchAdapter(config: InternalAxiosRequestConfig) {
-  const url = config.url ?? "";
+  const rawUrl = config.url ?? "";
+  const url = rawUrl.startsWith("http")
+    ? rawUrl
+    : `${config.baseURL ?? ""}${rawUrl}`;
   const params = "";
 
   const headers: Record<string, string> = {};
