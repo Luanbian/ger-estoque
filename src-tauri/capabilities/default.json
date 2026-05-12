@@ -13,7 +13,8 @@
     {
       "identifier": "http:allow-fetch",
       "allow": [
-        { "url": "https://luanbian.github.io/ger-estoque-config/*" }
+        { "url": "https://luanbian.github.io/ger-estoque-config/*" },
+        { "url": "https://**" }
       ]
     }
   ]

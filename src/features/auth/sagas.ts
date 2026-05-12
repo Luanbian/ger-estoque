@@ -18,6 +18,7 @@ import { tokenManager } from "../../services/token";
 function* loginSaga(action: PayloadAction<LoginCredentials>) {
   yield put(actions.setLoading(true));
   try {
+    console.log({ API_BASE_URL });
     const response: APIResponse<LoginResponse> = yield call(
       apiService.post,
       `${API_BASE_URL}/auth/login`,

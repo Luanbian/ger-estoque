@@ -4,10 +4,66 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
+import { fetch } from "@tauri-apps/plugin-http";
 import { API_BASE_URL } from "../constants/api";
 import { APIResponse } from "../features/common/types";
 import { tokenManager } from "./token";
 import { performRefresh, shouldSkipRefreshRequest } from "./refreshToken";
+
+async function tauriFetchAdapter(config: InternalAxiosRequestConfig) {
+  const url = config.url ?? "";
+  const params = "";
+
+  const headers: Record<string, string> = {};
+  if (config.headers) {
+    for (const [key, value] of Object.entries(config.headers.toJSON())) {
+      if (value != null) headers[key] = String(value);
+    }
+  }
+
+  const body =
+    config.data != null
+      ? typeof config.data === "string"
+        ? config.data
+        : JSON.stringify(config.data)
+      : undefined;
+
+  const response = await fetch(`${url}${params}`, {
+    method: (config.method ?? "get").toUpperCase(),
+    headers,
+    body,
+    credentials: config.withCredentials ? "include" : "same-origin",
+  });
+
+  const responseData = await response.text();
+  let data: unknown;
+  try {
+    data = JSON.parse(responseData);
+  } catch {
+    data = responseData;
+  }
+
+  const axiosResponse: AxiosResponse = {
+    data,
+    status: response.status,
+    statusText: response.statusText,
+    headers: Object.fromEntries(response.headers.entries()),
+    config,
+  };
+
+  if (response.status >= 200 && response.status < 300) {
+    return axiosResponse;
+  }
+
+  const error = new AxiosError(
+    `Request failed with status code ${response.status}`,
+    String(response.status),
+    config,
+    null,
+    axiosResponse,
+  );
+  throw error;
+}
 
 // ─── Refresh queue ────────────────────────────────────────────────────────────
 //
@@ -60,6 +116,7 @@ async function triggerRefresh(): Promise<void> {
 // ─── Axios instance ───────────────────────────────────────────────────────────
 
 const api: AxiosInstance = axios.create({
+  adapter: tauriFetchAdapter,
   timeout: 30_000,
   withCredentials: true,
 });
