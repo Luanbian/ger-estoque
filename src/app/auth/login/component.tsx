@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { LoginCredentials } from "../../../features/auth/types";
+import { Version } from "../../components/version";
 
 interface Props {
   data: {
@@ -94,6 +95,7 @@ export const LoginComponent = ({ actions, data }: Props) => {
           </Box>
         </CardContent>
       </Card>
+      <Version />
     </Box>
   );
 };

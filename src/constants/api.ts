@@ -3,12 +3,13 @@ export var API_BASE_URL =
 export var WS_BASE_URL =
   import.meta.env.VITE_PUBLIC_WS_BASE_URL || "http://localhost:3000";
 
-import axios from "axios";
+import { fetch } from "@tauri-apps/plugin-http";
 
 export async function loadConfig(): Promise<void> {
-  const res = await axios.get(
+  const res = await fetch(
     "https://luanbian.github.io/ger-estoque-config/data.json",
   );
-  API_BASE_URL = `${res.data.url}/api`;
-  WS_BASE_URL = res.data.url;
+  const data = await res.json();
+  API_BASE_URL = `${data.url}/api`;
+  WS_BASE_URL = data.url;
 }

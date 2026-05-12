@@ -8,6 +8,13 @@
   "permissions": [
     "core:default",
     "opener:default",
-    "store:default"
+    "store:default",
+    "http:default",
+    {
+      "identifier": "http:allow-fetch",
+      "allow": [
+        { "url": "https://luanbian.github.io/ger-estoque-config/*" }
+      ]
+    }
   ]
 }
