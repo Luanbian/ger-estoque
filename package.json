@@ -1,7 +1,7 @@
 {
   "name": "ger-estoque",
   "private": true,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -21,7 +21,7 @@
     "@mui/x-tree-view": "^8.22.0",
     "@reduxjs/toolkit": "^2.11.1",
     "@tabler/icons-react": "^3.35.0",
-    "@tauri-apps/api": "2.10.1",
+    "@tauri-apps/api": "^2.11.0",
     "@tauri-apps/plugin-http": "^2.5.9",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-shell": "^2.3.4",
