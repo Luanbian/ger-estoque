@@ -15,5 +15,5 @@ export const HealthCheck = () => {
     return <div>Loading...</div>;
   }
 
-  return <HealthCheckComponent status={data.status} />;
+  return <HealthCheckComponent status={data.status} version={data.version} />;
 };

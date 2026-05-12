@@ -7,9 +7,10 @@ import {
 
 interface HealthCheckProps {
   status: string;
+  version: string;
 }
 
-export const HealthCheckComponent = ({ status }: HealthCheckProps) => {
+export const HealthCheckComponent = ({ status, version }: HealthCheckProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -49,6 +50,7 @@ export const HealthCheckComponent = ({ status }: HealthCheckProps) => {
             }}
           />
           <Typography>status: {status}</Typography>
+          <Typography>version: {version}</Typography>
         </Box>
       </Popover>
     </>

@@ -3,7 +3,6 @@ import { HealthCheck } from "./healthCheck/container";
 import { IconLogout, IconUser } from "@tabler/icons-react";
 import { ASSETS_BASE_URL } from "../../../constants/assets";
 import { NotificationHeader } from "./notification/container";
-import logoComplete from "../../../../public/logo_animal.png";
 
 interface Props {
   data: {
@@ -27,7 +26,7 @@ export const HeaderComponent = ({ data, actions }: Props) => {
       padding={2}
     >
       <img
-        src={logoComplete}
+        src="/logo_animal.png"
         alt="Avatar"
         width={40}
         height={40}

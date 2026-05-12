@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { LoginCredentials } from "../../../features/auth/types";
-import logoComplete from "../../../../public/logo_complete.png";
 
 interface Props {
   data: {
@@ -46,7 +45,7 @@ export const LoginComponent = ({ actions, data }: Props) => {
     >
       <Card sx={{ maxWidth: 400, width: "100%", p: 2 }}>
         <CardContent>
-          <img src={logoComplete} alt="Logo" width={300} height={300} />
+          <img src="/logo_complete.png" alt="Logo" width={300} height={300} />
 
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>

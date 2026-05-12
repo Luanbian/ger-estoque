@@ -10,7 +10,7 @@ function* loadHealthCheckSaga() {
   try {
     const response: APIResponse<HealthCheckResponse> = yield call(
       apiService.get,
-      API_BASE_URL
+      API_BASE_URL,
     );
 
     const { data } = response;
@@ -19,7 +19,8 @@ function* loadHealthCheckSaga() {
       actions.setData({
         status: data.status,
         details: data.details,
-      })
+        version: data.version,
+      }),
     );
   } catch (error) {
     yield put(actions.setError("Failed to load health check data"));

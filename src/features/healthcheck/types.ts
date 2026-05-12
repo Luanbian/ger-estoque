@@ -1,6 +1,7 @@
 export interface HealthStatus {
   status: string;
   details?: Record<string, any>;
+  version: string;
 }
 
 export interface HealthCheckSliceState {
@@ -14,4 +15,5 @@ export interface HealthCheckResponse {
   info: Record<string, { [key: string]: string }>;
   error: Record<string, any>;
   details: Record<string, { [key: string]: string }>;
+  version: string;
 }
