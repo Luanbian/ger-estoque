@@ -12,7 +12,7 @@ import {
   Chip,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { ASSETS_BASE_URL } from "../../../constants/assets";
+import { ASSETS_BASE_URL } from "../../../constants/api";
 
 interface Props {
   data: {

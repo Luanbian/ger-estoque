@@ -2,6 +2,8 @@ export let API_BASE_URL =
   import.meta.env.VITE_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
 export let WS_BASE_URL =
   import.meta.env.VITE_PUBLIC_WS_BASE_URL || "http://localhost:3000";
+export let ASSETS_BASE_URL =
+  import.meta.env.VITE_PUBLIC_ASSETS_BASE_URL || "http://localhost:3000";
 
 import { fetch } from "@tauri-apps/plugin-http";
 
@@ -12,4 +14,5 @@ export async function loadConfig(): Promise<void> {
   const data = await res.json();
   API_BASE_URL = `${data.url}/api`;
   WS_BASE_URL = data.url;
+  ASSETS_BASE_URL = data.url;
 }

@@ -33,7 +33,7 @@ import {
 import { ModalComponent } from "../../components/modal";
 import { CreateCatalogCategory } from "../../components/catalog/createCategory";
 import { CreateCatalogItem } from "../../components/catalog/createItem";
-import { ASSETS_BASE_URL } from "../../../constants/assets";
+import { ASSETS_BASE_URL } from "../../../constants/api";
 
 interface Props {
   data: {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { IconLibraryPhoto } from "@tabler/icons-react";
-import { ASSETS_BASE_URL } from "../../../../constants/assets";
+import { ASSETS_BASE_URL } from "../../../../constants/api";
 
 interface Props {
   data: {

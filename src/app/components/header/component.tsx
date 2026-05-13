@@ -1,8 +1,8 @@
 import { Box, Button, IconButton } from "@mui/material";
 import { HealthCheck } from "./healthCheck/container";
 import { IconLogout, IconUser } from "@tabler/icons-react";
-import { ASSETS_BASE_URL } from "../../../constants/assets";
 import { NotificationHeader } from "./notification/container";
+import { ASSETS_BASE_URL } from "../../../constants/api";
 
 interface Props {
   data: {
