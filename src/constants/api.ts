@@ -1,6 +1,6 @@
-export var API_BASE_URL =
+export let API_BASE_URL =
   import.meta.env.VITE_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
-export var WS_BASE_URL =
+export let WS_BASE_URL =
   import.meta.env.VITE_PUBLIC_WS_BASE_URL || "http://localhost:3000";
 
 import { fetch } from "@tauri-apps/plugin-http";

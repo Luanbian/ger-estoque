@@ -12,8 +12,12 @@ async function bootstrap() {
     console.error("[bootstrap] loadConfig failed, using defaults:", e);
   }
 
-  await appStore.init();
-  tokenManager.load();
+  try {
+    await appStore.init();
+    tokenManager.load();
+  } catch (e) {
+    console.error("[bootstrap] store init failed:", e);
+  }
 
   ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>

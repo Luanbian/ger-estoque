@@ -15,11 +15,12 @@
       {
         "title": "ger-estoque",
         "width": 1920,
-        "height": 1080
+        "height": 1080,
+        "devtools": true
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https: ipc: asset:"
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: http: https:; connect-src 'self' https: wss: ws: ipc: asset:"
     }
   },
   "bundle": {

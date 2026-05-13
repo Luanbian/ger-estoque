@@ -35,63 +35,6 @@ export default defineConfig(() => ({
     // Reduce chunk size warning limit (optional, default is 500kB)
     chunkSizeWarningLimit: 600,
 
-    rollupOptions: {
-      output: {
-        // Manual chunks for better code splitting
-        manualChunks: (id) => {
-          // MUI components in separate chunk
-          if (id.includes("node_modules/@mui/material")) {
-            return "mui-material";
-          }
-          if (id.includes("node_modules/@mui/icons-material")) {
-            return "mui-icons";
-          }
-          if (
-            id.includes("node_modules/@mui/lab") ||
-            id.includes("node_modules/@mui/x-date-pickers") ||
-            id.includes("node_modules/@mui/x-tree-view")
-          ) {
-            return "mui-lab";
-          }
-
-          // Emotion (MUI styling) in separate chunk
-          if (id.includes("node_modules/@emotion")) {
-            return "emotion";
-          }
-
-          // Redux and Saga in separate chunk
-          if (
-            id.includes("node_modules/redux") ||
-            id.includes("node_modules/react-redux") ||
-            id.includes("node_modules/@reduxjs/toolkit") ||
-            id.includes("node_modules/redux-saga")
-          ) {
-            return "redux";
-          }
-
-          // React core libraries
-          if (
-            id.includes("node_modules/react") ||
-            id.includes("node_modules/react-dom")
-          ) {
-            return "react-vendor";
-          }
-
-          // Other large dependencies
-          if (id.includes("node_modules/lodash")) {
-            return "lodash";
-          }
-          if (id.includes("node_modules/axios")) {
-            return "axios";
-          }
-
-          // All other node_modules in vendor chunk
-          if (id.includes("node_modules")) {
-            return "vendor";
-          }
-        },
-      },
-    },
 
     // Enable minification with esbuild (faster than terser)
     minify: "esbuild",
