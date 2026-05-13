@@ -6,7 +6,12 @@ import { tokenManager } from "./services/token";
 import App from "./App";
 
 async function bootstrap() {
-  await loadConfig();
+  try {
+    await loadConfig();
+  } catch (e) {
+    console.error("[bootstrap] loadConfig failed, using defaults:", e);
+  }
+
   await appStore.init();
   tokenManager.load();
 
