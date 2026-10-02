@@ -10,6 +10,10 @@ export const Login = () => {
   const { loading, error, token } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    dispatch(actions.setError(null));
+  }, []);
+
+  useEffect(() => {
     if (token) {
       navigate("/");
     }

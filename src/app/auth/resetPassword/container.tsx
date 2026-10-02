@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { actions } from "../../../features/auth";
 import { useDispatch, useSelector } from "../../../store/hooks";
@@ -19,14 +20,19 @@ export const ResetPassword = () => {
   };
 
   const handleRequestNewLink = () => {
-    dispatch(actions.setError(null));
     navigate("/forgot-password");
   };
 
-  if (resetPasswordMessage) {
+  useEffect(() => {
+    dispatch(actions.setError(null));
+  }, []);
+
+  useEffect(() => {
+    if (!resetPasswordMessage) return;
     toast.success(resetPasswordMessage);
     dispatch(actions.setResetPasswordMessage(undefined));
-  }
+    navigate("/login");
+  }, [resetPasswordMessage]);
 
   return (
     <ResetPasswordComponent

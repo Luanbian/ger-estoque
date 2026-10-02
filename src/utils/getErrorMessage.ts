@@ -8,7 +8,9 @@ const collectConstraints = (items: ValidationErrorItem[]): string[] =>
   ]);
 
 export const getErrorMessage = (error: unknown): string => {
-  if (!(error instanceof AxiosError)) return "An unknown error occurred";
+  if (!(error instanceof AxiosError)) {
+    return error instanceof Error ? error.message : "An unknown error occurred";
+  }
 
   const apiError: unknown = error.response?.data?.error;
   if (typeof apiError === "string") return apiError;

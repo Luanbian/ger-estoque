@@ -7,6 +7,7 @@ import { Filters } from "../filters/types";
 import { AppState } from "../../store";
 import { generateParams } from "../../utils/generateParams";
 import actions from "./slice";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 function* getSales(payload: PayloadAction<PaginationRequest | undefined>) {
   yield put(actions.setLoading(true));
@@ -25,11 +26,7 @@ function* getSales(payload: PayloadAction<PaginationRequest | undefined>) {
     yield put(actions.setSales(data));
     yield put(actions.setPagination(response.pagination || null));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -48,11 +45,7 @@ function* createSales(payload: PayloadAction<CreateSalePayload>) {
 
     yield put(actions.addSale(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -69,11 +62,7 @@ function* getMaxSalesInvoicing() {
 
     yield put(actions.setMaxSalesInvoicing(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   }
 }
 

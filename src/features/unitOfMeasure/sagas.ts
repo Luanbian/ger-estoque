@@ -4,6 +4,7 @@ import { UnitOfMeasure } from "./types.ts";
 import { APIResponse } from "../common/types.ts";
 import { API_BASE_URL } from "../../constants/api.ts";
 import { apiService } from "../../services/api.ts";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 function* getUnitOfMeasure() {
   yield put(actions.setLoading(true));
@@ -17,11 +18,7 @@ function* getUnitOfMeasure() {
 
     yield put(actions.setUnitOfMeasures(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }

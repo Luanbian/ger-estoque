@@ -31,14 +31,30 @@ async function tauriFetchAdapter(config: InternalAxiosRequestConfig) {
         : JSON.stringify(config.data)
       : undefined;
 
-  const response = await fetch(url, {
-    method: (config.method ?? "get").toUpperCase(),
-    headers,
-    body,
-    credentials: config.withCredentials ? "include" : "same-origin",
-  });
+  const signal = config.timeout
+    ? AbortSignal.timeout(config.timeout)
+    : undefined;
 
-  const responseData = await response.text();
+  let response: Response;
+  let responseData: string;
+  try {
+    response = await fetch(url, {
+      method: (config.method ?? "get").toUpperCase(),
+      headers,
+      body,
+      credentials: config.withCredentials ? "include" : "same-origin",
+      signal,
+    });
+    responseData = await response.text();
+  } catch (error) {
+    if (!signal?.aborted) throw error;
+    throw new AxiosError(
+      "Tempo de resposta do servidor esgotado",
+      AxiosError.ETIMEDOUT,
+      config,
+    );
+  }
+
   let data: unknown;
   try {
     data = JSON.parse(responseData);

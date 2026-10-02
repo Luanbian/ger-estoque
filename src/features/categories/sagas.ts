@@ -8,6 +8,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { Filters } from "../filters/types.ts";
 import { AppState } from "../../store/index.ts";
 import { generateParams } from "../../utils/generateParams.ts";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 function* getCategoryTree(
   payload: PayloadAction<PaginationRequest | undefined>,
@@ -28,11 +29,7 @@ function* getCategoryTree(
     yield put(actions.setCategory(data));
     yield put(actions.setPagination(response.pagination || null));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -50,11 +47,7 @@ function* getCategory() {
 
     yield put(actions.setCategoryPlain(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -73,11 +66,7 @@ function* createCategory(payload: PayloadAction<CategoryPayload>) {
 
     yield put(actions.addCategory(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -96,11 +85,7 @@ function* createSubCategory(payload: PayloadAction<CategoryPayload>) {
 
     yield put(actions.addSubCategory(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -121,11 +106,7 @@ function* updateCategory(
 
     yield put(actions.setOneCategory(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -141,11 +122,7 @@ function* deleteCategory(payload: PayloadAction<string>) {
 
     yield put(actions.removeCategory(payload.payload));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -163,11 +140,7 @@ function* deleteSubCategory(
 
     yield put(actions.removeSubCategory(payload.payload));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
