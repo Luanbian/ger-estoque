@@ -1,5 +1,8 @@
 export const convertToCents = (value: string): number => {
-  const floatValue = parseFloat(value);
+  const normalized = value.includes(",")
+    ? value.replace(/\./g, "").replace(",", ".")
+    : value;
+  const floatValue = parseFloat(normalized);
   return isNaN(floatValue) ? 0 : Math.round(floatValue * 100);
 };
 

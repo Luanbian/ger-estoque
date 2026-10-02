@@ -18,3 +18,9 @@ export interface PaginationRequest {
   limit?: string;
   sort?: string;
 }
+
+export interface ValidationErrorItem {
+  property: string;
+  constraints?: Record<string, string>;
+  children?: ValidationErrorItem[];
+}

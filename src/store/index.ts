@@ -47,7 +47,7 @@ const sagaMiddleware = createSagaMiddleware({
   },
 });
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   healthCheck: healthCheckSlice.reducer,
   customizer: customizerSlice.reducer,
   auth: authSlice.reducer,
@@ -67,6 +67,16 @@ const rootReducer = combineReducers({
   catalog: catalogSlice.reducer,
   whatsapp: whatsappSlice.reducer,
 });
+
+const rootReducer: typeof appReducer = (state, action) => {
+  if (action.type !== authSlice.actions.logout.type || !state) {
+    return appReducer(state, action);
+  }
+  return appReducer(
+    { customizer: state.customizer, planType: state.planType },
+    action,
+  );
+};
 
 export const store = configureStore({
   reducer: rootReducer,

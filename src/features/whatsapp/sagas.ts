@@ -1,6 +1,6 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 import { actions } from "./slice";
 import { Whatsapp } from "./types";
 import { APIResponse } from "../common/types";
@@ -17,13 +17,7 @@ function* getWhatsapp() {
 
     yield put(actions.setWhatsapp(response.data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof AxiosError
-          ? error.response?.data.error
-          : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -43,13 +37,7 @@ function* updateWhatsapp(action: PayloadAction<Whatsapp>) {
 
     yield put(actions.setWhatsapp(response.data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof AxiosError
-          ? error.response?.data.error
-          : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -69,13 +57,7 @@ function* createWhatsapp(action: PayloadAction<Whatsapp>) {
 
     yield put(actions.setWhatsapp(response.data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof AxiosError
-          ? error.response?.data.error
-          : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }

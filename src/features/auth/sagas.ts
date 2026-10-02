@@ -1,6 +1,7 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 import actions from "./slice";
 import {
   ForgotPasswordPayload,
@@ -45,13 +46,7 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
       yield put(actions.setError("E-mail ou senha inválidos"));
       return;
     }
-    yield put(
-      actions.setError(
-        error instanceof AxiosError
-          ? error.response?.data.error
-          : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -72,13 +67,7 @@ function* forgotPasswordSaga(action: PayloadAction<ForgotPasswordPayload>) {
       yield put(actions.setForgotPasswordMessage(FORGOT_PASSWORD_MESSAGE));
       return;
     }
-    yield put(
-      actions.setError(
-        error instanceof AxiosError
-          ? error.response?.data.error
-          : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -100,13 +89,7 @@ function* resetPasswordSaga(action: PayloadAction<ResetPasswordPayload>) {
       yield put(actions.setError("Link inválido ou expirado"));
       return;
     }
-    yield put(
-      actions.setError(
-        error instanceof AxiosError
-          ? error.response?.data.error
-          : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
