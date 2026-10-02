@@ -11,11 +11,7 @@ import { tokenManager } from "./token";
 import { performRefresh, shouldSkipRefreshRequest } from "./refreshToken";
 
 async function tauriFetchAdapter(config: InternalAxiosRequestConfig) {
-  const rawUrl = config.url ?? "";
-  const url = rawUrl.startsWith("http")
-    ? rawUrl
-    : `${config.baseURL ?? ""}${rawUrl}`;
-  const params = "";
+  const url = axios.getUri(config);
 
   const headers: Record<string, string> = {};
   if (config.headers) {
@@ -31,7 +27,7 @@ async function tauriFetchAdapter(config: InternalAxiosRequestConfig) {
         : JSON.stringify(config.data)
       : undefined;
 
-  const response = await fetch(`${url}${params}`, {
+  const response = await fetch(url, {
     method: (config.method ?? "get").toUpperCase(),
     headers,
     body,
@@ -99,7 +95,7 @@ function waitInQueue(): Promise<void> {
  * - Se já está refreshando: entra na fila e aguarda.
  * - Se não está: inicia o refresh, drena a fila ao concluir.
  */
-async function triggerRefresh(): Promise<void> {
+export async function triggerRefresh(): Promise<void> {
   if (isRefreshing) {
     return waitInQueue();
   }
@@ -170,6 +166,7 @@ api.interceptors.response.use(
 
     if (!original) return Promise.reject(error);
     if (original._retry) return Promise.reject(error);
+    if (!tokenManager.get()) return Promise.reject(error);
     if (shouldSkipRefreshRequest(original.url)) return Promise.reject(error);
     if (error.response?.status !== 401) return Promise.reject(error);
 

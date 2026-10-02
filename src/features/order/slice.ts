@@ -22,7 +22,7 @@ export const orderSlice = createSlice({
       _state,
       _action: PayloadAction<{
         orderId: string;
-        status: OrderStatus;
+        status: OrderStatus.ACCEPTED | OrderStatus.REJECTED;
       }>,
     ) => {},
     setLoading: (state, action: PayloadAction<boolean>) => {

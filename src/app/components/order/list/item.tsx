@@ -16,8 +16,6 @@ import { IconCircleCheck, IconClock, IconXboxX } from "@tabler/icons-react";
 import { convertFromCents } from "../../../../utils/convertTocents";
 import { ModalComponent } from "../../modal";
 import { OrderDetails } from "../details";
-import { Whatsapp } from "../../../../features/whatsapp/types";
-import { openWhatsapp } from "../../../../utils/openWhatsapp";
 
 interface Props {
   data: {
@@ -123,28 +121,30 @@ const OrderItemComponent = ({ data, actions }: Props) => {
         </Box>
         <Divider />
       </Box>
-      <Box sx={{ p: 2 }} display={"flex"} gap={2}>
-        <Button
-          fullWidth
-          variant="outlined"
-          sx={{
-            borderRadius: 2,
-          }}
-          onClick={handleReject}
-        >
-          Rejeitar
-        </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          sx={{
-            borderRadius: 2,
-          }}
-          onClick={handleAccept}
-        >
-          Aceitar
-        </Button>
-      </Box>
+      {order.status === OrderStatus.PENDING && (
+        <Box sx={{ p: 2 }} display={"flex"} gap={2}>
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{
+              borderRadius: 2,
+            }}
+            onClick={handleReject}
+          >
+            Rejeitar
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{
+              borderRadius: 2,
+            }}
+            onClick={handleAccept}
+          >
+            Aceitar
+          </Button>
+        </Box>
+      )}
 
       <ModalComponent
         isOpen={isModalOpen}
@@ -158,39 +158,28 @@ const OrderItemComponent = ({ data, actions }: Props) => {
 interface OrderItemProps {
   data: {
     order: Order;
-    whatsapp: Whatsapp | null;
   };
 }
 
 export const OrderItem = ({ data }: OrderItemProps) => {
   const dispatch = useDispatch();
-  const { order, whatsapp } = data;
+  const { order } = data;
 
-  const handleAccept = async () => {
+  const handleAccept = () => {
     dispatch(
       actions.updateOrderStatusRequest({
         orderId: order._id,
         status: OrderStatus.ACCEPTED,
       }),
     );
-    await openWhatsapp(
-      order.customer.phone,
-      order.customer.name,
-      whatsapp?.acceptedMessage,
-    );
   };
 
-  const handleReject = async () => {
+  const handleReject = () => {
     dispatch(
       actions.updateOrderStatusRequest({
         orderId: order._id,
         status: OrderStatus.REJECTED,
       }),
-    );
-    await openWhatsapp(
-      order.customer.phone,
-      order.customer.name,
-      whatsapp?.rejectedMessage,
     );
   };
 

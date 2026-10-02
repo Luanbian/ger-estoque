@@ -11,12 +11,14 @@ import { useForm } from "react-hook-form";
 
 interface Props {
   onResetPassword: (newPassword: string) => void;
+  onRequestNewLink: () => void;
   loading: boolean;
   error: string | null;
 }
 
 export const ResetPasswordComponent = ({
   onResetPassword,
+  onRequestNewLink,
   error,
   loading,
 }: Props) => {
@@ -65,6 +67,9 @@ export const ResetPasswordComponent = ({
               {loading ? "Redefinindo..." : "Redefinir Senha"}
             </Button>
           </form>
+          <Button variant="text" sx={{ mt: 2 }} onClick={onRequestNewLink}>
+            Pedir um novo link
+          </Button>
         </CardContent>
       </Card>
     </Box>

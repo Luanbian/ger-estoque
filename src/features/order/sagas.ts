@@ -1,4 +1,6 @@
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 import { actions } from "./slice";
 import { APIResponse, PaginationRequest } from "../common/types";
 import { Order } from "./types";
@@ -7,6 +9,9 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { generateParams } from "../../utils/generateParams";
 import { Filters } from "../filters/types";
 import { AppState } from "../../store";
+import { OrderStatus } from "../common/orderStatusEnum";
+import { Whatsapp } from "../whatsapp/types";
+import { openWhatsapp } from "../../utils/openWhatsapp";
 
 function* getOrders(payload: PayloadAction<PaginationRequest | undefined>) {
   try {
@@ -36,7 +41,10 @@ function* getOrders(payload: PayloadAction<PaginationRequest | undefined>) {
 }
 
 function* updateOrderStatus(
-  payload: PayloadAction<{ orderId: string; status: string }>,
+  payload: PayloadAction<{
+    orderId: string;
+    status: OrderStatus.ACCEPTED | OrderStatus.REJECTED;
+  }>,
 ) {
   try {
     const { orderId, status } = payload.payload;
@@ -50,7 +58,24 @@ function* updateOrderStatus(
     const { data } = result;
 
     yield put(actions.setOneOrder(data));
+
+    const whatsapp: Whatsapp | null = yield select(
+      (state: AppState) => state.whatsapp.data,
+    );
+    yield call(
+      openWhatsapp,
+      data.customer.phone,
+      data.customer.name,
+      status === OrderStatus.ACCEPTED
+        ? whatsapp?.acceptedMessage
+        : whatsapp?.rejectedMessage,
+    );
   } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 404) {
+      toast.warning("Este pedido já foi decidido ou não existe");
+      yield put(actions.getOrdersRequest());
+      return;
+    }
     yield put(
       actions.setError(
         error instanceof Error ? error.message : "An unknown error occurred",

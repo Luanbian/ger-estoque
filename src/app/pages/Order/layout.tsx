@@ -36,7 +36,7 @@ export const Sale = () => {
 
   return (
     <SaleComponent
-      data={{ orders: data, loading, pagination, whatsapp }}
+      data={{ orders: data, loading, pagination }}
       actions={{ onChangePage }}
     />
   );

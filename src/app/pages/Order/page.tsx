@@ -8,12 +8,10 @@ import { Order } from "../../../features/order/types";
 import { Pagination } from "../../../features/common/types";
 import { OrderFilter } from "../../components/order/filters";
 import { OrderListComponent } from "../../components/order/list/list";
-import { Whatsapp } from "../../../features/whatsapp/types";
 
 interface Props {
   data: {
     orders: Order[] | null;
-    whatsapp: Whatsapp | null;
     loading: boolean;
     pagination: Pagination | null;
   };
@@ -23,7 +21,7 @@ interface Props {
 }
 
 export const SaleComponent = ({ data, actions }: Props) => {
-  const { orders, loading, pagination, whatsapp } = data;
+  const { orders, loading, pagination } = data;
   const { onChangePage } = actions;
 
   return (
@@ -42,7 +40,7 @@ export const SaleComponent = ({ data, actions }: Props) => {
                 Nenhum pedido encontrado.
               </Typography>
             ) : (
-              <OrderListComponent data={{ orders, whatsapp }} />
+              <OrderListComponent data={{ orders }} />
             )}
           </>
         )}

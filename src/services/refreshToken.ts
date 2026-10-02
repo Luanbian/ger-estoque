@@ -1,4 +1,4 @@
-import axios from "axios";
+import { fetch } from "@tauri-apps/plugin-http";
 import { API_BASE_URL } from "../constants/api";
 import { APIResponse } from "../features/common/types";
 import { LoginResponse } from "../features/auth/types";
@@ -7,33 +7,18 @@ import store from "../store";
 import { actions } from "../features/auth";
 import { EXCLUDED_REFRESH_PATHS } from "../constants/refreshToken";
 
-const refreshClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 15_000,
-  headers: { "Content-Type": "application/json" },
-  withCredentials: true,
-});
-
-// Pathname prefix do API_BASE_URL (ex.: "/api" em "http://localhost:3000/api")
-const API_BASE_PATH = (() => {
-  try {
-    return new URL(API_BASE_URL).pathname.replace(/\/$/, "");
-  } catch {
-    return "";
-  }
-})();
-
 /**
  * Normaliza qualquer URL de request para o pathname relativo ao API base.
  * Funciona para URLs completas ("http://host/api/auth/login") e relativas ("/auth/login").
  */
 function toApiPath(url: string): string {
   try {
+    const basePath = new URL(API_BASE_URL).pathname.replace(/\/$/, "");
     const { pathname } = url.startsWith("http")
       ? new URL(url)
       : new URL(url, API_BASE_URL);
-    return API_BASE_PATH && pathname.startsWith(API_BASE_PATH)
-      ? pathname.slice(API_BASE_PATH.length) || "/"
+    return basePath && pathname.startsWith(basePath)
+      ? pathname.slice(basePath.length) || "/"
       : pathname;
   } catch {
     return url;
@@ -54,17 +39,23 @@ export function shouldSkipRefreshRequest(url?: string): boolean {
 export async function performRefresh(): Promise<void> {
   let succeeded = false;
   try {
-    const resp = await refreshClient.post<APIResponse<LoginResponse>>(
-      "/auth/refresh",
-      {},
-    );
-    const newToken = resp.data?.data?.accessToken;
+    // Precisa passar pelo plugin-http: o cookie httpOnly `refresh_token` do login
+    // fica no cookie jar do lado Rust, invisível para o fetch/XHR do webview.
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    });
+    if (!response.ok) throw new Error(`refresh-${response.status}`);
+
+    const body: APIResponse<LoginResponse> = await response.json();
+    const newToken = body.data?.accessToken;
     if (!newToken) throw new Error("refresh-no-token");
 
     await tokenManager.set(newToken);
     store.dispatch(
       actions.setAuth({
-        data: store.getState().auth.data,
+        data: { tenantId: body.data.tenantId },
         token: newToken,
       }),
     );

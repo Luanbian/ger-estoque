@@ -4,7 +4,6 @@ import { AxiosError } from "axios";
 import actions from "./slice";
 import {
   ForgotPasswordPayload,
-  ForgotPasswordResponse,
   LoginCredentials,
   LoginResponse,
   ResetPasswordPayload,
@@ -14,6 +13,9 @@ import { APIResponse } from "../common/types";
 import { API_BASE_URL } from "../../constants/api";
 import { apiService } from "../../services/api";
 import { tokenManager } from "../../services/token";
+import { actions as wsActions } from "../ws";
+
+const FORGOT_PASSWORD_MESSAGE = "Se o e-mail existir, você receberá instruções";
 
 function* loginSaga(action: PayloadAction<LoginCredentials>) {
   yield put(actions.setLoading(true));
@@ -27,6 +29,8 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
 
     const { data } = response;
 
+    yield call([tokenManager, tokenManager.set], data.accessToken);
+
     yield put(
       actions.setAuth({
         data: {
@@ -35,9 +39,12 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
         token: data.accessToken,
       }),
     );
-
-    yield call([tokenManager, tokenManager.set], data.accessToken);
   } catch (error) {
+    const status = error instanceof AxiosError ? error.response?.status : null;
+    if (status === 401 || status === 404) {
+      yield put(actions.setError("E-mail ou senha inválidos"));
+      return;
+    }
     yield put(
       actions.setError(
         error instanceof AxiosError
@@ -53,16 +60,18 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
 function* forgotPasswordSaga(action: PayloadAction<ForgotPasswordPayload>) {
   yield put(actions.setLoading(true));
   try {
-    const response: APIResponse<ForgotPasswordResponse> = yield call(
+    yield call(
       apiService.post,
       `${API_BASE_URL}/auth/forgot-password`,
       action.payload,
     );
 
-    const { data } = response;
-
-    yield put(actions.setForgotPasswordMessage(data.message));
+    yield put(actions.setForgotPasswordMessage(FORGOT_PASSWORD_MESSAGE));
   } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 404) {
+      yield put(actions.setForgotPasswordMessage(FORGOT_PASSWORD_MESSAGE));
+      return;
+    }
     yield put(
       actions.setError(
         error instanceof AxiosError
@@ -87,6 +96,10 @@ function* resetPasswordSaga(action: PayloadAction<ResetPasswordPayload>) {
 
     yield put(actions.setResetPasswordMessage(data.message));
   } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 404) {
+      yield put(actions.setError("Link inválido ou expirado"));
+      return;
+    }
     yield put(
       actions.setError(
         error instanceof AxiosError
@@ -99,9 +112,15 @@ function* resetPasswordSaga(action: PayloadAction<ResetPasswordPayload>) {
   }
 }
 
+function* logoutSaga() {
+  yield call([tokenManager, tokenManager.clear]);
+  yield put(wsActions.disconnect());
+}
+
 export function* authSagas() {
   yield all([
     takeEvery(actions.loginRequest.type, loginSaga),
+    takeEvery(actions.logout.type, logoutSaga),
     takeEvery(actions.forgotPasswordRequest.type, forgotPasswordSaga),
     takeEvery(actions.resetPasswordRequest.type, resetPasswordSaga),
   ]);

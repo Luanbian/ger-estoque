@@ -2,10 +2,11 @@ import { toast } from "react-toastify";
 import { actions } from "../../../features/auth";
 import { useDispatch, useSelector } from "../../../store/hooks";
 import { ResetPasswordComponent } from "./component";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export const ResetPassword = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token") || "";
 
@@ -15,6 +16,11 @@ export const ResetPassword = () => {
 
   const handleResetPassword = (newPassword: string) => {
     dispatch(actions.resetPasswordRequest({ token, newPassword }));
+  };
+
+  const handleRequestNewLink = () => {
+    dispatch(actions.setError(null));
+    navigate("/forgot-password");
   };
 
   if (resetPasswordMessage) {
@@ -27,6 +33,7 @@ export const ResetPassword = () => {
       error={error}
       loading={loading}
       onResetPassword={handleResetPassword}
+      onRequestNewLink={handleRequestNewLink}
     />
   );
 };

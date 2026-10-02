@@ -43,7 +43,8 @@ class TokenManager {
 
   /** Synchronous expiry check — no IPC calls. */
   isExpiringSoon(thresholdSeconds = 120): boolean {
-    const exp = this.cached?.payload?.exp;
+    if (!this.cached) return false;
+    const exp = this.cached.payload.exp;
     if (!exp) return true;
     return exp - Math.floor(Date.now() / 1000) < thresholdSeconds;
   }
