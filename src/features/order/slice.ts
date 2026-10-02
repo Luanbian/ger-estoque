@@ -8,6 +8,7 @@ const initialState: OrderState = {
   loading: false,
   error: null,
   pagination: null,
+  decidingId: null,
 };
 
 export const orderSlice = createSlice({
@@ -18,6 +19,7 @@ export const orderSlice = createSlice({
       _state,
       _action: PayloadAction<PaginationRequest | undefined>,
     ) => {},
+    reloadOrdersRequest: () => {},
     updateOrderStatusRequest: (
       _state,
       _action: PayloadAction<{
@@ -36,6 +38,9 @@ export const orderSlice = createSlice({
     },
     setPagination: (state, action: PayloadAction<OrderState["pagination"]>) => {
       state.pagination = action.payload;
+    },
+    setDecidingId: (state, action: PayloadAction<string | null>) => {
+      state.decidingId = action.payload;
     },
     setOneOrder: (state, action: PayloadAction<Order>) => {
       if (!state.data) return;

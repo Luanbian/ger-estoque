@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Order } from "../../../../features/order/types";
-import { useDispatch } from "../../../../store/hooks";
+import { useDispatch, useSelector } from "../../../../store/hooks";
 import { actions } from "../../../../features/order";
 import { OrderStatus } from "../../../../features/common/orderStatusEnum";
 import { strSlice } from "../../../../utils/strSlice";
@@ -20,6 +20,7 @@ import { OrderDetails } from "../details";
 interface Props {
   data: {
     order: Order;
+    deciding: boolean;
   };
   actions: {
     handleAccept: () => void;
@@ -28,7 +29,7 @@ interface Props {
 }
 
 const OrderItemComponent = ({ data, actions }: Props) => {
-  const { order } = data;
+  const { order, deciding } = data;
   const { handleAccept, handleReject } = actions;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -130,6 +131,7 @@ const OrderItemComponent = ({ data, actions }: Props) => {
               borderRadius: 2,
             }}
             onClick={handleReject}
+            disabled={deciding}
           >
             Rejeitar
           </Button>
@@ -140,6 +142,7 @@ const OrderItemComponent = ({ data, actions }: Props) => {
               borderRadius: 2,
             }}
             onClick={handleAccept}
+            disabled={deciding}
           >
             Aceitar
           </Button>
@@ -164,6 +167,7 @@ interface OrderItemProps {
 export const OrderItem = ({ data }: OrderItemProps) => {
   const dispatch = useDispatch();
   const { order } = data;
+  const { decidingId } = useSelector((state) => state.order);
 
   const handleAccept = () => {
     dispatch(
@@ -185,7 +189,7 @@ export const OrderItem = ({ data }: OrderItemProps) => {
 
   return (
     <OrderItemComponent
-      data={{ order }}
+      data={{ order, deciding: decidingId === order._id }}
       actions={{ handleAccept, handleReject }}
     />
   );
