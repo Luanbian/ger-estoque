@@ -15,12 +15,12 @@ export const socket: ISocket = {
 
 let tokenFromSocketRefresh: string | null = null;
 
-export const connectWebSocket = (tenantId: string) => {
+export const connectWebSocket = () => {
   if (socket.io) return;
 
   const client = io(WS_BASE_URL, {
     transports: ["websocket"],
-    auth: (cb) => cb({ token: tokenManager.get(), tenantId }),
+    auth: (cb) => cb({ token: tokenManager.get() }),
   });
   socket.io = client;
   console.log("Attempting to connect to WebSocket...");

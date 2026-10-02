@@ -6,7 +6,6 @@ import { actions as wpActions } from "../../../features/whatsapp";
 
 export const Sale = () => {
   const dispatch = useDispatch();
-  const { isConnected } = useSelector((state) => state.ws);
   const { data, loading, pagination } = useSelector((state) => state.order);
   const { data: whatsapp } = useSelector((state) => state.whatsapp);
 
@@ -14,7 +13,7 @@ export const Sale = () => {
     if (whatsapp === null) {
       dispatch(wpActions.whatsappRequest());
     }
-  }, [whatsapp, data]);
+  }, []);
 
   useEffect(() => {
     dispatch(actions.getOrdersRequest());
@@ -29,10 +28,6 @@ export const Sale = () => {
       }),
     );
   };
-
-  if (!isConnected) {
-    return <div>Conectando ao Servidor...</div>;
-  }
 
   return (
     <SaleComponent

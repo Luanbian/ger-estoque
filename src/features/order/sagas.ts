@@ -2,7 +2,7 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { actions } from "./slice";
-import { APIResponse, PaginationRequest } from "../common/types";
+import { APIResponse, Pagination, PaginationRequest } from "../common/types";
 import { Order } from "./types";
 import { apiService } from "../../services/api";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -37,15 +37,28 @@ function* getOrders(payload: PayloadAction<PaginationRequest | undefined>) {
   }
 }
 
+function* reloadOrders() {
+  const pagination: Pagination | null = yield select(
+    (state: AppState) => state.order.pagination,
+  );
+  yield put(
+    actions.getOrdersRequest(
+      pagination
+        ? { page: String(pagination.page), limit: String(pagination.limit) }
+        : undefined,
+    ),
+  );
+}
+
 function* updateOrderStatus(
   payload: PayloadAction<{
     orderId: string;
     status: OrderStatus.ACCEPTED | OrderStatus.REJECTED;
   }>,
 ) {
+  const { orderId, status } = payload.payload;
+  yield put(actions.setDecidingId(orderId));
   try {
-    const { orderId, status } = payload.payload;
-
     const result: APIResponse<Order> = yield call(
       apiService.patch,
       `/order/${orderId}/status`,
@@ -70,16 +83,19 @@ function* updateOrderStatus(
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 404) {
       toast.warning("Este pedido já foi decidido ou não existe");
-      yield put(actions.getOrdersRequest());
+      yield call(reloadOrders);
       return;
     }
     yield put(actions.setError(getErrorMessage(error)));
+  } finally {
+    yield put(actions.setDecidingId(null));
   }
 }
 
 export function* orderSagas() {
   yield all([
     takeEvery(actions.getOrdersRequest.type, getOrders),
+    takeEvery(actions.reloadOrdersRequest.type, reloadOrders),
     takeEvery(actions.updateOrderStatusRequest.type, updateOrderStatus),
   ]);
 }

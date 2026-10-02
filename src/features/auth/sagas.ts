@@ -16,8 +16,6 @@ import { apiService } from "../../services/api";
 import { tokenManager } from "../../services/token";
 import { actions as wsActions } from "../ws";
 
-const FORGOT_PASSWORD_MESSAGE = "Se o e-mail existir, você receberá instruções";
-
 function* loginSaga(action: PayloadAction<LoginCredentials>) {
   yield put(actions.setLoading(true));
   try {
@@ -41,8 +39,7 @@ function* loginSaga(action: PayloadAction<LoginCredentials>) {
       }),
     );
   } catch (error) {
-    const status = error instanceof AxiosError ? error.response?.status : null;
-    if (status === 401 || status === 404) {
+    if (error instanceof AxiosError && error.response?.status === 401) {
       yield put(actions.setError("E-mail ou senha inválidos"));
       return;
     }
@@ -61,12 +58,12 @@ function* forgotPasswordSaga(action: PayloadAction<ForgotPasswordPayload>) {
       action.payload,
     );
 
-    yield put(actions.setForgotPasswordMessage(FORGOT_PASSWORD_MESSAGE));
+    yield put(
+      actions.setForgotPasswordMessage(
+        "Se o e-mail existir, você receberá instruções",
+      ),
+    );
   } catch (error) {
-    if (error instanceof AxiosError && error.response?.status === 404) {
-      yield put(actions.setForgotPasswordMessage(FORGOT_PASSWORD_MESSAGE));
-      return;
-    }
     yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
@@ -98,6 +95,11 @@ function* resetPasswordSaga(action: PayloadAction<ResetPasswordPayload>) {
 function* logoutSaga() {
   yield call([tokenManager, tokenManager.clear]);
   yield put(wsActions.disconnect());
+  try {
+    yield call(apiService.post, `${API_BASE_URL}/auth/refresh/revoke`);
+  } catch {
+    // Best-effort: a sessão local já foi encerrada mesmo que a revogação falhe.
+  }
 }
 
 export function* authSagas() {

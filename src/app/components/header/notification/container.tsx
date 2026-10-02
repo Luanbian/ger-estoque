@@ -24,7 +24,7 @@ export const NotificationHeader = () => {
   useEffect(() => {
     if (notifications.length > 0) {
       toast.success("Você tem um novo pedido!");
-      dispatch(orderActions.getOrdersRequest());
+      dispatch(orderActions.reloadOrdersRequest());
     }
   }, [notifications]);
 

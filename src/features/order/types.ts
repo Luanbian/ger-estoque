@@ -26,6 +26,7 @@ export interface OrderState {
   loading: boolean;
   error: string | null;
   pagination: Pagination | null;
+  decidingId: string | null;
 }
 
 export interface UpdateOrderStatusPayload {

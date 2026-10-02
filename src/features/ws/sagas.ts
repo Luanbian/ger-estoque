@@ -4,7 +4,6 @@ import {
   call,
   ChannelTakeEffect,
   put,
-  select,
   take,
   takeLatest,
 } from "redux-saga/effects";
@@ -14,7 +13,6 @@ import {
   disconnectWebSocket,
   socket,
 } from "../../services/socket";
-import { AppState } from "../../store";
 
 function createSocketChannel() {
   return eventChannel((emit) => {
@@ -33,11 +31,7 @@ function createSocketChannel() {
 }
 
 function* watchEvents() {
-  const tenantId: string = yield select(
-    (state: AppState) => state.auth.data?.tenantId || "default-tenant",
-  );
-
-  yield call(connectWebSocket, tenantId);
+  yield call(connectWebSocket);
 
   const channel: EventChannel<any> = yield call(createSocketChannel);
 
@@ -49,11 +43,7 @@ function* watchEvents() {
 
 function* connectSaga() {
   try {
-    const tenantId: string = yield select(
-      (state: AppState) => state.auth.data?.tenantId || "default-tenant",
-    );
-
-    yield call(connectWebSocket, tenantId);
+    yield call(connectWebSocket);
 
     yield put(actions.setConnectionStatus(true));
   } catch (error) {
