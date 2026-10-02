@@ -44,6 +44,7 @@ export async function performRefresh(): Promise<void> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: "{}",
+    signal: AbortSignal.timeout(15_000),
   });
 
   if (response.status === 401) {

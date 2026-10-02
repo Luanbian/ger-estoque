@@ -5,6 +5,7 @@ import { APIResponse } from "../common/types";
 import { apiService } from "../../services/api";
 import { CreateShowcasePayload, Showcase } from "./types";
 import { uploadFile } from "../../utils/uploadFile";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 function* getShowcase() {
   yield put(actions.setLoading(true));
@@ -18,11 +19,7 @@ function* getShowcase() {
 
     yield put(actions.setShowcase(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -69,11 +66,7 @@ function* createShowcase(payload: PayloadAction<CreateShowcasePayload>) {
     yield put(actions.setMessage("Seu site foi criado com sucesso!"));
     yield put(actions.setShowcase(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -91,11 +84,7 @@ function* getShowcaseByName(payload: PayloadAction<{ name: string }>) {
 
     yield put(actions.setShowcase(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -142,11 +131,7 @@ function* updateShowcase(payload: PayloadAction<CreateShowcasePayload>) {
     yield put(actions.setMessage("Seu site foi atualizado com sucesso!"));
     yield put(actions.setShowcase(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }

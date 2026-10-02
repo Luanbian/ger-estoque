@@ -1,6 +1,12 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import {
+  Action,
+  configureStore,
+  combineReducers,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import { all, spawn } from "redux-saga/effects";
+import { all, select, spawn, takeEvery } from "redux-saga/effects";
+import { toast } from "react-toastify";
 
 // Slice
 import { healthCheckSlice } from "../features/healthcheck/slice";
@@ -87,9 +93,28 @@ export const store = configureStore({
     }).concat(sagaMiddleware),
 });
 
+const SLICES_WITH_ERROR_SCREEN = ["auth", "accountShopkeeper", "planType"];
+const PRE_LOGIN_SLICES = ["payment"];
+
+const isToastableError = (action: Action): action is PayloadAction<string> =>
+  action.type.endsWith("/setError") &&
+  "payload" in action &&
+  typeof action.payload === "string" &&
+  !SLICES_WITH_ERROR_SCREEN.includes(action.type.split("/")[0]);
+
+function* toastErrorSaga(action: PayloadAction<string>) {
+  const token: string | null = yield select(
+    (state: AppState) => state.auth.token,
+  );
+  // Sessão expirada derruba várias requests em 401 ao mesmo tempo: sem sessão, só os fluxos pré-login avisam.
+  if (!token && !PRE_LOGIN_SLICES.includes(action.type.split("/")[0])) return;
+  toast.error(action.payload);
+}
+
 // Run sagas
 function* rootSaga() {
   yield all([
+    takeEvery(isToastableError, toastErrorSaga),
     spawn(healthSagas),
     spawn(authSagas),
     spawn(productSagas),

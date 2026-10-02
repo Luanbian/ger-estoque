@@ -12,6 +12,7 @@ import { AppState } from "../../store";
 import { OrderStatus } from "../common/orderStatusEnum";
 import { Whatsapp } from "../whatsapp/types";
 import { openWhatsapp } from "../../utils/openWhatsapp";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 function* getOrders(payload: PayloadAction<PaginationRequest | undefined>) {
   try {
@@ -30,11 +31,7 @@ function* getOrders(payload: PayloadAction<PaginationRequest | undefined>) {
     yield put(actions.setOrders(data));
     yield put(actions.setPagination(response.pagination || null));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -76,11 +73,7 @@ function* updateOrderStatus(
       yield put(actions.getOrdersRequest());
       return;
     }
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   }
 }
 

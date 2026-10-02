@@ -14,6 +14,7 @@ import { apiService } from "../../services/api";
 import { Filters } from "../filters/types";
 import { AppState } from "../../store/index";
 import { generateParams } from "../../utils/generateParams";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 function* getProductTree(
   payload: PayloadAction<PaginationRequest | undefined>,
@@ -35,11 +36,7 @@ function* getProductTree(
     yield put(actions.setPagination(response.pagination || null));
   } catch (error) {
     console.error(error);
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -58,11 +55,7 @@ function* createProduct(payload: PayloadAction<ProductPayload>) {
 
     yield put(actions.addProduct(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.resetRegister());
     yield put(actions.setLoading(false));
@@ -84,11 +77,7 @@ function* createProductWithVariant(
 
     yield put(actions.addProduct(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.resetRegister());
     yield put(actions.setLoading(false));
@@ -109,11 +98,7 @@ function* updateProduct(
     const { data } = response;
     yield put(actions.setOneProduct(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -133,11 +118,7 @@ function* addVariantToProduct(
     const { data } = response;
     yield put(actions.addVariant({ id: payload.payload.id, data }));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -157,11 +138,7 @@ function* updateVariant(payload: PayloadAction<UpdateVariantPayload>) {
     const { data } = response;
     yield put(actions.setOneVariant(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -174,11 +151,7 @@ function* removeProduct(payload: PayloadAction<string>) {
 
     yield put(actions.removeProduct(payload.payload));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -196,11 +169,7 @@ function* removeVariant(
 
     yield put(actions.removeVariant(payload.payload));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }

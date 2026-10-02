@@ -13,6 +13,7 @@ import { apiService } from "../../services/api.ts";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { AppState } from "../../store/index.ts";
 import { uploadFile } from "../../utils/uploadFile.ts";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 function* getCatalog() {
   yield put(actions.setLoading(true));
@@ -39,11 +40,7 @@ function* getCatalog() {
       }),
     );
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -81,11 +78,7 @@ function* createCatalogCategory(
     yield put(actions.addCatalogCategory(data));
     yield call(getCatalog);
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -112,11 +105,7 @@ function* createCatalogItem(payload: PayloadAction<CatalogItemPayload>) {
 
     yield put(actions.addCatalogItem(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -135,11 +124,7 @@ function* associateCatalogCategory(
 
     yield call(getCatalog);
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }

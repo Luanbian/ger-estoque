@@ -3,6 +3,7 @@ import actions from "./slice";
 import { APIResponse } from "../common/types";
 import { PlanType } from "./types";
 import { apiService } from "../../services/api";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 function* getPlanTypes() {
   yield put(actions.setLoading(true));
@@ -15,11 +16,7 @@ function* getPlanTypes() {
 
     yield put(actions.setPlanType(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      )
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { actions } from "../../../features/auth";
 import { ForgotPasswordPayload } from "../../../features/auth/types";
@@ -16,11 +17,16 @@ export const ForgotPassword = () => {
     dispatch(actions.forgotPasswordRequest(data));
   };
 
-  if (forgotPasswordMessage) {
+  useEffect(() => {
+    dispatch(actions.setError(null));
+  }, []);
+
+  useEffect(() => {
+    if (!forgotPasswordMessage) return;
     toast.success(forgotPasswordMessage);
     dispatch(actions.setForgotPasswordMessage(undefined));
     navigate("/login");
-  }
+  }, [forgotPasswordMessage]);
 
   return (
     <ForgotPasswordComponent

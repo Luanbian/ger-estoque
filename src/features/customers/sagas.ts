@@ -7,6 +7,7 @@ import { Filters } from "../filters/types";
 import { AppState } from "../../store";
 import { generateParams } from "../../utils/generateParams";
 import { CreateCustomerPayload, Customer } from "./types";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 function* getCustomers(payload: PayloadAction<PaginationRequest | undefined>) {
   yield put(actions.setLoading(true));
@@ -25,11 +26,7 @@ function* getCustomers(payload: PayloadAction<PaginationRequest | undefined>) {
     yield put(actions.setCustomers(data));
     yield put(actions.setPagination(response.pagination || null));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -48,11 +45,7 @@ function* createCustomer(payload: PayloadAction<CreateCustomerPayload>) {
 
     yield put(actions.addCustomer(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -69,11 +62,7 @@ function* getCustomerMaxSpent() {
 
     yield put(actions.setMaxSpent(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   }
 }
 
@@ -81,11 +70,7 @@ function* updateIsFavorite(payload: PayloadAction<string>) {
   try {
     yield call(apiService.patch, `/customer/favorite/${payload.payload}`, {});
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   }
 }
 
@@ -106,11 +91,7 @@ function* getFavorites(payload: PayloadAction<PaginationRequest | undefined>) {
     yield put(actions.setFavorites(data));
     yield put(actions.setPaginationFavorites(response.pagination || null));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoadingFavorites(false));
   }
@@ -127,11 +108,7 @@ function* getFavoriteMaxSpent() {
 
     yield put(actions.setMaxSpentFavorites(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof Error ? error.message : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   }
 }
 
