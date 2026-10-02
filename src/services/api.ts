@@ -12,17 +12,21 @@ import { performRefresh, shouldSkipRefreshRequest } from "./refreshToken";
 
 async function tauriFetchAdapter(config: InternalAxiosRequestConfig) {
   const url = axios.getUri(config);
+  const isFormData = config.data instanceof FormData;
 
   const headers: Record<string, string> = {};
   if (config.headers) {
     for (const [key, value] of Object.entries(config.headers.toJSON())) {
-      if (value != null) headers[key] = String(value);
+      if (value == null) continue;
+      // Sem Content-Type o Request gera o multipart com boundary.
+      if (isFormData && key.toLowerCase() === "content-type") continue;
+      headers[key] = String(value);
     }
   }
 
   const body =
     config.data != null
-      ? typeof config.data === "string"
+      ? typeof config.data === "string" || isFormData
         ? config.data
         : JSON.stringify(config.data)
       : undefined;

@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
-import { AxiosError } from "axios";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 import { actions } from "./slice";
 import { AccountShopkeeper, CreateAccountShopkeeperPayload } from "./types.ts";
 import { apiService } from "../../services/api.ts";
@@ -14,13 +14,7 @@ function* registerAccountSaga(
   try {
     yield call(apiService.post, "/account-shopkeeper", payload.payload);
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof AxiosError
-          ? error.response?.data.error
-          : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -38,13 +32,7 @@ function* getAccountShopkeeper() {
 
     yield put(actions.setAccountShopkeeper(data));
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof AxiosError
-          ? error.response?.data.error
-          : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }
@@ -75,13 +63,7 @@ function* updateAccountShopkeeperAvatar(
       }),
     );
   } catch (error) {
-    yield put(
-      actions.setError(
-        error instanceof AxiosError
-          ? error.response?.data.error
-          : "An unknown error occurred",
-      ),
-    );
+    yield put(actions.setError(getErrorMessage(error)));
   } finally {
     yield put(actions.setLoading(false));
   }

@@ -33,37 +33,34 @@ export function shouldSkipRefreshRequest(url?: string): boolean {
 
 /**
  * Faz a chamada HTTP de refresh de token.
- * Em caso de falha: limpa o token e dispara logout no Redux.
+ * Só limpa o token e dispara logout quando a API recusa o refresh (401);
+ * falha de rede ou 5xx apenas rejeita, sem derrubar a sessão.
  * Chamada apenas pelo triggerRefresh() em api.ts — sem deduplicação aqui.
  */
 export async function performRefresh(): Promise<void> {
-  let succeeded = false;
-  try {
-    // Precisa passar pelo plugin-http: o cookie httpOnly `refresh_token` do login
-    // fica no cookie jar do lado Rust, invisível para o fetch/XHR do webview.
-    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: "{}",
-    });
-    if (!response.ok) throw new Error(`refresh-${response.status}`);
+  // Precisa passar pelo plugin-http: o cookie httpOnly `refresh_token` do login
+  // fica no cookie jar do lado Rust, invisível para o fetch/XHR do webview.
+  const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  });
 
-    const body: APIResponse<LoginResponse> = await response.json();
-    const newToken = body.data?.accessToken;
-    if (!newToken) throw new Error("refresh-no-token");
-
-    await tokenManager.set(newToken);
-    store.dispatch(
-      actions.setAuth({
-        data: { tenantId: body.data.tenantId },
-        token: newToken,
-      }),
-    );
-    succeeded = true;
-  } finally {
-    if (!succeeded) {
-      await tokenManager.clear();
-      store.dispatch(actions.logout());
-    }
+  if (response.status === 401) {
+    await tokenManager.clear();
+    store.dispatch(actions.logout());
   }
+  if (!response.ok) throw new Error(`refresh-${response.status}`);
+
+  const body: APIResponse<LoginResponse> = await response.json();
+  const newToken = body.data?.accessToken;
+  if (!newToken) throw new Error("refresh-no-token");
+
+  await tokenManager.set(newToken);
+  store.dispatch(
+    actions.setAuth({
+      data: { tenantId: body.data.tenantId },
+      token: newToken,
+    }),
+  );
 }

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { actions } from "../../features/accountShopkeeper";
@@ -48,15 +49,17 @@ export const RegisterAccount = () => {
     dispatch(paymentActions.createCheckoutRequest(checkoutPayload));
   };
 
-  if (paymentData?.checkoutLink) {
-    const fetchImport = async () => {
-      const { open } = await import("@tauri-apps/plugin-shell");
-      await open(paymentData.checkoutLink!);
+  const checkoutLink = paymentData?.checkoutLink;
+  useEffect(() => {
+    if (!checkoutLink) return;
+    const openCheckout = async () => {
+      const { openUrl } = await import("@tauri-apps/plugin-opener");
+      await openUrl(checkoutLink);
     };
-    fetchImport().catch((error) => {
-      return toast.error(`Erro ao abrir link de pagamento: ${error.message}`);
+    openCheckout().catch((error) => {
+      toast.error(`Erro ao abrir link de pagamento: ${error.message}`);
     });
-  }
+  }, [checkoutLink]);
 
   if (responseMessage) {
     toast.success(responseMessage);
